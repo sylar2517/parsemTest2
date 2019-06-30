@@ -10,6 +10,8 @@
 
 @interface ViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet UIView *toolBarView;
+- (IBAction)actionFlashOnCliked:(UIButton *)sender;
 
 @end
 
