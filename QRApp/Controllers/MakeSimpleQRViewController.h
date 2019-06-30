@@ -20,7 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (IBAction)actionEndOfPrint:(UITextField *)sender;
 - (IBAction)actionBack:(UIButton *)sender;
-- (IBAction)actionPrint:(UITextField *)sender;
 
 @end
 

@@ -9,9 +9,11 @@
 #import "HistoryScanTVController.h"
 #import "ViewController.h"
 #import "HistoryCell.h"
-#import "Models/HistoryPost+CoreDataClass.h"
-#import "Controllers/ResultViewController.h"
-#import "Controllers/PopUpForCameraOrGallery.h"
+#import "HistoryPost+CoreDataClass.h"
+#import "ResultViewController.h"
+#import "PopUpForCameraOrGallery.h"
+#import "DataManager.h"
+
 @interface HistoryScanTVController ()
 
 @property(strong, nonatomic)NSMutableArray* filterObject;
@@ -60,8 +62,13 @@
 
 #pragma mark - UITableViewDataSourse
 - (void)configureCell:(HistoryCell *)cell atIndexPath:(NSIndexPath*)indexPath{
-    
-    HistoryPost* post = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    HistoryPost* post = nil;
+    if (self.filterObject) {
+        post = [self.filterObject objectAtIndex:indexPath.row];
+    } else {
+        post = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    }
+    //HistoryPost* post = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.nameLabel.text = post.value;
     
 //    UIImage* image = [UIImage imageWithData:post.picture];
@@ -115,19 +122,20 @@
     vc.result = post.value;
     [self presentViewController:vc animated:YES completion:nil];
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 80.f;
 }
 
-
-//
-//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-//    if (self.isFiltered) {
-//        return self.filterObject.count;
-//    } else {
-//        return [super tableView:tableView numberOfRowsInSection:section];
-//    }
-//}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    if (self.isFiltered) {
+        self.isFiltered = NO;
+        //NSLog(@"%lu", (unsigned long)self.filterObject.count);
+        return self.filterObject.count;
+    } else {
+        return [super tableView:tableView numberOfRowsInSection:section];
+    }
+}
 
 
 #pragma mark -  UISearchBarDelegate
@@ -138,22 +146,29 @@
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
     [searchBar resignFirstResponder];
     [searchBar setShowsCancelButton:NO animated:YES];
+    searchBar.text = nil;
+    self.filterObject = nil;
     [self.tableView reloadData];
 }
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
-//    NSLog(@"aaa");
+    NSLog(@"aaa");
 //    //[self generateSectionsInBackgroundFromArray:self.searchArray withFilter:self.searchBar.text];
-//    self.isFiltered = YES;
-//    [self filterContentForSearchText:self.searchBar.text scope:nil];
-//    if (searchText.length == 0) {
-//        self.isFiltered = NO;
-//    } else {
-//        self.isFiltered = YES;
-//        self.filterObject = [NSMutableArray array];
-//        [self filterContentForSearchText:searchText];
-//    }
+    self.isFiltered = YES;
+   // [self filterContentForSearchText:self.searchBar.text scope:nil];
+    if (searchText.length == 0) {
+        self.isFiltered = NO;
+        self.filterObject = nil;
+        [self.tableView reloadData];
+    } else {
+        self.isFiltered = YES;
+        self.filterObject = [NSMutableArray array];
+        [self filterContentForSearchText:searchText];
+//        if
+        
+    }
 //
 }
+
 #pragma mark -  Private Methods
 
 
@@ -162,16 +177,35 @@
     //    self.savedSearchTerm = searchText;
     //
     //    freshData = NO;
-    self.isFiltered = NO;
+    
     if (searchText !=nil)
     {
-        NSPredicate *predicate =[NSPredicate predicateWithFormat:@"name contains[cd] %@", searchText];
-        [self.fetchedResultsController.fetchRequest setPredicate:predicate];
+        NSPredicate *predicate =[NSPredicate predicateWithFormat:@"value contains[cd] %@", searchText];
+//        [self.fetchedResultsController.fetchRequest setPredicate:predicate];
+        NSFetchRequest* request = [[NSFetchRequest alloc] init];
+        NSEntityDescription* description = [NSEntityDescription entityForName:@"HistoryPost" inManagedObjectContext:self.managedObjectContext];
+        [request setEntity:description];
+        [request setFetchBatchSize:20];
+        [request setPredicate:predicate];
+        NSError* reqestError = nil;
+        NSArray* resultArray = [[DataManager sharedManager].persistentContainer.viewContext executeFetchRequest:request error:&reqestError];
+        if (reqestError) {
+            NSLog(@"%@", [reqestError localizedDescription]);
+            self.filterObject = nil;
+        } else {
+            self.filterObject = [NSMutableArray arrayWithArray:resultArray];
+        }
+
+        
     }
+//    else {
+//        self.filterObject = nil;
+//    }
     else
     {
         NSPredicate *predicate =[NSPredicate predicateWithFormat:@"All"];
         [self.fetchedResultsController.fetchRequest setPredicate:predicate];
+        self.filterObject = nil;
     }
     
     NSError *error = nil;
@@ -203,4 +237,11 @@
 //}
 
 
+- (IBAction)test:(id)sender {
+    NSLog(@"aaaa");
+    //[self.fetchedResultsController prepareForInterfaceBuilder];
+    //NSPredicate *predicate =[NSPredicate predicateWithFormat:@"name contains[cd] %@", @"id"];
+    
+    [self.tableView reloadData];
+}
 @end
