@@ -19,6 +19,7 @@
 //    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
    // [[DataManager sharedManager] deleteAllObject];
+    //test
     return YES;
 }
 
