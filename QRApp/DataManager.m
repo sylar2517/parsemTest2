@@ -17,13 +17,13 @@
     });
     return manager;
 }
--(void) deleteAllObject{
+-(void) deleteHistory{
     NSArray* resultArray = [self allObjects];
     for (id object in resultArray) {
         [self.persistentContainer.viewContext deleteObject:object];
     }
     [self.persistentContainer.viewContext save:nil];
-    NSLog(@"DELLETE ALL OBJECT");
+   
 }
 
 -(NSArray*)allObjects{

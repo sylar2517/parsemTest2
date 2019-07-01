@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface HistoryScanTVController : CoreDataTableViewController <NSFetchedResultsControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
-- (IBAction)test:(id)sender;
+- (IBAction)actionSettings:(id)sender;
 
 @end
 

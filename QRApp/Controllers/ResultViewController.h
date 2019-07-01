@@ -21,12 +21,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIButton *openInBrowser;
 @property (weak, nonatomic) IBOutlet UIButton *copingButton;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
+@property (weak, nonatomic) IBOutlet UIButton *saveButton;
+@property (weak, nonatomic) IBOutlet UIButton *exportButton;
+
+
 
 
 - (IBAction)actionBack:(UIButton *)sender;
 - (IBAction)actionCopy:(UIButton *)sender;
-
 - (IBAction)actionOpenInBrowser:(id)sender;
+- (IBAction)actionSave:(UIButton *)sender;
+- (IBAction)actionExport:(UIButton *)sender;
+
 
 
 @end

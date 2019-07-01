@@ -30,7 +30,7 @@
     self.mainView.layer.cornerRadius = 10;
     self.mainView.layer.masksToBounds = YES;
     
-    NSArray* buttons = [[NSArray alloc] initWithObjects:self.copingButton, self.openInBrowser, self.backButton, nil];
+    NSArray* buttons = [[NSArray alloc] initWithObjects:self.copingButton, self.openInBrowser, self.backButton,self.saveButton, self.exportButton, nil];
     for (UIButton*but in buttons) {
         but.layer.cornerRadius = 10;
         but.layer.masksToBounds = YES;
@@ -103,7 +103,27 @@
 //    //
 //    //    [[DataManager sharedManager] saveContext];
 //}
-
+-(UIImage*)makeQRFromText:(UIImageView*)image{
+    
+    
+    NSData *stringData = [self.result dataUsingEncoding: NSUTF8StringEncoding];
+    
+    CIFilter *qrFilter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+    [qrFilter setValue:stringData forKey:@"inputMessage"];
+    [qrFilter setValue:@"H" forKey:@"inputCorrectionLevel"];
+    
+    CIImage *qrImage = qrFilter.outputImage;
+    float scaleX = image.frame.size.width / qrImage.extent.size.width;
+    float scaleY = image.frame.size.height / qrImage.extent.size.height;
+    
+    qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
+    
+    return  [UIImage imageWithCIImage:qrImage
+                                 scale:[UIScreen mainScreen].scale
+                           orientation:UIImageOrientationUp];
+    
+    
+}
 
 #pragma mark - Actions
 - (IBAction)actionBack:(UIButton *)sender {
@@ -114,7 +134,6 @@
         NSDate* now = [NSDate date];
         post.dateOfCreation = now;
         post.value = self.resultTextImageView.text;
-
     }
     
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -127,6 +146,24 @@
 - (IBAction)actionOpenInBrowser:(id)sender {
     NSURL* URL = [NSURL URLWithString:self.resultTextImageView.text];
     [[UIApplication sharedApplication] openURL:URL options:@{} completionHandler:nil];
+}
+
+- (IBAction)actionSave:(UIButton *)sender {
+}
+
+- (IBAction)actionExport:(UIButton *)sender {
+    //UIImage* image = self.resultImageView.image;
+//    UIImageView* test = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 300, 300)];
+//    test.image = [self makeQRFromText:test];
+//    UIImage* image = test.image;
+//    [image preferredPresentationSizeForItemProvider];
+    //[self.view addSubview:test];
+    
+//    UIImage* image = [UIImage imageNamed:@"Cam"];
+//    NSArray* array = @[image];
+//    UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:array applicationActivities:nil];
+//    //avc.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
+//    [self presentViewController:avc animated:YES completion:nil];
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{

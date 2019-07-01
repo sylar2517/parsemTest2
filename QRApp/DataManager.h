@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (DataManager*) sharedManager;
 
 - (void)saveContext;
--(void) deleteAllObject;
+-(void) deleteHistory;
 @end
 
 NS_ASSUME_NONNULL_END

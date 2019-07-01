@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "QRApp/Controllers/HistoryScanTVController.m"
-            timestampString = "583625244.687964"
+            timestampString = "583710798.917295"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "208"
-            endingLineNumber = "208"
-            landmarkName = "-filterContentForSearchText:"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
+            landmarkName = "-touchesBegan:withEvent:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

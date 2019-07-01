@@ -18,6 +18,12 @@
 
 @property(strong, nonatomic)NSMutableArray* filterObject;
 @property(assign, nonatomic)BOOL isFiltered;
+@property(assign, nonatomic)BOOL isEditing;
+@property(strong, nonatomic)NSMutableArray* tempObjectArray;
+
+@property(strong, nonatomic)NSArray*withExport;
+@property(strong, nonatomic)NSArray*withOutExport;
+
 
 @end
 
@@ -27,8 +33,25 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.isFiltered = NO;
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    self.isEditing = NO;
+    
+    [[UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]] setTintColor:[UIColor whiteColor]];
+    [[UIBarButtonItem appearanceWhenContainedInInstancesOfClasses:@[[UISearchBar class]]] setTitle:@"Отмена"];
+    
+    self.tableView.allowsMultipleSelectionDuringEditing = YES;
+    self.navigationController.toolbar.barStyle = UIBarStyleBlack;
+    self.navigationController.toolbar.tintColor = [UIColor whiteColor];
+    UIBarButtonItem* export = [[UIBarButtonItem alloc] initWithTitle:@"Экспорт" style:(UIBarButtonItemStylePlain) target:self action:@selector(actionExport:)];
+    UIBarButtonItem* flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:(UIBarButtonSystemItemFlexibleSpace) target:self action:nil];
+    UIBarButtonItem* delete = [[UIBarButtonItem alloc] initWithTitle:@"Удалить" style:(UIBarButtonItemStylePlain) target:self action:@selector(actionDelete:)];
+    UIBarButtonItem* cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:(UIBarButtonItemStylePlain) target:self action:@selector(actionCancelEditing:)];
+    cancel.tintColor = [UIColor redColor];
+    
+    self.withExport =@[cancel, flex,  export, flex, delete];
+    self.withOutExport = @[cancel, flex, delete];
+    
+    self.toolbarItems = self.withExport;
+    
 }
 
 
@@ -59,6 +82,9 @@
     _fetchedResultsController = aFetchedResultsController;
     return _fetchedResultsController;
 }
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [self.searchBar resignFirstResponder];
+}
 
 #pragma mark - UITableViewDataSourse
 - (void)configureCell:(HistoryCell *)cell atIndexPath:(NSIndexPath*)indexPath{
@@ -70,27 +96,33 @@
     }
     //HistoryPost* post = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.nameLabel.text = post.value;
-    
-//    UIImage* image = [UIImage imageWithData:post.picture];
-//    //cell.imageViewCell.image = [UIImage imageWithData:post.picture];
-//    cell.imageViewCell.image = image;
+    //cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    cell.tintColor = [UIColor blackColor];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.nameLabel.textColor = [UIColor whiteColor];
+    cell.dateLabel.textColor = [UIColor whiteColor];
     
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
-   // [df setDateStyle:(NSDateFormatterFullStyle)];
     [df setDateFormat:@"dd-MM-yyyy HH:mm"];
+    
     cell.dateLabel.text = [df stringFromDate:post.dateOfCreation];
+    //    UIImage* image = [UIImage imageWithData:post.picture];
+    //    //cell.imageViewCell.image = [UIImage imageWithData:post.picture];
+    //    cell.imageViewCell.image = image;
+    // cell.backgroundColor = [UIColor darkGrayColor];
+    //    CIImage *qrImage = [CIImage imageWithData:post.picture];
+    //    float scaleX = cell.imageViewCell.frame.size.width / qrImage.extent.size.width;
+    //    float scaleY = cell.imageViewCell.frame.size.height / qrImage.extent.size.height;
+    //
+    //    qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
+    //    UIImage* image = [UIImage imageWithCIImage:qrImage
+    //                                         scale:[UIScreen mainScreen].scale
+    //                                   orientation:UIImageOrientationUp];
     
-    
-//    CIImage *qrImage = [CIImage imageWithData:post.picture];
-//    float scaleX = cell.imageViewCell.frame.size.width / qrImage.extent.size.width;
-//    float scaleY = cell.imageViewCell.frame.size.height / qrImage.extent.size.height;
-//
-//    qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
-//    UIImage* image = [UIImage imageWithCIImage:qrImage
-//                                         scale:[UIScreen mainScreen].scale
-//                                   orientation:UIImageOrientationUp];
     cell.imageViewCell.image = [self makeQRFromText:post.value from:cell.imageViewCell];
-   // cell.imageViewCell.layer.magnificationFilter = kCAFilterNearest;
+
+    
+    // cell.imageViewCell.layer.magnificationFilter = kCAFilterNearest;
 }
 
 
@@ -109,20 +141,69 @@
     qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
     
     return [UIImage imageWithCIImage:qrImage
-                             scale:[UIScreen mainScreen].scale
-                       orientation:UIImageOrientationUp];
+                               scale:[UIScreen mainScreen].scale
+                         orientation:UIImageOrientationUp];
     
 }
 
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    HistoryPost* post = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
-    vc.result = post.value;
-    [self presentViewController:vc animated:YES completion:nil];
+   // [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    if (!self.isEditing) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        HistoryPost* post = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
+        vc.result = post.value;
+        [self presentViewController:vc animated:YES completion:nil];
+    } else {
+        
+        HistoryPost* post = nil;
+        if (self.filterObject) {
+            post = [self.filterObject objectAtIndex:indexPath.row];
+        } else {
+            post = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        }
+        
+        [self.tempObjectArray addObject:post];
+        
+        if(self.tempObjectArray.count > 1){
+            self.toolbarItems = self.withOutExport;
+        } else {
+            self.toolbarItems = self.withExport;
+        }
+        
+        HistoryCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        cell.nameLabel.textColor = [UIColor blackColor];
+        cell.dateLabel.textColor = [UIColor blackColor];
+        
+    }
 }
-
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (!self.isEditing) {
+        return;
+    } else {
+       
+        HistoryPost* post = nil;
+        if (self.filterObject) {
+            post = [self.filterObject objectAtIndex:indexPath.row];
+        } else {
+            post = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        }
+        [self.tempObjectArray removeObject:post];
+        
+        if(self.tempObjectArray.count > 1){
+            self.toolbarItems = self.withOutExport;
+        } else {
+            self.toolbarItems = self.withExport;
+        }
+        
+        HistoryCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        cell.nameLabel.textColor = [UIColor whiteColor];
+        cell.dateLabel.textColor = [UIColor whiteColor];
+        
+    }
+}
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 80.f;
 }
@@ -135,6 +216,12 @@
     } else {
         return [super tableView:tableView numberOfRowsInSection:section];
     }
+}
+-(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 3;
+}
+- (nullable NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return @"Удалить";
 }
 
 
@@ -151,10 +238,8 @@
     [self.tableView reloadData];
 }
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
-    NSLog(@"aaa");
-//    //[self generateSectionsInBackgroundFromArray:self.searchArray withFilter:self.searchBar.text];
+
     self.isFiltered = YES;
-   // [self filterContentForSearchText:self.searchBar.text scope:nil];
     if (searchText.length == 0) {
         self.isFiltered = NO;
         self.filterObject = nil;
@@ -163,15 +248,13 @@
         self.isFiltered = YES;
         self.filterObject = [NSMutableArray array];
         [self filterContentForSearchText:searchText];
-//        if
-        
     }
 //
 }
-
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    [searchBar resignFirstResponder];
+}
 #pragma mark -  Private Methods
-
-
 - (void)filterContentForSearchText:(NSString*)searchText
 {
     //    self.savedSearchTerm = searchText;
@@ -181,7 +264,7 @@
     if (searchText !=nil)
     {
         NSPredicate *predicate =[NSPredicate predicateWithFormat:@"value contains[cd] %@", searchText];
-//        [self.fetchedResultsController.fetchRequest setPredicate:predicate];
+        //        [self.fetchedResultsController.fetchRequest setPredicate:predicate];
         NSFetchRequest* request = [[NSFetchRequest alloc] init];
         NSEntityDescription* description = [NSEntityDescription entityForName:@"HistoryPost" inManagedObjectContext:self.managedObjectContext];
         [request setEntity:description];
@@ -195,12 +278,12 @@
         } else {
             self.filterObject = [NSMutableArray arrayWithArray:resultArray];
         }
-
+        
         
     }
-//    else {
-//        self.filterObject = nil;
-//    }
+    //    else {
+    //        self.filterObject = nil;
+    //    }
     else
     {
         NSPredicate *predicate =[NSPredicate predicateWithFormat:@"All"];
@@ -224,6 +307,93 @@
 
 
 
+
+#pragma mark -  Actions storyboard
+- (IBAction)actionSettings:(id)sender{
+    
+    UIAlertController* ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:(UIAlertControllerStyleActionSheet)];
+    
+    
+    UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Отмена" style:(UIAlertActionStyleCancel) handler:nil];
+    UIAlertAction* editing = [UIAlertAction actionWithTitle:@"Редактировать" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+        
+        self.isEditing = !self.isEditing;
+        if (self.editing == NO) {
+            [self.navigationController setToolbarHidden:YES animated:YES];
+        } else {
+            [self.navigationController setToolbarHidden:NO animated:YES];
+            self.tempObjectArray = [NSMutableArray array];
+        }
+        [self.tableView setEditing:self.isEditing animated:YES];
+        
+    }];
+    
+    UIAlertAction* clear = [UIAlertAction actionWithTitle:@"Отчистить историю" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+        [self allertForDelete];
+    }];
+    
+    [ac addAction:editing];
+    [ac addAction:clear];
+    [ac addAction:aa];
+    
+    [self presentViewController:ac animated:YES completion:nil];
+}
+
+-(void)allertForDelete{
+    UIAlertController* ac2 = [UIAlertController alertControllerWithTitle:@"Очистить историю?" message:nil preferredStyle:(UIAlertControllerStyleAlert)];
+    UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Отмена" style:(UIAlertActionStyleCancel) handler:nil];
+    UIAlertAction* clear = [UIAlertAction actionWithTitle:@"Да" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+        [[DataManager sharedManager] deleteHistory];
+    }];
+    
+    [ac2 addAction:clear];
+    [ac2 addAction:aa];
+    
+    [self presentViewController:ac2 animated:YES completion:nil];
+}
+#pragma mark -  Actions UIBarButtonItem
+-(void)actionExport:(UIBarButtonItem*)sender{
+    
+    NSMutableArray* temp = [NSMutableArray array];
+    NSArray* array = [NSArray array];
+    NSDateFormatter* df = [[NSDateFormatter alloc] init];
+    [df setDateFormat:@"dd-MM-yyyy HH:mm"];
+    
+    if (self.tempObjectArray.count != 0 && self.tempObjectArray) {
+        for (HistoryPost* post in self.tempObjectArray) {
+            NSString* test = post.value;
+            NSString* string = [NSString stringWithFormat:@"text -%@\ndate of creation -  %@", test, [df stringFromDate:post.dateOfCreation]];
+            [temp addObject:string];
+        }
+        
+        array = temp;
+        NSLog(@"%@", array);
+        UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:array applicationActivities:nil];
+        //avc.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
+        [self presentViewController:avc animated:YES completion:nil];
+
+    }
+}
+-(void)actionDelete:(UIBarButtonItem*)sender{
+    
+    if (self.tempObjectArray.count != 0 && self.tempObjectArray) {
+        for (HistoryPost* post in self.tempObjectArray) {
+            [[DataManager sharedManager].persistentContainer.viewContext deleteObject:post];
+            [[DataManager sharedManager] saveContext];
+        }
+        [self.tempObjectArray removeAllObjects];
+        [self.tableView reloadData];
+    }
+}
+
+-(void)actionCancelEditing:(UIBarButtonItem*)sender{
+    self.isEditing = !self.isEditing;
+
+    [self.navigationController setToolbarHidden:YES animated:YES];
+    [self.tableView setEditing:self.isEditing animated:YES];
+    [self.tableView reloadData];
+}
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -235,13 +405,4 @@
 //        vc.fromMenu = YES;
 //    }
 //}
-
-
-- (IBAction)test:(id)sender {
-    NSLog(@"aaaa");
-    //[self.fetchedResultsController prepareForInterfaceBuilder];
-    //NSPredicate *predicate =[NSPredicate predicateWithFormat:@"name contains[cd] %@", @"id"];
-    
-    [self.tableView reloadData];
-}
 @end
