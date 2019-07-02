@@ -49,9 +49,13 @@
         [self.imagePickerController dismissViewControllerAnimated:YES completion:nil];
         
         GalleryViewController* gvc = [self.storyboard instantiateViewControllerWithIdentifier:@"galleryController"];
-        UINavigationController* nav = [[UINavigationController alloc] initWithRootViewController:gvc];
+       // UINavigationController* nav = [[UINavigationController alloc] initWithRootViewController:gvc];
         gvc.selectedImage = self.selectedImage;
-        [self presentViewController:nav animated:YES completion:nil];
+        //[self presentViewController:gvc animated:YES completion:nil];
+        //[]
+        gvc.modalPresentationStyle = UIModalPresentationOverFullScreen;
+        gvc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        [self presentViewController:gvc animated:YES completion:nil];
     }
 }
 

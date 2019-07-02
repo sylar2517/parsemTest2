@@ -14,14 +14,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property(strong, nonatomic)UIImage* selectedImage;
 @property (weak, nonatomic) IBOutlet UIImageView *selectedImageView;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightConstraint;
+@property (weak, nonatomic) IBOutlet UIView *panelView;
+
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightConstraint;
 @property (weak, nonatomic) IBOutlet UIImageView *qrCodeImageView;
+@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *buttonsOutletCollection;
 
 
 
 
 - (IBAction)actionCopy:(UIButton *)sender;
 - (IBAction)actionScan:(UIButton *)sender;
+- (IBAction)actionBack:(UIButton *)sender;
 
 
 

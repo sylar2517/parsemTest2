@@ -29,6 +29,7 @@
 		763CD01822C6A60C0009F955 /* CoreDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 763CD01722C6A60C0009F955 /* CoreDataTableViewController.m */; };
 		763CD01B22C6B7D20009F955 /* MakeSimpleQRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 763CD01A22C6B7D20009F955 /* MakeSimpleQRViewController.m */; };
 		7653841222C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = 7653841122C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m */; };
+		765D66C622CBFFAF00F79EDC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765D66C522CBFFAF00F79EDC /* SettingsViewController.m */; };
 		76B257F222C8EA52002E22D5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76B257F122C8EA51002E22D5 /* WebKit.framework */; };
 		76B257F822C93A60002E22D5 /* CreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B257F722C93A60002E22D5 /* CreationViewController.m */; };
 /* End PBXBuildFile section */
@@ -93,6 +94,8 @@
 		763CD01A22C6B7D20009F955 /* MakeSimpleQRViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MakeSimpleQRViewController.m; sourceTree = "<group>"; };
 		7653841022C0D9EC00D6EDDE /* PopUpForCameraOrGallery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PopUpForCameraOrGallery.h; sourceTree = "<group>"; };
 		7653841122C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PopUpForCameraOrGallery.m; sourceTree = "<group>"; };
+		765D66C422CBFFAF00F79EDC /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		765D66C522CBFFAF00F79EDC /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		76B257F122C8EA51002E22D5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		76B257F622C93A60002E22D5 /* CreationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CreationViewController.h; sourceTree = "<group>"; };
 		76B257F722C93A60002E22D5 /* CreationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CreationViewController.m; sourceTree = "<group>"; };
@@ -190,6 +193,8 @@
 				763CD00622C6A3D30009F955 /* DataManager.h */,
 				763CD00722C6A3D30009F955 /* DataManager.m */,
 				7614778C22BFFA0000022E85 /* Assets.xcassets */,
+				765D66C422CBFFAF00F79EDC /* SettingsViewController.h */,
+				765D66C522CBFFAF00F79EDC /* SettingsViewController.m */,
 				7614778E22BFFA0000022E85 /* LaunchScreen.storyboard */,
 				7614779122BFFA0000022E85 /* Info.plist */,
 				7614779222BFFA0000022E85 /* main.m */,
@@ -373,6 +378,7 @@
 				7614778B22BFF9FF00022E85 /* QRApp.xcdatamodeld in Sources */,
 				763CD01B22C6B7D20009F955 /* MakeSimpleQRViewController.m in Sources */,
 				763CD00822C6A3D30009F955 /* DataManager.m in Sources */,
+				765D66C622CBFFAF00F79EDC /* SettingsViewController.m in Sources */,
 				7614778522BFF9FF00022E85 /* ViewController.m in Sources */,
 				7606926E22C3F8D000BB9D6E /* HistoryCell.m in Sources */,
 				763CD01422C6A5A60009F955 /* Posts+CoreDataClass.m in Sources */,
