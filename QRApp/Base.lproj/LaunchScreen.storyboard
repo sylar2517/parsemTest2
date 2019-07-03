@@ -25,7 +25,9 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="erT-3i-P6i" secondAttribute="bottom" constant="224" id="04k-qG-6bK"/>
                             <constraint firstItem="erT-3i-P6i" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Raz-06-voh"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="erT-3i-P6i" secondAttribute="trailing" constant="17" id="gIa-rK-heu"/>
                             <constraint firstItem="erT-3i-P6i" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="214" id="nK6-Uf-e9d"/>
                             <constraint firstItem="erT-3i-P6i" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="oh8-8T-Z2A"/>
                             <constraint firstItem="erT-3i-P6i" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="17" id="uqy-JU-arx"/>

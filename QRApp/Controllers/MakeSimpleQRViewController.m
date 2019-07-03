@@ -17,15 +17,46 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.backButton.layer.cornerRadius = 10;
-    self.backButton.layer.masksToBounds = YES;
     
+    for (UIButton* but in self.buttonsOutletCollection) {
+        but.layer.cornerRadius = 10;
+        but.layer.masksToBounds = YES;
+    }
     self.menuView.layer.cornerRadius = 10;
     self.menuView.layer.masksToBounds = YES;
+    
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    if (CGRectGetWidth(screenBounds) == 320) {
+        NSLog(@"AaaaaAaaaaAaaaaAaaaaAaaaaAaaaaAaaaa");
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillAppear:) name:UIKeyboardWillShowNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillDisappear:) name:UIKeyboardWillHideNotification object:nil];
+    }
+ 
 }
 
-
-
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+#pragma mark - NSNotificationCenter
+-(void)keyboardWillAppear:(NSNotification*)notification{
+//    NSNumber* test = [notification.userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey];
+//    CGRect rect = [test CGRectValue];
+  //  NSLog(@"%@", notification.userInfo);
+    if (self.view.frame.origin.y == 0) {
+        //self.levelConstrain.constant = -CGRectGetHeight(rect);
+        
+        [UIView animateWithDuration:0.25 animations:^{
+            self.levelConstrain.constant = -50;
+        }];
+    }
+}
+-(void)keyboardWillDisappear:(NSNotification*)notification{
+    [UIView animateWithDuration:0.25 animations:^{
+        self.levelConstrain.constant = 0;
+    }];
+}
+#pragma mark - Actions
 - (IBAction)actionEndOfPrint:(UITextField *)sender {
     [self makeQR];
 }
@@ -42,10 +73,18 @@
 
 #pragma matk -  UITextFieldDelegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    if ([self.textField.text isEqual:nil]) {
+        return YES;
+    }
     [self makeQR];
+    [self.textField resignFirstResponder];
     return YES;
 }
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+
+//    if (textField.text.length == 1 && [string isEqualToString:@""]) {
+//    
+//    }
     [self makeQR];
     return YES;
 }
