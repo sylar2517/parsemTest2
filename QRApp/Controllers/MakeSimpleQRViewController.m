@@ -38,6 +38,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
 #pragma mark - NSNotificationCenter
 -(void)keyboardWillAppear:(NSNotification*)notification{
 //    NSNumber* test = [notification.userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey];
@@ -56,6 +57,7 @@
         self.levelConstrain.constant = 0;
     }];
 }
+
 #pragma mark - Actions
 - (IBAction)actionEndOfPrint:(UITextField *)sender {
     [self makeQR];
@@ -63,6 +65,28 @@
 
 - (IBAction)actionBack:(UIButton *)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)actionExport:(UIButton *)sender {
+}
+
+- (IBAction)actionSaveImage:(UIButton *)sender {
+    UIImage* image = [self makeQRForSaveOrExport];
+    
+    UIGraphicsBeginImageContext(CGSizeMake(400, 400));
+    image = UIGraphicsGetImageFromCurrentImageContext();
+//    image = [self makeQRForSaveOrExport];
+    UIGraphicsEndImageContext();
+    UIImageView* imageview = [[UIImageView alloc] initWithImage:image];
+    [self.view addSubview:imageview];
+    //NSData *imageData = UIImageJPEGRepresentation(image, 0.7);
+    NSLog(@"%@", image);
+//    NSArray* array = @[image];
+//    UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:array applicationActivities:nil];
+//    //avc.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
+//    [self presentViewController:avc animated:YES completion:nil];
+
+    
 }
 
 
@@ -105,6 +129,23 @@
     self.resultImageView.image = [UIImage imageWithCIImage:qrImage
                                                      scale:[UIScreen mainScreen].scale
                                                orientation:UIImageOrientationUp];
+}
+-(UIImage*)makeQRForSaveOrExport{
+    NSData *stringData = [self.textField.text dataUsingEncoding: NSUTF8StringEncoding];
+    
+    CIFilter *qrFilter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+    [qrFilter setValue:stringData forKey:@"inputMessage"];
+    [qrFilter setValue:@"H" forKey:@"inputCorrectionLevel"];
+    
+    CIImage *qrImage = qrFilter.outputImage;
+    float scaleX = self.resultImageView.frame.size.width / qrImage.extent.size.width;
+    float scaleY = self.resultImageView.frame.size.height / qrImage.extent.size.height;
+    
+    qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
+    
+    return  [UIImage imageWithCIImage:qrImage
+                             scale:[UIScreen mainScreen].scale
+                       orientation:UIImageOrientationUp];
 }
 /*
  #pragma mark - Navigation
