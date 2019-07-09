@@ -10,6 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Vision/Vision.h>
 #import "QRViewController.h"
+//#import <TesseractOCR.h>
 
 typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     AVCamSetupResultSuccess,
@@ -18,7 +19,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 };
 
 @interface TextScanViewController () <AVCaptureVideoDataOutputSampleBufferDelegate>
-
+////G8TesseractDelegate
 @property(strong, nonatomic) AVCaptureSession* session;
 @property(assign, nonatomic) AVCamSetupResult setupResult;
 @property(nonatomic)dispatch_queue_t sessionQueue;
@@ -57,8 +58,16 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:leftSwipe];
     
+    
+    
+//    G8Tesseract* tesseract = [[G8Tesseract alloc] initWithLanguage:@"eng+rus"];
+//    tesseract.delegate = self;
+    
+    
 }
-
+//- (void)progressImageRecognitionForTesseract:(G8Tesseract * _Nonnull )tesseract{
+//    NSLog(@"%lu", (unsigned long)tesseract.progress);
+//}
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     dispatch_async(self.sessionQueue, ^{
