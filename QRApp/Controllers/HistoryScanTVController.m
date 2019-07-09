@@ -7,14 +7,14 @@
 //
 
 #import "HistoryScanTVController.h"
-#import "ViewController.h"
+#import "QRViewController.h"
 #import "HistoryCell.h"
 #import "HistoryPost+CoreDataClass.h"
 #import "ResultViewController.h"
 #import "PopUpForCameraOrGallery.h"
 #import "DataManager.h"
 
-@interface HistoryScanTVController ()
+@interface HistoryScanTVController () <PopUpForCameraOrGalleryDelegate>
 
 @property(strong, nonatomic)NSMutableArray* filterObject;
 @property(assign, nonatomic)BOOL isFiltered;
@@ -51,10 +51,8 @@
     self.withOutExport = @[cancel, flex, delete];
     
     self.toolbarItems = self.withExport;
-    
+
 }
-
-
 
 - (NSFetchedResultsController*) fetchedResultsController {
     if (_fetchedResultsController != nil) {
@@ -394,15 +392,28 @@
     [self.tableView reloadData];
 }
 
+#pragma mark - PopUpForCameraOrGalleryDelegate
+- (void) presentCamera{
+    QRViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"cameraController"];
+    CATransition *transition = [[CATransition alloc] init];
+    transition.duration = 0.5;
+    transition.type = kCATransitionPush;
+    transition.subtype = kCATransitionFromLeft;
+    [transition setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    [self.view.window.layer addAnimation:transition forKey:kCATransition];
+    [self.navigationController pushViewController:vc animated:NO];
+}
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    // Get the new view controller using [segue destinationViewController].
-//    // Pass the selected object to the new view controller.
-//    if ([segue.identifier isEqualToString:@"popUpForCamera"]) {
-//        PopUpForCameraOrGallery* vc = segue.destinationViewController;
-//        vc.fromMenu = YES;
-//    }
-//}
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqualToString:@"popUpForCamera"]) {
+        PopUpForCameraOrGallery* vc = segue.destinationViewController;
+        vc.delegate = self;
+        //vc.fromMenu = YES;
+    }
+}
 @end

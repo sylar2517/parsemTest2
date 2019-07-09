@@ -8,7 +8,8 @@
 
 #import "PopUpForCameraOrGallery.h"
 #import "GalleryViewController.h"
-#import "ViewController.h"
+#import "QRViewController.h"
+#import "HistoryScanTVController.h"
 
 @interface PopUpForCameraOrGallery () <UINavigationControllerDelegate ,UIImagePickerControllerDelegate>
 
@@ -23,6 +24,7 @@
     // Do any additional setup after loading the view.
     self.popUpView.layer.cornerRadius = 10;
     self.popUpView.layer.masksToBounds = YES;
+    
 }
 
 #pragma mark - Action
@@ -50,6 +52,12 @@
 //        [weakSelf presentViewController:vc animated:YES completion:nil];
 //    }];
     
+}
+
+- (IBAction)actionCamera:(UIButton *)sender {
+
+    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.delegate presentCamera];
 }
 
 
@@ -81,18 +89,20 @@
     [self.imagePickerController dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark - Navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    
-    if ([segue.identifier isEqualToString:@"camera"]) {
-        UIViewController* vc = segue.destinationViewController;
-        __weak PopUpForCameraOrGallery* weakSelf = self;
-        [self dismissViewControllerAnimated:YES completion:^{
-            [weakSelf presentViewController:vc animated:YES completion:nil];
-        }];
-    }
-//    if ([segue.identifier isEqualToString:@"sad"]) {
-// 
-//    }
-
-}
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+//    
+////    if ([segue.identifier isEqualToString:@"camera"]) {
+//////        QRViewController* vc = segue.destinationViewController;
+//////        __weak PopUpForCameraOrGallery* weakSelf = self;
+////        [self dismissViewControllerAnimated:YES completion:nil];
+////    }
+////    if ([segue.identifier isEqualToString:@"sad"]) {
+////
+////    }
+////    if ([segue.identifier isEqualToString:@"popUpForCamera"]) {
+////        //        QRViewController* vc = segue.destinationViewController;
+////        //        __weak PopUpForCameraOrGallery* weakSelf = self;
+////        //[self dismissViewControllerAnimated:YES completion:nil];
+////    }
+//}
 @end

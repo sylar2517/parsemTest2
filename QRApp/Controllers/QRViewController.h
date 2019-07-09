@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface QRViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UIView *toolBarView;
 @property (weak, nonatomic) IBOutlet UIButton *QRScanButton;
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewQR;
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *buttons;
+@property (weak, nonatomic) IBOutlet UIButton *backButton;
 
 
 - (IBAction)actionFlashOnCliked:(UIButton *)sender;
@@ -21,6 +22,9 @@
 - (IBAction)actionScanPDF:(UIButton *)sender;
 
 - (IBAction)actionBarcode:(UIButton *)sender;
+- (IBAction)scanText:(UIButton *)sender;
+- (IBAction)actionExit:(UIButton *)sender;
 
+//-(void)backToRoot;
 @end
 
