@@ -396,7 +396,7 @@
 - (void) presentCamera{
     QRViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"cameraController"];
     CATransition *transition = [[CATransition alloc] init];
-    transition.duration = 0.5;
+    transition.duration = 0.3;
     transition.type = kCATransitionPush;
     transition.subtype = kCATransitionFromLeft;
     [transition setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];

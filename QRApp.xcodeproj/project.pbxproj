@@ -34,7 +34,6 @@
 		765D66C622CBFFAF00F79EDC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765D66C522CBFFAF00F79EDC /* SettingsViewController.m */; };
 		76B257F222C8EA52002E22D5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76B257F122C8EA51002E22D5 /* WebKit.framework */; };
 		76B257F822C93A60002E22D5 /* CreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B257F722C93A60002E22D5 /* CreationViewController.m */; };
-		76EA022C22D51EB1000B5820 /* tessData in Resources */ = {isa = PBXBuildFile; fileRef = 76EA022B22D51EB0000B5820 /* tessData */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,7 +104,6 @@
 		76B257F122C8EA51002E22D5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		76B257F622C93A60002E22D5 /* CreationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CreationViewController.h; sourceTree = "<group>"; };
 		76B257F722C93A60002E22D5 /* CreationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CreationViewController.m; sourceTree = "<group>"; };
-		76EA022B22D51EB0000B5820 /* tessData */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tessData; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,7 +193,6 @@
 				7606927222C40B1600BB9D6E /* Cells */,
 				760A5C3422C56EA50032B730 /* Controllers */,
 				763CD00922C6A5840009F955 /* Models */,
-				76EA022B22D51EB0000B5820 /* tessData */,
 				7614778022BFF9FF00022E85 /* AppDelegate.h */,
 				7614778122BFF9FF00022E85 /* AppDelegate.m */,
 				7614778622BFF9FF00022E85 /* Main.storyboard */,
@@ -281,7 +278,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 761477AF22BFFA0000022E85 /* Build configuration list for PBXNativeTarget "QRAppTests" */;
 			buildPhases = (
-				EFC2484E3C91E8D8CDC362E0 /* [CP] Check Pods Manifest.lock */,
 				7614779422BFFA0000022E85 /* Sources */,
 				7614779522BFFA0000022E85 /* Frameworks */,
 				7614779622BFFA0000022E85 /* Resources */,
@@ -300,7 +296,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 761477B222BFFA0000022E85 /* Build configuration list for PBXNativeTarget "QRAppUITests" */;
 			buildPhases = (
-				FBD91A4B3CDC477CC94FD387 /* [CP] Check Pods Manifest.lock */,
 				7614779F22BFFA0000022E85 /* Sources */,
 				761477A022BFFA0000022E85 /* Frameworks */,
 				761477A122BFFA0000022E85 /* Resources */,
@@ -363,7 +358,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7614779022BFFA0000022E85 /* LaunchScreen.storyboard in Resources */,
-				76EA022C22D51EB1000B5820 /* tessData in Resources */,
 				7614778D22BFFA0000022E85 /* Assets.xcassets in Resources */,
 				7614778822BFF9FF00022E85 /* Main.storyboard in Resources */,
 			);
@@ -384,53 +378,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		EFC2484E3C91E8D8CDC362E0 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-QRAppTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		FBD91A4B3CDC477CC94FD387 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-QRAppUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7614777922BFF9FF00022E85 /* Sources */ = {

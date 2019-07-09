@@ -10,7 +10,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Vision/Vision.h>
 #import "QRViewController.h"
-//#import <TesseractOCR.h>
 
 typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     AVCamSetupResultSuccess,
@@ -19,7 +18,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 };
 
 @interface TextScanViewController () <AVCaptureVideoDataOutputSampleBufferDelegate>
-////G8TesseractDelegate
+
 @property(strong, nonatomic) AVCaptureSession* session;
 @property(assign, nonatomic) AVCamSetupResult setupResult;
 @property(nonatomic)dispatch_queue_t sessionQueue;
@@ -58,16 +57,8 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:leftSwipe];
     
-    
-    
-//    G8Tesseract* tesseract = [[G8Tesseract alloc] initWithLanguage:@"eng+rus"];
-//    tesseract.delegate = self;
-    
-    
 }
-//- (void)progressImageRecognitionForTesseract:(G8Tesseract * _Nonnull )tesseract{
-//    NSLog(@"%lu", (unsigned long)tesseract.progress);
-//}
+
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     dispatch_async(self.sessionQueue, ^{
@@ -316,7 +307,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 #pragma mark - Actions
 - (IBAction)actionExit:(UIButton *)sender {
     CATransition *transition = [[CATransition alloc] init];
-    transition.duration = 0.5;
+    transition.duration = 0.3;
     transition.type = kCATransitionPush;
     transition.subtype = kCATransitionFromRight;
     [transition setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
@@ -327,7 +318,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 }
 
 - (IBAction)backToQR:(UIButton *)sender {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 - (IBAction)flashONorOFF:(UIButton *)sender {
@@ -355,7 +346,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 
 -(void)handleLeftSwipe:(UISwipeGestureRecognizer*)sender{
     CATransition *transition = [[CATransition alloc] init];
-    transition.duration = 0.5;
+    transition.duration = 0.3;
     transition.type = kCATransitionPush;
     transition.subtype = kCATransitionFromRight;
     [transition setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
