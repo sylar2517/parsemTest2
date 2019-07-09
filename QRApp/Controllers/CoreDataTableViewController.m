@@ -30,6 +30,7 @@
     }
     return _managedObjectContext;
 }
+
 - (NSFetchedResultsController*)fetchedResultsController {
     return nil;
 }

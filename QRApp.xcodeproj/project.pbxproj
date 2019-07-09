@@ -162,6 +162,10 @@
 				7614780022C0262C00022E85 /* HistoryScanTVController.m */,
 				763CD01622C6A60C0009F955 /* CoreDataTableViewController.h */,
 				763CD01722C6A60C0009F955 /* CoreDataTableViewController.m */,
+				765D66C422CBFFAF00F79EDC /* SettingsViewController.h */,
+				765D66C522CBFFAF00F79EDC /* SettingsViewController.m */,
+				7654A6AD22CFF6F9004D7C5F /* TextScanViewController.h */,
+				7654A6AE22CFF6F9004D7C5F /* TextScanViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -196,13 +200,9 @@
 				7614778022BFF9FF00022E85 /* AppDelegate.h */,
 				7614778122BFF9FF00022E85 /* AppDelegate.m */,
 				7614778622BFF9FF00022E85 /* Main.storyboard */,
-				7654A6AD22CFF6F9004D7C5F /* TextScanViewController.h */,
-				7654A6AE22CFF6F9004D7C5F /* TextScanViewController.m */,
 				763CD00622C6A3D30009F955 /* DataManager.h */,
 				763CD00722C6A3D30009F955 /* DataManager.m */,
 				7614778C22BFFA0000022E85 /* Assets.xcassets */,
-				765D66C422CBFFAF00F79EDC /* SettingsViewController.h */,
-				765D66C522CBFFAF00F79EDC /* SettingsViewController.m */,
 				7614778E22BFFA0000022E85 /* LaunchScreen.storyboard */,
 				7614779122BFFA0000022E85 /* Info.plist */,
 				7614779222BFFA0000022E85 /* main.m */,

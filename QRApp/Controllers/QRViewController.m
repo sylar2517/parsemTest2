@@ -83,15 +83,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 #pragma mark - Actions
 -(void)handleLeftSwipe:(UISwipeGestureRecognizer*)sender{
     //[self backToRoot];
-    CATransition *transition = [[CATransition alloc] init];
-    transition.duration = 0.5;
-    transition.type = kCATransitionPush;
-    transition.subtype = kCATransitionFromRight;
-    [transition setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    [self.view.window.layer addAnimation:transition forKey:kCATransition];
-    [self.navigationController popToRootViewControllerAnimated:YES];
-    self.navigationController.navigationBarHidden = NO;
-    [self.tabBarController.tabBar setHidden:NO];
+    [self exitFromController];
 }
 
 
@@ -190,19 +182,25 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 }
 
 - (IBAction)actionExit:(UIButton *)sender {
+    [self exitFromController];
+}
+
+
+#pragma mark - Methods
+-(void)exitFromController{
+    
     CATransition *transition = [[CATransition alloc] init];
     transition.duration = 0.5;
     transition.type = kCATransitionPush;
     transition.subtype = kCATransitionFromRight;
     [transition setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
     [self.view.window.layer addAnimation:transition forKey:kCATransition];
+    [self.session stopRunning];
     [self.navigationController popToRootViewControllerAnimated:YES];
     self.navigationController.navigationBarHidden = NO;
     [self.tabBarController.tabBar setHidden:NO];
+    
 }
-
-#pragma mark - Methods
-
 -(void)buttonCliked:(UIButton*)sender{
     for (UIButton* but in self.buttons) {
         if ([but isEqual:sender]) {

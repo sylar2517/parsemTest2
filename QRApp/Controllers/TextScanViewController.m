@@ -314,6 +314,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     [self.view.window.layer addAnimation:transition forKey:kCATransition];
     self.navigationController.navigationBarHidden = NO;
     [self.tabBarController.tabBar setHidden:NO];
+    [self.session stopRunning];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
@@ -353,6 +354,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     [self.view.window.layer addAnimation:transition forKey:kCATransition];
     self.navigationController.navigationBarHidden = NO;
     [self.tabBarController.tabBar setHidden:NO];
+    [self.session stopRunning];
     [self.navigationController popToRootViewControllerAnimated:YES];
 
 }

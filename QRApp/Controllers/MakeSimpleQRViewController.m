@@ -71,19 +71,19 @@
 }
 
 - (IBAction)actionSaveImage:(UIButton *)sender {
-    UIImage* image = [self makeQRForSaveOrExport];
-    
-    UIGraphicsBeginImageContext(CGSizeMake(400, 400));
-    image = UIGraphicsGetImageFromCurrentImageContext();
-//    image = [self makeQRForSaveOrExport];
-    UIGraphicsEndImageContext();
-    UIImageView* imageview = [[UIImageView alloc] initWithImage:image];
-    [self.view addSubview:imageview];
-    //NSData *imageData = UIImageJPEGRepresentation(image, 0.7);
-    NSLog(@"%@", image);
-//    NSArray* array = @[image];
-//    UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:array applicationActivities:nil];
-//    //avc.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
+//    UIImage* image = [self makeQRForSaveOrExport];
+//    
+//    UIGraphicsBeginImageContext(CGSizeMake(400, 400));
+//    image = UIGraphicsGetImageFromCurrentImageContext();
+////    image = [self makeQRForSaveOrExport];
+//    UIGraphicsEndImageContext();
+//    UIImageView* imageview = [[UIImageView alloc] initWithImage:image];
+//    [self.view addSubview:imageview];
+//    //NSData *imageData = UIImageJPEGRepresentation(image, 0.7);
+//    NSLog(@"%@", image);
+////    NSArray* array = @[image];
+////    UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:array applicationActivities:nil];
+////    //avc.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
 //    [self presentViewController:avc animated:YES completion:nil];
 
     

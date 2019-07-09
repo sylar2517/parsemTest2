@@ -353,7 +353,7 @@
 -(void)actionExport:(UIBarButtonItem*)sender{
     
     NSMutableArray* temp = [NSMutableArray array];
-    NSArray* array = [NSArray array];
+    NSArray* array = nil;
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
     [df setDateFormat:@"dd-MM-yyyy HH:mm"];
     
@@ -364,7 +364,7 @@
             [temp addObject:string];
         }
         
-        array = temp;
+        array = [NSArray arrayWithArray:temp];
         NSLog(@"%@", array);
         UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:array applicationActivities:nil];
         //avc.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
