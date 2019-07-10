@@ -31,6 +31,8 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 @property(strong, nonatomic)AVCaptureMetadataOutput *output;
 
 @property(strong, nonatomic)NSArray* request;
+@property(assign, nonatomic) BOOL haveResult;
+
 
 @end
 
@@ -39,31 +41,51 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 #pragma mark - Lifestyle
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    //addSession
     [self initSession];
     
+    
+    //custom view editing
     self.toolBarView.layer.cornerRadius = 10;
     self.toolBarView.layer.masksToBounds = YES;
     
     self.backButton.layer.cornerRadius = 0.5 * self.backButton.bounds.size.width;;
     self.backButton.layer.masksToBounds = YES;
     
+    self.snapButtonView.layer.cornerRadius = 0.5 * self.snapButtonView.bounds.size.width;;
+    self.snapButtonView.layer.masksToBounds = YES;
+    
+    self.snapButton.layer.cornerRadius = 0.5 * self.snapButton.bounds.size.width;;
+    self.snapButton.layer.masksToBounds = YES;
+    
+    self.conterView.layer.cornerRadius = 0.5 * self.conterView.bounds.size.width;;
+    self.conterView.layer.masksToBounds = YES;
+    
+    self.navigationController.navigationBarHidden = YES;
+    [self.tabBarController.tabBar setHidden:YES];
+    
+    
+    
+    //add exit
     UISwipeGestureRecognizer* leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
     leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:leftSwipe];
     
+     //go to Scan
+    
     [self actionScanQR:self.QRScanButton];
     
-    self.navigationController.navigationBarHidden = YES;
-    [self.tabBarController.tabBar setHidden:YES];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+        //Start scan
     dispatch_async(self.sessionQueue, ^{
         switch (self.setupResult) {
             case AVCamSetupResultSuccess:
             {
-                //Start capture session
                 [self.session startRunning];
             }
                 break;
@@ -72,17 +94,16 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
                 break;
         }
     });
+    self.haveResult = YES;
 }
 
 - (void)dealloc
 {
-    NSLog(@"AAAAAA");
     [self.session stopRunning];
 }
 
 #pragma mark - Actions
 -(void)handleLeftSwipe:(UISwipeGestureRecognizer*)sender{
-    //[self backToRoot];
     [self exitFromController];
 }
 
@@ -109,37 +130,11 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 
 - (IBAction)actionScanQR:(UIButton *)sender {
     self.imageViewQR.hidden = NO;
-    
-    
-//    UIImage* image = [UIImage imageNamed:@"Cam"];
-//    UIImageView* camImageView = [[UIImageView alloc] initWithImage:image];
-//    CGFloat width = CGRectGetWidth(self.view.bounds)*2/3;
-//    camImageView.frame = CGRectMake(self.view.center.x - width/2,
-//                                    self.view.center.y - width/2,
-//                                    width, width);
-    
+
     [self buttonCliked:sender];
     [self.view bringSubviewToFront:self.toolBarView];
     [self.view bringSubviewToFront:self.imageViewQR];
     [self.view bringSubviewToFront:self.backButton];
-//    [self.session beginConfiguration];
-//    self.outputText = nil;
-//    self.output = [[AVCaptureMetadataOutput alloc] init];
-//    if ([self.session canAddOutput:self.output]) {
-//        [self.session addOutput:self.output];
-//        [self.output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
-//        if (![self.output.metadataObjectTypes isEqualToArray:@[AVMetadataObjectTypeQRCode]]) {
-//            self.output.metadataObjectTypes = @[AVMetadataObjectTypeQRCode];
-//        }
-//        //self.output.metadataObjectTypes = @[AVMetadataObjectTypeQRCode];
-//    } else {
-//        NSLog(@"No output");
-//        self.setupResult = AVCamSetupResultSessionConfigurationFailed;
-//        [self.session commitConfiguration];
-//        return;
-//    }
-//
-//    [self.session commitConfiguration];
     
     [self.session beginConfiguration];
     self.output.metadataObjectTypes = @[AVMetadataObjectTypeQRCode];
@@ -149,41 +144,68 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 - (IBAction)actionScanPDF:(UIButton *)sender {
     [self buttonCliked:sender];
     self.imageViewQR.hidden = YES;
-    
-    [self.session beginConfiguration];
-    self.output.metadataObjectTypes = nil;
-    [self.session commitConfiguration];
 
+
+    [UIView animateWithDuration:0.25 animations:^{
+        self.snapButton.hidden = self.snapButtonView.hidden = NO;
+        [self.view bringSubviewToFront:self.snapButton];
+        [self.view bringSubviewToFront:self.snapButtonView];
+    }];
 }
 
 - (IBAction)actionBarcode:(UIButton *)sender{
-    self.imageViewQR.hidden = YES;
+//    self.imageViewQR.hidden = YES;
     [self buttonCliked:sender];
-    [self.session beginConfiguration];
-    self.output.metadataObjectTypes = nil;
-    [self.session commitConfiguration];
+//    [self.session beginConfiguration];
+//    self.output.metadataObjectTypes = nil;
+//    [self.session commitConfiguration];
     
 }
 
 - (IBAction)scanText:(UIButton *)sender {
-   // [self dismissViewControllerAnimated:NO completion:nil];
-   // TextScanViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"textViewController"];
-    //__weak QRViewController* weakSelf = self;
-    
-//    [self dismissViewControllerAnimated:NO completion:^{
-////        [weakSelf.navigationController presentViewController:vc animated:NO completion:^{
-////            NSLog(@"END");
-////        }];
-//    }];
-   // [self presentViewController:vc animated:YES completion:nil];
+  
     TextScanViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"textViewController"];
-    //[self presentViewController:vc animated:NO completion:nil];
     [self.navigationController pushViewController:vc animated:YES];
+    
+    
 }
 
 - (IBAction)actionExit:(UIButton *)sender {
     [self exitFromController];
 }
+
+- (IBAction)actionMakePhoto:(UIButton *)sender {
+    UIView* shot = [[UIView alloc] initWithFrame:CGRectMake(0,
+                                                            0,
+                                                            CGRectGetWidth(self.view.bounds),
+                                                            CGRectGetHeight(self.view.bounds))];
+    self.conterButton.hidden = NO;
+    self.conterView.hidden = NO;
+    
+//    [UIView animateWithDuration:0.25 animations:^{
+//        self.conterView.hidden = NO;
+//        sender.hidden = NO;
+//        [self.view bringSubviewToFront:sender];
+//        [self.view bringSubviewToFront:self.conterView];
+//
+//    }];
+    [UIView animateWithDuration:0.25 animations:^{
+        shot.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8];
+        [self.view addSubview:shot];
+        
+    } completion:^(BOOL finished) {
+        [shot removeFromSuperview];
+        [self.view bringSubviewToFront:self.conterButton];
+        [self.view bringSubviewToFront:self.conterView];
+    }];
+    [self.conterButton setTitle:@"1" forState:(UIControlStateNormal)];
+    
+}
+
+- (IBAction)actionWatchPDF:(UIButton *)sender {
+    NSLog(@"AAAAAA");
+}
+
 
 
 #pragma mark - Methods
@@ -210,6 +232,23 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
         } else {
             but.backgroundColor = [UIColor clearColor];
         }
+    }
+    
+    void (^noQR)(void) = ^{
+        [self.session beginConfiguration];
+        self.output.metadataObjectTypes = nil;
+        [self.session commitConfiguration];
+    };
+    
+    if (sender.tag != 0) {
+        self.imageViewQR.hidden = YES;
+        noQR();
+    } else if (sender.tag != 1){
+        self.snapButton.hidden = self.snapButtonView.hidden =self.conterView.hidden = YES;
+        noQR();
+    } else {
+        self.imageViewQR.hidden = self.snapButton.hidden = self.snapButtonView.hidden = YES;
+        noQR();
     }
 }
 
@@ -335,8 +374,9 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
         
         if ([[metadataObjects objectAtIndex:0] isKindOfClass:[AVMetadataMachineReadableCodeObject class]]) {
             AVMetadataMachineReadableCodeObject* object = [metadataObjects objectAtIndex:0];
-            if (object.type == AVMetadataObjectTypeQRCode) {
+            if (object.type == AVMetadataObjectTypeQRCode && self.haveResult) {
                 
+                self.haveResult = NO;
                 ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
                 vc.result = object.stringValue;
                 vc.fromCamera = YES;

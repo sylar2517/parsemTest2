@@ -51,7 +51,8 @@
     self.withOutExport = @[cancel, flex, delete];
     
     self.toolbarItems = self.withExport;
-
+    //[self.navigationController.navigationBar setPrefersLargeTitles:YES];
+    //self.navigationController.title.
 }
 
 - (NSFetchedResultsController*) fetchedResultsController {
@@ -342,6 +343,7 @@
     UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Отмена" style:(UIAlertActionStyleCancel) handler:nil];
     UIAlertAction* clear = [UIAlertAction actionWithTitle:@"Да" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
         [[DataManager sharedManager] deleteHistory];
+        [self.tableView reloadData];
     }];
     
     [ac2 addAction:clear];
@@ -377,8 +379,8 @@
     if (self.tempObjectArray.count != 0 && self.tempObjectArray) {
         for (HistoryPost* post in self.tempObjectArray) {
             [[DataManager sharedManager].persistentContainer.viewContext deleteObject:post];
-            [[DataManager sharedManager] saveContext];
         }
+        [[DataManager sharedManager] saveContext];
         [self.tempObjectArray removeAllObjects];
         [self.tableView reloadData];
     }

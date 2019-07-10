@@ -15,6 +15,10 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewQR;
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *buttons;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
+@property (weak, nonatomic) IBOutlet UIView *snapButtonView;
+@property (weak, nonatomic) IBOutlet UIButton *snapButton;
+@property (weak, nonatomic) IBOutlet UIView *conterView;
+@property (weak, nonatomic) IBOutlet UIButton *conterButton;
 
 
 - (IBAction)actionFlashOnCliked:(UIButton *)sender;
@@ -24,7 +28,10 @@
 - (IBAction)actionBarcode:(UIButton *)sender;
 - (IBAction)scanText:(UIButton *)sender;
 - (IBAction)actionExit:(UIButton *)sender;
+- (IBAction)actionMakePhoto:(UIButton *)sender;
+- (IBAction)actionWatchPDF:(UIButton *)sender;
 
-//-(void)backToRoot;
+
+
 @end
 

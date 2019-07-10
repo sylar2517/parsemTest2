@@ -11,7 +11,7 @@
 #import "QRViewController.h"
 #import "HistoryScanTVController.h"
 
-@interface PopUpForCameraOrGallery () <UINavigationControllerDelegate ,UIImagePickerControllerDelegate>
+@interface PopUpForCameraOrGallery () <UINavigationControllerDelegate ,UIImagePickerControllerDelegate, GalleryViewControllerDelegate>
 
 @property(strong, nonatomic)UIImagePickerController* imagePickerController;
 @property(strong, nonatomic)UIImage* selectedImage;
@@ -40,18 +40,7 @@
     vc.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     vc.allowsEditing = NO;
     self.imagePickerController =vc;
-    [self presentViewController:vc animated:YES completion:nil];
-//    __weak PopUpForCameraOrGallery* weakSelf = self;
-//    [self dismissViewControllerAnimated:YES completion:^{
-//        UIImagePickerController* vc = [[UIImagePickerController alloc] init];
-//        vc.delegate = self;
-//
-//        vc.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-//        vc.allowsEditing = NO;
-//        weakSelf.imagePickerController =vc;
-//        [weakSelf presentViewController:vc animated:YES completion:nil];
-//    }];
-    
+    [self presentViewController:vc animated:YES completion:nil];    
 }
 
 - (IBAction)actionCamera:(UIButton *)sender {
@@ -74,6 +63,7 @@
             //[]
             gvc.modalPresentationStyle = UIModalPresentationOverFullScreen;
             gvc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            gvc.delegate = self;
             [self presentViewController:gvc animated:YES completion:nil];
 //            UITabBarController* root = [self.storyboard instantiateViewControllerWithIdentifier:@"tapBarController"];
 //            __weak PopUpForCameraOrGallery* weakSelf = self;
@@ -89,20 +79,7 @@
     [self.imagePickerController dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark - Navigation
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    
-////    if ([segue.identifier isEqualToString:@"camera"]) {
-//////        QRViewController* vc = segue.destinationViewController;
-//////        __weak PopUpForCameraOrGallery* weakSelf = self;
-////        [self dismissViewControllerAnimated:YES completion:nil];
-////    }
-////    if ([segue.identifier isEqualToString:@"sad"]) {
-////
-////    }
-////    if ([segue.identifier isEqualToString:@"popUpForCamera"]) {
-////        //        QRViewController* vc = segue.destinationViewController;
-////        //        __weak PopUpForCameraOrGallery* weakSelf = self;
-////        //[self dismissViewControllerAnimated:YES completion:nil];
-////    }
-//}
+- (void) exitCamera{
+    [self dismissViewControllerAnimated:NO completion:nil];
+}
 @end

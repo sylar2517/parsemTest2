@@ -32,7 +32,7 @@
                                                     <action selector="actionScanQR:" destination="BYZ-38-t0r" eventType="touchUpInside" id="p63-q9-sTU"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kfK-94-hJi">
+                                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kfK-94-hJi">
                                                 <rect key="frame" x="77" y="0.0" width="69.5" height="64"/>
                                                 <color key="backgroundColor" red="1" green="0.9861545397" blue="0.24490885600000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <state key="normal" image="pdf"/>
@@ -40,7 +40,7 @@
                                                     <action selector="actionScanPDF:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2DE-6Y-hqT"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EZX-fl-WmD">
+                                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EZX-fl-WmD">
                                                 <rect key="frame" x="154.5" y="0.0" width="69" height="64"/>
                                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <state key="normal" image="text"/>
@@ -48,7 +48,7 @@
                                                     <action selector="scanText:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wuA-yB-FUt"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HR9-NI-Y4v">
+                                            <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HR9-NI-Y4v">
                                                 <rect key="frame" x="231.5" y="0.0" width="69.5" height="64"/>
                                                 <color key="backgroundColor" red="0.96620899439999997" green="0.2145553607" blue="0.1130115871" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <state key="normal" image="barcode"/>
@@ -56,7 +56,7 @@
                                                     <action selector="actionBarcode:" destination="BYZ-38-t0r" eventType="touchUpInside" id="b0Y-Fa-V94"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="285-NB-S7d">
+                                            <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="285-NB-S7d">
                                                 <rect key="frame" x="309" y="0.0" width="69" height="64"/>
                                                 <color key="backgroundColor" red="0.23865866729999999" green="0.97085891040000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <state key="normal" image="flashLight"/>
@@ -97,6 +97,50 @@
                                     <action selector="actionExit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XF9-Iz-bUq"/>
                                 </connections>
                             </button>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MgU-C6-aHc">
+                                <rect key="frame" x="167" y="674" width="80" height="80"/>
+                                <subviews>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T4N-ry-tGe">
+                                        <rect key="frame" x="2" y="2" width="76" height="76"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <action selector="actionMakePhoto:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HwI-RX-ouK"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="T4N-ry-tGe" secondAttribute="bottom" constant="2" id="5sG-ja-5WJ"/>
+                                    <constraint firstItem="T4N-ry-tGe" firstAttribute="top" secondItem="MgU-C6-aHc" secondAttribute="top" constant="2" id="FLS-rC-4rv"/>
+                                    <constraint firstAttribute="width" constant="80" id="KbD-gE-ity"/>
+                                    <constraint firstAttribute="height" constant="80" id="RWr-X5-n9V"/>
+                                    <constraint firstAttribute="trailing" secondItem="T4N-ry-tGe" secondAttribute="trailing" constant="2" id="WkG-1d-Hpd"/>
+                                    <constraint firstItem="T4N-ry-tGe" firstAttribute="leading" secondItem="MgU-C6-aHc" secondAttribute="leading" constant="2" id="yUJ-Nj-odm"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jeg-n1-oEe">
+                                <rect key="frame" x="354" y="704" width="50" height="50"/>
+                                <subviews>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CdW-ll-KQA">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <state key="normal" title="0">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="actionWatchPDF:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Zxo-yK-085"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.14999999999999999" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="CdW-ll-KQA" secondAttribute="bottom" id="EbT-vL-t2T"/>
+                                    <constraint firstAttribute="trailing" secondItem="CdW-ll-KQA" secondAttribute="trailing" id="OdL-us-ofW"/>
+                                    <constraint firstItem="CdW-ll-KQA" firstAttribute="leading" secondItem="jeg-n1-oEe" secondAttribute="leading" id="SF3-q7-iL0"/>
+                                    <constraint firstAttribute="width" constant="50" id="axg-tk-z5m"/>
+                                    <constraint firstAttribute="height" constant="50" id="xZF-5P-avJ"/>
+                                    <constraint firstItem="CdW-ll-KQA" firstAttribute="top" secondItem="jeg-n1-oEe" secondAttribute="top" id="zcN-pr-uea"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
@@ -106,8 +150,12 @@
                             <constraint firstItem="3KB-aU-Eat" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Qv0-Us-GmZ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="X0G-fz-TG5" secondAttribute="trailing" constant="10" id="SWk-xe-vL7"/>
                             <constraint firstItem="yMi-Sw-5F4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Wny-yY-cvw"/>
+                            <constraint firstItem="X0G-fz-TG5" firstAttribute="top" secondItem="jeg-n1-oEe" secondAttribute="bottom" constant="8" id="Xhy-Sg-qQi"/>
                             <constraint firstItem="X0G-fz-TG5" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="YBk-mY-N1v"/>
                             <constraint firstItem="yMi-Sw-5F4" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="haa-Kw-CBR"/>
+                            <constraint firstItem="jeg-n1-oEe" firstAttribute="trailing" secondItem="X0G-fz-TG5" secondAttribute="trailing" id="lql-Wp-3KE"/>
+                            <constraint firstItem="X0G-fz-TG5" firstAttribute="top" secondItem="MgU-C6-aHc" secondAttribute="bottom" constant="8" id="oT1-bN-udU"/>
+                            <constraint firstItem="MgU-C6-aHc" firstAttribute="centerX" secondItem="X0G-fz-TG5" secondAttribute="centerX" id="p0D-eN-wYT"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -117,7 +165,11 @@
                     <connections>
                         <outlet property="QRScanButton" destination="QaU-48-Ujt" id="YNP-lz-3EL"/>
                         <outlet property="backButton" destination="3KB-aU-Eat" id="dKE-wo-i5O"/>
+                        <outlet property="conterButton" destination="CdW-ll-KQA" id="xXq-gc-a4N"/>
+                        <outlet property="conterView" destination="jeg-n1-oEe" id="yZ8-P0-Zxc"/>
                         <outlet property="imageViewQR" destination="yMi-Sw-5F4" id="MTf-qx-Uid"/>
+                        <outlet property="snapButton" destination="T4N-ry-tGe" id="v6R-Y4-BZi"/>
+                        <outlet property="snapButtonView" destination="MgU-C6-aHc" id="eOR-05-Auv"/>
                         <outlet property="toolBarView" destination="X0G-fz-TG5" id="GaG-mU-WYY"/>
                         <outletCollection property="buttons" destination="kfK-94-hJi" id="F7k-Za-UtI"/>
                         <outletCollection property="buttons" destination="EZX-fl-WmD" id="hWj-9v-ZXR"/>
@@ -203,20 +255,24 @@
                         </connections>
                     </tableView>
                     <tabBarItem key="tabBarItem" systemItem="history" id="hvj-ee-SLl"/>
-                    <toolbarItems/>
+                    <toolbarItems>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="ROM-oT-1Nx"/>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" title="История" id="aGL-Ee-CZr">
-                        <barButtonItem key="leftBarButtonItem" systemItem="camera" id="LjS-nF-lfA">
-                            <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <connections>
-                                <segue destination="uof-wt-fgu" kind="presentation" identifier="popUpForCamera" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="4ME-J2-8hC"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="09F-xO-FyH">
-                            <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <connections>
-                                <action selector="actionSettings:" destination="mrW-cu-gz0" id="pYE-DK-Eso"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="compose" id="09F-xO-FyH">
+                                <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <action selector="actionSettings:" destination="mrW-cu-gz0" id="pYE-DK-Eso"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="camera" id="LjS-nF-lfA">
+                                <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <segue destination="uof-wt-fgu" kind="presentation" identifier="popUpForCamera" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="4ME-J2-8hC"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -859,21 +915,21 @@
         <!--История-->
         <scene sceneID="04p-px-vbr">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="sRs-6H-7nx" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController storyboardIdentifier="navHistoryController" id="ada-jL-NkT" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="История" id="Xg6-nT-T23"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="fVG-6J-Sfj">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" largeTitles="YES" id="fVG-6J-Sfj">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" cocoaTouchSystemColor="darkTextColor"/>
                         <textAttributes key="titleTextAttributes">
-                            <color key="textColor" red="0.98769628089999995" green="1" blue="0.97000179949999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </textAttributes>
                     </navigationBar>
                     <connections>
                         <segue destination="mrW-cu-gz0" kind="relationship" relationship="rootViewController" id="Xhs-qH-Vh3"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sRs-6H-7nx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1399" y="55"/>
         </scene>
@@ -1105,7 +1161,6 @@
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <state key="normal" image="qr"/>
                                                 <connections>
-                                                    <action selector="actionScanQR:" destination="BYZ-38-t0r" eventType="touchUpInside" id="h2V-Xb-fQ8"/>
                                                     <action selector="backToQR:" destination="2E8-fA-OsS" eventType="touchUpInside" id="12q-yO-qFg"/>
                                                 </connections>
                                             </button>
@@ -1113,9 +1168,6 @@
                                                 <rect key="frame" x="77" y="0.0" width="69.5" height="64"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <state key="normal" image="pdf"/>
-                                                <connections>
-                                                    <action selector="actionScanPDF:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rpB-Dq-3nG"/>
-                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vQw-NT-5SO">
                                                 <rect key="frame" x="154.5" y="0.0" width="69" height="64"/>
@@ -1126,16 +1178,12 @@
                                                 <rect key="frame" x="231.5" y="0.0" width="69.5" height="64"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <state key="normal" image="barcode"/>
-                                                <connections>
-                                                    <action selector="actionBarcode:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bL7-uW-wui"/>
-                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sdf-kx-122">
                                                 <rect key="frame" x="309" y="0.0" width="69" height="64"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <state key="normal" image="flashLight"/>
                                                 <connections>
-                                                    <action selector="actionFlashOnCliked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1pc-RH-0Bp"/>
                                                     <action selector="flashONorOFF:" destination="2E8-fA-OsS" eventType="touchUpInside" id="MDR-jx-z1h"/>
                                                 </connections>
                                             </button>

@@ -46,6 +46,8 @@
     
     [self makeQRFromText];
     self.resultTextImageView.delegate = self;
+    
+    [self save];
 }
 
 #pragma mark - UITextViewDelegate
@@ -54,6 +56,16 @@
 }
 
 #pragma mark - Methods
+-(void)save{
+    if (self.fromCamera && self.resultTextImageView.text) {
+        HistoryPost* post = [NSEntityDescription insertNewObjectForEntityForName:@"HistoryPost" inManagedObjectContext:[DataManager sharedManager].persistentContainer.viewContext];
+        NSDate* now = [NSDate date];
+        post.dateOfCreation = now;
+        post.value = self.resultTextImageView.text;
+        [[DataManager sharedManager] saveContext];
+    }
+}
+
 -(void)makeQRFromText{
     //    CIImage* ciImage = [self createQRForString:self.result];
     //    UIImage* image = [UIImage imageWithCIImage:ciImage];
@@ -128,13 +140,6 @@
 #pragma mark - Actions
 - (IBAction)actionBack:(UIButton *)sender {
     [self.resultTextImageView resignFirstResponder];
-    
-    if (self.fromCamera) {
-        HistoryPost* post = [NSEntityDescription insertNewObjectForEntityForName:@"HistoryPost" inManagedObjectContext:[DataManager sharedManager].persistentContainer.viewContext];
-        NSDate* now = [NSDate date];
-        post.dateOfCreation = now;
-        post.value = self.resultTextImageView.text;
-    }
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }

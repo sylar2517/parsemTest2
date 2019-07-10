@@ -42,6 +42,7 @@
     self.panelView.layer.cornerRadius = 10;
     self.panelView.layer.masksToBounds = YES;
     
+    //self.delegate = self;
 }
 - (void)dealloc
 {
@@ -123,7 +124,7 @@
         
         [[DataManager sharedManager] saveContext];
     }
-    
+    [self.delegate exitCamera];
     [self dismissViewControllerAnimated:YES completion:nil];
 
 }
@@ -207,6 +208,14 @@
                                orientation:UIImageOrientationUp];
 
 }
+#pragma mark - Orientation
+- (BOOL)shouldAutorotate {
+    
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    return orientation == UIInterfaceOrientationPortrait ? NO : YES;
+}
+
 //#pragma mark - Touces
 //- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
 //    [self.textView resignFirstResponder];

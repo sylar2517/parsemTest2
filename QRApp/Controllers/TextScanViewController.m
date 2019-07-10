@@ -85,6 +85,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     }];
 
 }
+
 - (void)dealloc
 {
     NSLog(@"AAAAAA");
@@ -123,7 +124,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
             break;
     }
     
-    //dispatch_async(self.sessionQueue, ^{
+  //  dispatch_async(self.sessionQueue, ^{
         [self configureSession];
    // });
     
@@ -163,6 +164,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     }
     
 
+    
     self.outputText = [[AVCaptureVideoDataOutput alloc] init];
     if ([self.session canAddOutput:self.outputText]) {
         [self.session addOutput:self.outputText];
@@ -175,6 +177,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
         return;
     }
     AVCaptureVideoPreviewLayer *imageLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.session];
+    //imageLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     imageLayer.frame = self.imageView.bounds;
     [self.imageView.layer addSublayer:imageLayer];
     self.video = imageLayer;
@@ -226,34 +229,37 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
         return;
     }
     
-    CGFloat maxX = 9999.0;
+    CGFloat maxX = 999999.0;
     CGFloat minX = 0.0;
-    CGFloat maxY = 9999.0;
+    CGFloat maxY = 999999.0;
     CGFloat minY = 0;
     
     for (VNRectangleObservation* cha in box.characterBoxes) {
+        
         if (cha.bottomLeft.x < maxX) {
             maxX = cha.bottomLeft.x;
         }
         if (cha.bottomRight.x > minX) {
             minX = cha.bottomRight.x;
         }
-        if (cha.bottomLeft.y < maxY) {
-            maxY = cha.bottomLeft.y;
+        if (cha.bottomRight.y < maxY) {
+            maxY = cha.bottomRight.y;
         }
         if (cha.topRight.y > minY) {
             minY = cha.topRight.y;
         }
+        
     }
+
     
-    NSInteger xCord = maxX * self.view.frame.size.width;
-    NSInteger yCord = (1 - minY) * self.view.frame.size.height;
-    NSInteger width = (minX - maxX) * self.view.frame.size.width;
-    NSInteger height = (minY - maxY) * self.view.frame.size.height;
+    const NSInteger xCord = maxX * CGRectGetWidth(self.view.frame);
+    const NSInteger yCord = (1 - minY) * self.view.frame.size.height;
+    const NSInteger width = (minX - maxX) * CGRectGetWidth(self.view.frame);
+    const NSInteger height = (minY - maxY) * self.view.frame.size.height;
     
     CALayer* outline = [[CALayer alloc] init];
     outline.frame = CGRectMake(xCord, yCord, width, height);
-    outline.borderWidth = 2.0f;
+    outline.borderWidth = 1.0f;
     outline.borderColor = [UIColor redColor].CGColor;
    // NSLog(@"%@", box.)
     [self.imageView.layer addSublayer:outline];
