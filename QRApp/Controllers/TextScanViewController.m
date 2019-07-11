@@ -10,23 +10,11 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Vision/Vision.h>
 #import "QRViewController.h"
+#import "MainSession.h"
 
-typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
-    AVCamSetupResultSuccess,
-    AVCamSetupResultNotAutorized,
-    AVCamSetupResultSessionConfigurationFailed
-};
+
 
 @interface TextScanViewController () <AVCaptureVideoDataOutputSampleBufferDelegate>
-
-@property(strong, nonatomic) AVCaptureSession* session;
-@property(assign, nonatomic) AVCamSetupResult setupResult;
-@property(nonatomic)dispatch_queue_t sessionQueue;
-@property(strong, nonatomic)AVCaptureDeviceInput* imput;
-
-@property(strong, nonatomic)AVCaptureVideoPreviewLayer *video;
-@property(strong, nonatomic)AVCaptureDevice* device;
-@property(strong, nonatomic)AVCaptureVideoDataOutput *outputText;
 
 
 @property(strong, nonatomic)NSArray* request;
@@ -48,33 +36,45 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     self.exitButton.layer.masksToBounds = YES;
     
     self.imageView.backgroundColor = [UIColor clearColor];
-    self.session = [[AVCaptureSession alloc] init];
     
-    [self initSession];
+//    [[MainSession sharedSessionForScanText] initSessionForTextForSetSampleBufferDelegate:self andImageView:self.imageView];
+    //[[MainSession sharedSession] beginConfiguration];
+    [[MainSession sharedSession] removeInput:[MainSession sharedSession].imput];
+    [[MainSession sharedSession] removeOutput:[MainSession sharedSession].output];
+    [[MainSession sharedSession] removeOutput:[MainSession sharedSession].outputText];
+   // [[MainSession sharedSession] commitConfiguration];
+    [[MainSession sharedSession] initSessionForView:self.view forQRorText:YES];
+    [[MainSession sharedSession] addOutPutForText:self];
     [self detectText];
     
     UISwipeGestureRecognizer* leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
     leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:leftSwipe];
-    
+    //[self.imageView bringSubviewToFront:self.settingsView];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    dispatch_async(self.sessionQueue, ^{
-        switch (self.setupResult) {
-            case AVCamSetupResultSuccess:
-            {
-                //Start capture session
-                [self.session startRunning];
-            }
-                break;
-                
-            default:
-                break;
-        }
-    });
-    //[self.view bringSubviewToFront:self.imageView];
+//    if ([MainSession sharedSessionForScanText].isStartText) {
+//        [[MainSession sharedSessionForScanText] startRunning];
+//    } else {
+            dispatch_async([MainSession sharedSession].sessionQueue, ^{
+                switch ([MainSession sharedSession].setupResult) {
+                    case AVCamSetupResultSuccess:
+                    {
+                        //Start capture session
+                        [[MainSession sharedSession] startRunning];
+                    }
+                        break;
+                        
+                    default:
+                        break;
+                }
+            });
+//    if (![[MainSession sharedSessionForScanText] isRunning]) {
+//        [[MainSession sharedSessionForScanText] startRunning];
+//    }
+//    }
     CGFloat width = CGRectGetHeight(self.view.bounds);
     self.bottomConstrain.constant = (width - CGRectGetHeight(self.settingsView.bounds) - 20);
 
@@ -89,102 +89,103 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 - (void)dealloc
 {
     NSLog(@"AAAAAA");
-    [self.session stopRunning];
+    //[[MainSession sharedSessionForScanText] stopRunning];
+    [[MainSession sharedSession] stopRunning];
 }
 
 - (void)viewDidLayoutSubviews{
 
-    self.video.frame = self.imageView.bounds;
+    [MainSession sharedSession].video.frame = self.imageView.bounds;
 }
 
-#pragma mark - VideoSetting
-
--(void)initSession{
-    //self.session = [[AVCaptureSession alloc] init];
-    self.session.sessionPreset = AVCaptureSessionPresetPhoto;
-
-
-    self.sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
-    switch ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo]) {
-        case AVAuthorizationStatusAuthorized:{
-            break;
-        }
-        case AVAuthorizationStatusNotDetermined:{
-            dispatch_suspend(self.sessionQueue);
-            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
-                if (!granted) {
-                    self.setupResult = AVCamSetupResultNotAutorized;
-                }
-                dispatch_resume(self.sessionQueue);
-            }];
-            break;
-        }
-        default:
-            self.setupResult = AVCamSetupResultNotAutorized;
-            break;
-    }
-    
-  //  dispatch_async(self.sessionQueue, ^{
-        [self configureSession];
-   // });
-    
-}
-
--(void)configureSession{
-    if (self.setupResult !=AVCamSetupResultSuccess) {
-        return;
-    }
-    NSError* error = nil;
-    [self.session beginConfiguration];
-    
-    self.device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    
-    //Imput
-    if(!self.device){
-        self.device = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionBack];
-        if (!self.device) {
-            self.device = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
-        }
-    }
-    AVCaptureDeviceInput* videoImput = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:&error];
-    if (!videoImput) {
-        NSLog(@"Imput errror - %@", [error localizedDescription]);
-        self.setupResult = AVCamSetupResultSessionConfigurationFailed;
-        [self.session commitConfiguration];
-        return;
-    } else if ([self.session canAddInput:videoImput]){
-        [self.session addInput:videoImput];
-        self.imput =videoImput;
-        
-    } else {
-        NSLog(@"No imput");
-        self.setupResult = AVCamSetupResultSessionConfigurationFailed;
-        [self.session commitConfiguration];
-        return;
-    }
-    
-
-    
-    self.outputText = [[AVCaptureVideoDataOutput alloc] init];
-    if ([self.session canAddOutput:self.outputText]) {
-        [self.session addOutput:self.outputText];
-        [self.outputText setSampleBufferDelegate:self queue:dispatch_get_main_queue()];
-        
-    } else {
-        NSLog(@"No output");
-        self.setupResult = AVCamSetupResultSessionConfigurationFailed;
-        [self.session commitConfiguration];
-        return;
-    }
-    AVCaptureVideoPreviewLayer *imageLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.session];
-    //imageLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-    imageLayer.frame = self.imageView.bounds;
-    [self.imageView.layer addSublayer:imageLayer];
-    self.video = imageLayer;
-    
-    [self.session commitConfiguration];
-
-}
+//#pragma mark - VideoSetting
+//
+//-(void)initSession{
+//    //self.session = [[AVCaptureSession alloc] init];
+//    self.session.sessionPreset = AVCaptureSessionPresetPhoto;
+//
+//
+//    self.sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
+//    switch ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo]) {
+//        case AVAuthorizationStatusAuthorized:{
+//            break;
+//        }
+//        case AVAuthorizationStatusNotDetermined:{
+//            dispatch_suspend(self.sessionQueue);
+//            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+//                if (!granted) {
+//                    self.setupResult = AVCamSetupResultNotAutorized;
+//                }
+//                dispatch_resume(self.sessionQueue);
+//            }];
+//            break;
+//        }
+//        default:
+//            self.setupResult = AVCamSetupResultNotAutorized;
+//            break;
+//    }
+//    
+//  //  dispatch_async(self.sessionQueue, ^{
+//        [self configureSession];
+//   // });
+//    
+//}
+//
+//-(void)configureSession{
+//    if (self.setupResult !=AVCamSetupResultSuccess) {
+//        return;
+//    }
+//    NSError* error = nil;
+//    [self.session beginConfiguration];
+//    
+//    self.device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+//    
+//    //Imput
+//    if(!self.device){
+//        self.device = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionBack];
+//        if (!self.device) {
+//            self.device = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
+//        }
+//    }
+//    AVCaptureDeviceInput* videoImput = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:&error];
+//    if (!videoImput) {
+//        NSLog(@"Imput errror - %@", [error localizedDescription]);
+//        self.setupResult = AVCamSetupResultSessionConfigurationFailed;
+//        [self.session commitConfiguration];
+//        return;
+//    } else if ([self.session canAddInput:videoImput]){
+//        [self.session addInput:videoImput];
+//        self.imput =videoImput;
+//        
+//    } else {
+//        NSLog(@"No imput");
+//        self.setupResult = AVCamSetupResultSessionConfigurationFailed;
+//        [self.session commitConfiguration];
+//        return;
+//    }
+//    
+//
+//    
+//    self.outputText = [[AVCaptureVideoDataOutput alloc] init];
+//    if ([self.session canAddOutput:self.outputText]) {
+//        [self.session addOutput:self.outputText];
+//        [self.outputText setSampleBufferDelegate:self queue:dispatch_get_main_queue()];
+//        
+//    } else {
+//        NSLog(@"No output");
+//        self.setupResult = AVCamSetupResultSessionConfigurationFailed;
+//        [self.session commitConfiguration];
+//        return;
+//    }
+//    AVCaptureVideoPreviewLayer *imageLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.session];
+//    //imageLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+//    imageLayer.frame = self.imageView.bounds;
+//    [self.imageView.layer addSublayer:imageLayer];
+//    self.video = imageLayer;
+//    
+//    [self.session commitConfiguration];
+//
+//}
 
 
 
@@ -207,7 +208,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
         dispatch_async(dispatch_get_main_queue(), ^{
 
             self.imageView.layer.sublayers = nil;
-            [self.imageView.layer addSublayer:self.video];
+            [self.imageView.layer addSublayer:[MainSession sharedSession].video];
             
             for (VNTextObservation* region in request.results) {
                 if ([region isEqual:nil]) {
@@ -291,6 +292,53 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     
 }
 
+#pragma mark - Actions
+- (IBAction)actionExit:(UIButton *)sender {
+    [self exit];
+}
+
+- (IBAction)backToQR:(UIButton *)sender {
+    [self.navigationController popViewControllerAnimated:NO];
+}
+
+- (IBAction)flashONorOFF:(UIButton *)sender {
+    AVCaptureDevice *flashLight = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    if ([flashLight isTorchAvailable] && [flashLight isTorchModeSupported:AVCaptureTorchModeOn])
+    {
+        BOOL success = [flashLight lockForConfiguration:nil];
+        if (success)
+        {
+            if ([flashLight isTorchActive]) {
+                [flashLight setTorchMode:AVCaptureTorchModeOff];
+            } else {
+                [flashLight setTorchMode:AVCaptureTorchModeOn];
+            }
+            [flashLight unlockForConfiguration];
+        }
+    }
+}
+
+- (IBAction)actionScan:(UIButton *)sender {
+     NSLog(@"actionScan:");
+}
+
+-(void)handleLeftSwipe:(UISwipeGestureRecognizer*)sender{
+    [self exit];
+}
+#pragma mark - private Methods
+-(void)exit{
+    CATransition *transition = [[CATransition alloc] init];
+    transition.duration = 0.3;
+    transition.type = kCATransitionPush;
+    transition.subtype = kCATransitionFromRight;
+    [transition setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    [self.view.window.layer addAnimation:transition forKey:kCATransition];
+    self.navigationController.navigationBarHidden = NO;
+    [self.tabBarController.tabBar setHidden:NO];
+  //  [[MainSession sharedSessionForScanText] stopRunning];
+    [[MainSession sharedSession] stopRunning];
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
 #pragma mark - Orientation
 - (BOOL)shouldAutorotate {
     
@@ -310,59 +358,4 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
  // Pass the selected object to the new view controller.
  }
  */
-#pragma mark - Actions
-- (IBAction)actionExit:(UIButton *)sender {
-    CATransition *transition = [[CATransition alloc] init];
-    transition.duration = 0.3;
-    transition.type = kCATransitionPush;
-    transition.subtype = kCATransitionFromRight;
-    [transition setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    [self.view.window.layer addAnimation:transition forKey:kCATransition];
-    self.navigationController.navigationBarHidden = NO;
-    [self.tabBarController.tabBar setHidden:NO];
-    [self.session stopRunning];
-    [self.navigationController popToRootViewControllerAnimated:YES];
-}
-
-- (IBAction)backToQR:(UIButton *)sender {
-    [self.navigationController popViewControllerAnimated:NO];
-}
-
-- (IBAction)flashONorOFF:(UIButton *)sender {
-    if ([self.device isTorchAvailable] && [self.device isTorchModeSupported:AVCaptureTorchModeOn])
-    {
-        BOOL success = [self.device lockForConfiguration:nil];
-        if (success)
-        {
-            if ([self.device isTorchActive])
-            {
-                [self.device setTorchMode:AVCaptureTorchModeOff];
-            }
-            else
-            {
-                [self.device setTorchMode:AVCaptureTorchModeOn];
-            }
-            [self.device unlockForConfiguration];
-        }
-    }
-}
-
-- (IBAction)actionScan:(UIButton *)sender {
-     NSLog(@"actionScan:");
-}
-
--(void)handleLeftSwipe:(UISwipeGestureRecognizer*)sender{
-    CATransition *transition = [[CATransition alloc] init];
-    transition.duration = 0.3;
-    transition.type = kCATransitionPush;
-    transition.subtype = kCATransitionFromRight;
-    [transition setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    [self.view.window.layer addAnimation:transition forKey:kCATransition];
-    self.navigationController.navigationBarHidden = NO;
-    [self.tabBarController.tabBar setHidden:NO];
-    [self.session stopRunning];
-    [self.navigationController popToRootViewControllerAnimated:YES];
-
-}
-
 @end

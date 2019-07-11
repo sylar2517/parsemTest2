@@ -269,6 +269,8 @@
         [request setEntity:description];
         [request setFetchBatchSize:20];
         [request setPredicate:predicate];
+        NSSortDescriptor* sdName = [NSSortDescriptor sortDescriptorWithKey:@"dateOfCreation" ascending:NO];
+        [request setSortDescriptors:@[sdName]];
         NSError* reqestError = nil;
         NSArray* resultArray = [[DataManager sharedManager].persistentContainer.viewContext executeFetchRequest:request error:&reqestError];
         if (reqestError) {

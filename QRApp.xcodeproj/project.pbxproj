@@ -34,6 +34,7 @@
 		765D66C622CBFFAF00F79EDC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765D66C522CBFFAF00F79EDC /* SettingsViewController.m */; };
 		76B257F222C8EA52002E22D5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76B257F122C8EA51002E22D5 /* WebKit.framework */; };
 		76B257F822C93A60002E22D5 /* CreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B257F722C93A60002E22D5 /* CreationViewController.m */; };
+		76C0533922D6776F00F55DEC /* MainSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 76C0533822D6776F00F55DEC /* MainSession.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +105,8 @@
 		76B257F122C8EA51002E22D5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		76B257F622C93A60002E22D5 /* CreationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CreationViewController.h; sourceTree = "<group>"; };
 		76B257F722C93A60002E22D5 /* CreationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CreationViewController.m; sourceTree = "<group>"; };
+		76C0533722D6776F00F55DEC /* MainSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainSession.h; sourceTree = "<group>"; };
+		76C0533822D6776F00F55DEC /* MainSession.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainSession.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +157,8 @@
 				7606927022C4069200BB9D6E /* ResultViewController.m */,
 				7614778322BFF9FF00022E85 /* QRViewController.h */,
 				7614778422BFF9FF00022E85 /* QRViewController.m */,
+				7654A6AD22CFF6F9004D7C5F /* TextScanViewController.h */,
+				7654A6AE22CFF6F9004D7C5F /* TextScanViewController.m */,
 				76B257F622C93A60002E22D5 /* CreationViewController.h */,
 				76B257F722C93A60002E22D5 /* CreationViewController.m */,
 				763CD01922C6B7D20009F955 /* MakeSimpleQRViewController.h */,
@@ -164,8 +169,6 @@
 				763CD01722C6A60C0009F955 /* CoreDataTableViewController.m */,
 				765D66C422CBFFAF00F79EDC /* SettingsViewController.h */,
 				765D66C522CBFFAF00F79EDC /* SettingsViewController.m */,
-				7654A6AD22CFF6F9004D7C5F /* TextScanViewController.h */,
-				7654A6AE22CFF6F9004D7C5F /* TextScanViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -200,9 +203,11 @@
 				7614778022BFF9FF00022E85 /* AppDelegate.h */,
 				7614778122BFF9FF00022E85 /* AppDelegate.m */,
 				7614778622BFF9FF00022E85 /* Main.storyboard */,
+				76C0533722D6776F00F55DEC /* MainSession.h */,
+				76C0533822D6776F00F55DEC /* MainSession.m */,
+				7614778C22BFFA0000022E85 /* Assets.xcassets */,
 				763CD00622C6A3D30009F955 /* DataManager.h */,
 				763CD00722C6A3D30009F955 /* DataManager.m */,
-				7614778C22BFFA0000022E85 /* Assets.xcassets */,
 				7614778E22BFFA0000022E85 /* LaunchScreen.storyboard */,
 				7614779122BFFA0000022E85 /* Info.plist */,
 				7614779222BFFA0000022E85 /* main.m */,
@@ -393,6 +398,7 @@
 				763CD01422C6A5A60009F955 /* Posts+CoreDataClass.m in Sources */,
 				7614779322BFFA0000022E85 /* main.m in Sources */,
 				7654A6AF22CFF6F9004D7C5F /* TextScanViewController.m in Sources */,
+				76C0533922D6776F00F55DEC /* MainSession.m in Sources */,
 				7614778222BFF9FF00022E85 /* AppDelegate.m in Sources */,
 				7614780122C0262C00022E85 /* HistoryScanTVController.m in Sources */,
 				763CD01222C6A5A60009F955 /* HistoryPost+CoreDataClass.m in Sources */,
