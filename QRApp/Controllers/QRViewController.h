@@ -13,12 +13,16 @@
 @property (weak, nonatomic) IBOutlet UIView *toolBarView;
 @property (weak, nonatomic) IBOutlet UIButton *QRScanButton;
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewQR;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *buttons;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIView *snapButtonView;
 @property (weak, nonatomic) IBOutlet UIButton *snapButton;
 @property (weak, nonatomic) IBOutlet UIView *conterView;
 @property (weak, nonatomic) IBOutlet UIButton *conterButton;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomConstrain;
+@property (weak, nonatomic) IBOutlet UIButton *textScanButton;
+@property (weak, nonatomic) IBOutlet UIButton *exitButton;
 
 
 - (IBAction)actionFlashOnCliked:(UIButton *)sender;

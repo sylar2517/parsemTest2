@@ -13,6 +13,7 @@
 #import "ResultViewController.h"
 #import "PopUpForCameraOrGallery.h"
 #import "DataManager.h"
+#import "MainSession.h"
 
 @interface HistoryScanTVController () <PopUpForCameraOrGalleryDelegate>
 
@@ -32,6 +33,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.isFiltered = NO;
     self.isEditing = NO;
     
@@ -51,8 +53,6 @@
     self.withOutExport = @[cancel, flex, delete];
     
     self.toolbarItems = self.withExport;
-    //[self.navigationController.navigationBar setPrefersLargeTitles:YES];
-    //self.navigationController.title.
 }
 
 - (NSFetchedResultsController*) fetchedResultsController {
@@ -219,10 +219,21 @@
 -(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 3;
 }
-- (nullable NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return @"Удалить";
-}
 
+- (nullable UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath{
+    UIContextualAction* action = [UIContextualAction contextualActionWithStyle:(UIContextualActionStyleNormal) title:@"Удалить" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        HistoryPost* post = nil;
+        if (self.filterObject) {
+            post = [self.filterObject objectAtIndex:indexPath.row];
+        } else {
+            post = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        }
+        [[DataManager sharedManager].persistentContainer.viewContext deleteObject:post];
+        [[DataManager sharedManager] saveContext];
+    }];
+    action.backgroundColor = [UIColor redColor];
+    return [UISwipeActionsConfiguration configurationWithActions:@[action]];
+}
 
 #pragma mark -  UISearchBarDelegate
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{

@@ -8,16 +8,35 @@
 
 #import "QRViewController.h"
 #import <AVFoundation/AVFoundation.h>
+#import <Vision/Vision.h>
 
 #import "PopUpForCameraOrGallery.h"
 #import "ResultViewController.h"
-#import "TextScanViewController.h"
-#import "MainSession.h"
+//#import "TextScanViewController.h"
+//#import "MainSession.h"
+typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
+    AVCamSetupResultSuccess,
+    AVCamSetupResultNotAutorized,
+    AVCamSetupResultSessionConfigurationFailed
+};
+
 
 @interface QRViewController () <AVCaptureMetadataOutputObjectsDelegate,AVCaptureVideoDataOutputSampleBufferDelegate>
 
 @property(strong, nonatomic) NSArray* request;
 @property(assign, nonatomic) BOOL haveResult;
+@property(assign, nonatomic) NSInteger buttonPressed;
+
+@property(strong, nonatomic) AVCaptureSession* session;
+@property(assign, nonatomic) AVCamSetupResult setupResult;
+@property(nonatomic)dispatch_queue_t sessionQueue;
+@property(strong, nonatomic)AVCaptureDeviceInput* imput;
+@property(strong, nonatomic)AVCaptureVideoPreviewLayer *video;
+@property(strong, nonatomic)AVCaptureDevice* device;
+@property(strong, nonatomic)AVCaptureMetadataOutput *output;
+@property(strong, nonatomic)AVCaptureVideoDataOutput *outputText;
+@property(assign, nonatomic)BOOL isScaningText;
+@property(assign, nonatomic)BOOL isBusy;
 
 @end
 
@@ -27,18 +46,23 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    //[[MainSession sharedSession] initSessionForView:self.view andMetadataObjectsDelegate:self];
-//    [MainSession sharedSession].imput = nil;
-//    [MainSession sharedSession].output = nil;
-//    [MainSession sharedSession].outputText = nil;
-    [[MainSession sharedSession] removeInput:[MainSession sharedSession].imput];
-    [[MainSession sharedSession] removeOutput:[MainSession sharedSession].output];
-    [[MainSession sharedSession] removeOutput:[MainSession sharedSession].outputText];
-    [[MainSession sharedSession] initSessionForView:self.view forQRorText:YES];
-    [[MainSession sharedSession] addOutPutForQR:self];
+    self.buttonPressed = 10;
+    
+    self.session = [[AVCaptureSession alloc] init];
+    [self initSessionForQR:YES];
+    
     //custom view editing
     self.toolBarView.layer.cornerRadius = 10;
     self.toolBarView.layer.masksToBounds = YES;
+    
+    self.textScanButton.layer.cornerRadius = 10;
+    self.textScanButton.layer.masksToBounds = YES;
+    
+    self.exitButton.layer.cornerRadius = 10;
+    self.exitButton.layer.masksToBounds = YES;
+    
+    self.conterView.layer.cornerRadius = 0.5 * self.conterView.bounds.size.width;;
+    self.conterView.layer.masksToBounds = YES;
     
     self.backButton.layer.cornerRadius = 0.5 * self.backButton.bounds.size.width;;
     self.backButton.layer.masksToBounds = YES;
@@ -48,9 +72,6 @@
     
     self.snapButton.layer.cornerRadius = 0.5 * self.snapButton.bounds.size.width;;
     self.snapButton.layer.masksToBounds = YES;
-    
-    self.conterView.layer.cornerRadius = 0.5 * self.conterView.bounds.size.width;;
-    self.conterView.layer.masksToBounds = YES;
     
     self.navigationController.navigationBarHidden = YES;
     [self.tabBarController.tabBar setHidden:YES];
@@ -66,41 +87,169 @@
     
     [self actionScanQR:self.QRScanButton];
     
+    //add notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appMovedToForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appMovedToBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
+}
+#pragma mark - NSNotification
+-(void)appMovedToForeground:(NSNotification*)notification{
+    [self.session startRunning];
+}
+-(void)appMovedToBackground:(NSNotification*)notification{
+    [self.session stopRunning];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     //Start scan
-    
-//    if ([[MainSession sharedSession] isRunning]) {
-//        [[MainSession sharedSession] reloadSessionForView:self.view andMetadataObjectsDelegate:self];
-//        [self actionScanQR:self.QRScanButton];
-//    } else {
-        dispatch_async([MainSession sharedSession].sessionQueue, ^{
-            switch ([MainSession sharedSession].setupResult) {
-                case AVCamSetupResultSuccess:
-                {
-                    [[MainSession sharedSession] startRunning];
-                }
-                    break;
-                    
-                default:
-                    break;
-            }
-        });
-    //}
 
-    
+    dispatch_async(self.sessionQueue, ^{
+        switch (self.setupResult) {
+            case AVCamSetupResultSuccess:
+            {
+                [self.session startRunning];
+            }
+                break;
+
+            default:
+                break;
+        }
+    });
+
     self.haveResult = YES;
 }
 
 - (void)dealloc
 {
-    [[MainSession sharedSession] stopRunning];
-    //[[MainSession sharedSessionForScanText] stopRunning];
+    self.imageView = nil;
+    [self.session stopRunning];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+- (void)viewDidLayoutSubviews{
+    
+    self.video.frame = self.imageView.frame;
+}
+#pragma mark - SessionSettings
+-(void)initSessionForQR:(BOOL) boolVal{
+    
+    self.session.sessionPreset = AVCaptureSessionPresetPhoto;
+    
+    
+    if (boolVal) {
+        AVCaptureVideoPreviewLayer* layer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.session];
+        layer.frame = self.view.bounds;
+        [self.view.layer addSublayer:layer];
+        layer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    }
+
+    self.sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
+    
+    switch ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo]) {
+        case AVAuthorizationStatusAuthorized:{
+            break;
+        }
+        case AVAuthorizationStatusNotDetermined:{
+            
+                dispatch_suspend(self.sessionQueue);
+                [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+                    if (!granted) {
+                        self.setupResult = AVCamSetupResultNotAutorized;
+                    }
+                    dispatch_resume(self.sessionQueue);
+                }];
+
+            break;
+        }
+        default:
+            self.setupResult = AVCamSetupResultNotAutorized;
+            break;
+    }
+
+    dispatch_async(self.sessionQueue, ^{
+        [self addImputForQR:boolVal];
+    });
 }
 
+-(void)addImputForQR:(BOOL)boolVal{
+    if (self.setupResult !=AVCamSetupResultSuccess) {
+        return;
+    }
+    NSError* error = nil;
+    
+    [self.session beginConfiguration];
+    
+    AVCaptureDevice* device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    
+    //Imput
+    if(!device){
+        device = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionBack];
+        if (!device) {
+            device = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
+        }
+    }
+    self.imput = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
+    if (!self.imput) {
+        NSLog(@"Imput errror - %@", [error localizedDescription]);
+        self.setupResult = AVCamSetupResultSessionConfigurationFailed;
+        [self.session commitConfiguration];
+        return;
+    } else if ([self.session canAddInput:self.imput]){
+        [self.session addInput:self.imput];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIInterfaceOrientation statusBarOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+            AVCaptureVideoOrientation initialVideoOrientation = AVCaptureVideoOrientationPortrait;
+            if (statusBarOrientation != UIInterfaceOrientationUnknown) {
+                initialVideoOrientation = (AVCaptureVideoOrientation)statusBarOrientation;
+            }
+            self.video.connection.videoOrientation = initialVideoOrientation;
+        });
+        
+    } else {
+        NSLog(@"No imput");
+        self.setupResult = AVCamSetupResultSessionConfigurationFailed;
+        [self.session commitConfiguration];
+        return;
+    }
+    if (boolVal) {
+        [self addOutPutForQR:self];
+    } else {
+        [self addOutPutForText:self];
+    }
+}
+
+-(void)addOutPutForQR:(nullable id<AVCaptureMetadataOutputObjectsDelegate>)objectsDelegate{
+    self.output = [[AVCaptureMetadataOutput alloc] init];
+    if ([self.session canAddOutput:self.output]) {
+        [self.session addOutput:self.output];
+        [self.output setMetadataObjectsDelegate:objectsDelegate queue:dispatch_get_main_queue()];
+        self.output.metadataObjectTypes = @[AVMetadataObjectTypeQRCode];
+    } else {
+        NSLog(@"No output");
+        self.setupResult = AVCamSetupResultSessionConfigurationFailed;
+        [self.session commitConfiguration];
+        return;
+    }
+    
+    [self.session commitConfiguration];
+}
+
+-(void)addOutPutForText:(nullable id<AVCaptureVideoDataOutputSampleBufferDelegate>)sampleBufferDelegate{
+    
+    self.outputText = [[AVCaptureVideoDataOutput alloc] init];
+    if ([self.session canAddOutput:self.outputText]) {
+        [self.session addOutput:self.outputText];
+        [self.outputText setSampleBufferDelegate:sampleBufferDelegate queue:dispatch_get_main_queue()];
+    } else {
+        NSLog(@"No output");
+        self.setupResult = AVCamSetupResultSessionConfigurationFailed;
+        [self.session commitConfiguration];
+        return;
+    }
+    [self.session commitConfiguration];
+    self.isBusy = YES;
+}
 #pragma mark - Actions
 -(void)handleLeftSwipe:(UISwipeGestureRecognizer*)sender{
     [self exitFromController];
@@ -126,40 +275,113 @@
 
 
 - (IBAction)actionScanQR:(UIButton *)sender {
-    self.imageViewQR.hidden = NO;
     
+    if (sender.tag == self.buttonPressed) {
+        return;
+    }
+    
+    if (self.outputText) {
+        [self.session beginConfiguration];
+        [self.session removeInput:self.imput];
+        [self.session removeOutput:self.outputText];
+        [self.session commitConfiguration];
+        [self initSessionForQR:YES];
+    }
     [self buttonCliked:sender];
-    [self.view bringSubviewToFront:self.toolBarView];
-    [self.view bringSubviewToFront:self.imageViewQR];
-    [self.view bringSubviewToFront:self.backButton];
     
-    [[MainSession sharedSession] beginConfiguration];
-    [MainSession sharedSession].output.metadataObjectTypes = @[AVMetadataObjectTypeQRCode];
-    [[MainSession sharedSession] commitConfiguration];
+    self.buttonPressed = sender.tag;
 }
 
 - (IBAction)actionScanPDF:(UIButton *)sender {
+
+    if (sender.tag == self.buttonPressed) {
+        return;
+    }
+    
+    BOOL needUpdate = NO;
+    if (self.output) {
+        [self.session beginConfiguration];
+        [self.session removeInput:self.imput];
+        [self.session removeOutput:self.output];
+        [self.session commitConfiguration];
+//        [self initSessionForQR:NO];
+        needUpdate = YES;
+    }
+    if (self.isBusy) {
+        [self.session beginConfiguration];
+        [self.session removeInput:self.imput];
+        [self.session removeOutput:self.outputText];
+        [self.session commitConfiguration];
+        //[self initSessionForQR:YES];
+        needUpdate = YES;
+    }
+    if (needUpdate) {
+        self.isScaningText = NO;
+        [self initSessionForQR:NO];
+    }
+    self.imageView.layer.sublayers = nil;
+    [self.imageView.layer addSublayer:self.video];
     [self buttonCliked:sender];
-    self.imageViewQR.hidden = YES;
     
-    
-    [UIView animateWithDuration:0.25 animations:^{
-        self.snapButton.hidden = self.snapButtonView.hidden = NO;
-        [self.view bringSubviewToFront:self.snapButton];
-        [self.view bringSubviewToFront:self.snapButtonView];
-    }];
+    self.buttonPressed = sender.tag;
 }
 
 - (IBAction)actionBarcode:(UIButton *)sender{
+//    if (self.outputText) {
+//        [self.session removeInput:self.imput];
+//        [self.session removeOutput:self.outputText];
+//        self.outputText = nil;
+//        [self initSessionForQR:YES];
+//    }
+    if (sender.tag == self.buttonPressed) {
+        return;
+    }
+    
     [self buttonCliked:sender];
+    
+     self.buttonPressed = sender.tag;
 }
 
 - (IBAction)scanText:(UIButton *)sender {
+    if (sender.tag == self.buttonPressed) {
+        return;
+    }
     
-    TextScanViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"textViewController"];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self buttonCliked:sender];
     
+    BOOL needUpdate = NO;
+    if (self.output) {
+        [self.session beginConfiguration];
+        [self.session removeInput:self.imput];
+        [self.session removeOutput:self.output];
+        [self.session commitConfiguration];
+        //        [self initSessionForQR:NO];
+        needUpdate = YES;
+    }
+    if (self.isBusy) {
+        [self.session beginConfiguration];
+        [self.session removeInput:self.imput];
+        [self.session removeOutput:self.outputText];
+        [self.session commitConfiguration];
+        //[self initSessionForQR:YES];
+        needUpdate = YES;
+    }
+    if (needUpdate) {
+        self.isScaningText = YES;
+        [self initSessionForQR:NO];
+    }
     
+
+    AVCaptureVideoPreviewLayer *imageLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.session];
+    imageLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    imageLayer.frame = self.imageView.frame;
+    [self.imageView.layer addSublayer:imageLayer];
+    self.video = imageLayer;
+    
+    [self.session commitConfiguration];
+    //self.isScaningText = YES;
+    [self detectText];
+    self.buttonPressed = sender.tag;
 }
 
 - (IBAction)actionExit:(UIButton *)sender {
@@ -167,8 +389,9 @@
 }
 
 - (IBAction)actionMakePhoto:(UIButton *)sender {
-   // [self buttonCliked:sender];
-    UIView* shot = [[UIView alloc] initWithFrame:CGRectMake(0,
+    
+    self.conterView.backgroundColor = [UIColor blackColor];
+    UIView* snap = [[UIView alloc] initWithFrame:CGRectMake(0,
                                                             0,
                                                             CGRectGetWidth(self.view.bounds),
                                                             CGRectGetHeight(self.view.bounds))];
@@ -176,31 +399,17 @@
     self.conterView.hidden = NO;
     
     [UIView animateWithDuration:0.25 animations:^{
-        shot.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8];
-        [self.view addSubview:shot];
+        snap.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8];
+        [self.view addSubview:snap];
         
     } completion:^(BOOL finished) {
-        [shot removeFromSuperview];
+        [snap removeFromSuperview];
         [self.view bringSubviewToFront:self.conterButton];
         [self.view bringSubviewToFront:self.conterView];
     }];
     [self.conterButton setTitle:@"1" forState:(UIControlStateNormal)];
     
-    [[MainSession sharedSession] beginConfiguration];
-    //[MainSession sharedSession].output.setSa
-    [[MainSession sharedSession] commitConfiguration];
-    //[[MainSession sharedSession] re]
-//    [MainSession sharedSession].ou = [[AVCaptureVideoDataOutput alloc] init];
-//    if ([[MainSession sharedSession].outputText canAddOutput:[MainSession sharedSessionForScanText].outputText]) {
-//        [[MainSession sharedSessionForScanText] addOutput:[MainSession sharedSessionForScanText].outputText];
-//        [[MainSession sharedSessionForScanText].outputText setSampleBufferDelegate:sampleBufferDelegate queue:dispatch_get_main_queue()];
-//
-//    } else {
-//        NSLog(@"No output");
-//        self.setupResult = AVCamSetupResultSessionConfigurationFailed;
-//        [[MainSession sharedSessionForScanText] commitConfiguration];
-//        return;
-//    }
+
 }
 
 - (IBAction)actionWatchPDF:(UIButton *)sender {
@@ -212,14 +421,15 @@
 #pragma mark - Methods
 -(void)exitFromController{
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     CATransition *transition = [[CATransition alloc] init];
     transition.duration = 0.5;
     transition.type = kCATransitionPush;
     transition.subtype = kCATransitionFromRight;
     [transition setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
     [self.view.window.layer addAnimation:transition forKey:kCATransition];
-    [[MainSession sharedSession] stopRunning];
-    //[[MainSession sharedSessionForScanText] stopRunning];
+    [self.session stopRunning];
+    self.imageView = nil;
     [self.navigationController popToRootViewControllerAnimated:YES];
     self.navigationController.navigationBarHidden = NO;
     [self.tabBarController.tabBar setHidden:NO];
@@ -237,23 +447,70 @@
     }
     
     void (^noQR)(void) = ^{
-        [[MainSession sharedSession] beginConfiguration];
-        [MainSession sharedSession].output.metadataObjectTypes = nil;
-        [[MainSession sharedSession] commitConfiguration];
+        [self.session beginConfiguration];
+        self.output.metadataObjectTypes = nil;
+        [self.session commitConfiguration];
     };
     
-    if (sender.tag != 0) {
-        self.imageViewQR.hidden = YES;
+    if (sender.tag == 0) {
+        
+        
+        [self allHidden];
+
+        [UIView animateWithDuration:0.5 animations:^{
+            self.imageViewQR.hidden = NO;
+            self.backButton.hidden = NO;
+            [self.view layoutIfNeeded];
+        }];
+        
+    } else if (sender.tag == 1){
         noQR();
-    } else if (sender.tag != 1){
-        self.snapButton.hidden = self.snapButtonView.hidden =self.conterView.hidden = YES;
+        [self allHidden];
+        self.backButton.hidden = self.snapButton.hidden = self.snapButtonView.hidden = self.conterView.hidden = NO;
+        
+        [UIView animateWithDuration:0.5 animations:^{
+            self.snapButton.hidden = self.snapButtonView.hidden = NO;
+            [self.view layoutIfNeeded];
+        }];
+        
+    } else if (sender.tag == 2){
         noQR();
-    } else {
-        self.imageViewQR.hidden = self.snapButton.hidden = self.snapButtonView.hidden = YES;
+        [self allHidden];
+
+        CGFloat width = CGRectGetHeight(self.view.bounds);
+        self.bottomConstrain.constant = -(width - CGRectGetHeight(self.toolBarView.bounds) - 20);
+        
+        [UIView animateWithDuration:1 animations:^{
+            self.textScanButton.hidden = NO;
+            self.exitButton.hidden = NO;
+            [self.view layoutIfNeeded];
+        }];
+        
+    } else if (sender.tag == 3) {
         noQR();
+        [self allHidden];
+        [UIView animateWithDuration:0.5 animations:^{
+            self.backButton.hidden = NO;
+            [self.view layoutIfNeeded];
+        }];
+        self.backButton.hidden = NO;
     }
 }
-
+-(void)allHidden{
+    self.imageViewQR.hidden = YES;
+    self.snapButton.hidden = self.snapButtonView.hidden =self.conterView.hidden = YES;
+    self.snapButton.hidden = self.snapButtonView.hidden = YES;
+    self.textScanButton.hidden = self.exitButton.hidden = YES;
+    
+    self.backButton.hidden = YES;
+    self.bottomConstrain.constant = 0;
+    [self.view bringSubviewToFront:self.toolBarView];
+    [self.view bringSubviewToFront:self.imageViewQR];
+    [self.view bringSubviewToFront:self.backButton];
+    [self.view bringSubviewToFront:self.snapButton];
+    [self.view bringSubviewToFront:self.snapButtonView];
+    
+}
 #pragma mark - AVCaptureMetadataOutputObjectsDelegate
 - (void)captureOutput:(AVCaptureOutput *)output didOutputMetadataObjects:(NSArray<__kindof AVMetadataObject *> *)metadataObjects fromConnection:(AVCaptureConnection *)connection{
     if (metadataObjects != nil && metadataObjects.count != 0) {
@@ -272,7 +529,108 @@
         }
     }
 }
+#pragma mark - detectig text
 
+-(void)detectText{
+    VNDetectTextRectanglesRequest* request = [[VNDetectTextRectanglesRequest alloc] initWithCompletionHandler:^(VNRequest * _Nonnull request, NSError * _Nullable error) {
+        
+        if ([request.results isEqual:nil]) {
+            return;
+        }
+        if (error) {
+            NSLog(@"error %@", [error localizedDescription]);
+            return;
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            self.imageView.layer.sublayers = nil;
+            [self.imageView.layer addSublayer:self.video];
+            
+            for (VNTextObservation* region in request.results) {
+                if ([region isEqual:nil]) {
+                    continue;
+                }
+                
+                [self higthlightWord:region];
+            }
+        });
+        
+    }];
+    
+    request.reportCharacterBoxes = YES;
+    self.request = @[request];
+}
+
+-(void)higthlightWord:(VNTextObservation*)box{
+    if ([box.characterBoxes isEqual:nil]) {
+        return;
+    }
+    
+    CGFloat maxX = 999999.0;
+    CGFloat minX = 0.0;
+    CGFloat maxY = 999999.0;
+    CGFloat minY = 0;
+    
+    for (VNRectangleObservation* cha in box.characterBoxes) {
+        
+        if (cha.bottomLeft.x < maxX) {
+            maxX = cha.bottomLeft.x;
+        }
+        if (cha.bottomRight.x > minX) {
+            minX = cha.bottomRight.x;
+        }
+        if (cha.bottomRight.y < maxY) {
+            maxY = cha.bottomRight.y;
+        }
+        if (cha.topRight.y > minY) {
+            minY = cha.topRight.y;
+        }
+        
+    }
+    
+    
+    const NSInteger xCord = maxX * CGRectGetWidth(self.imageView.bounds);
+    const NSInteger yCord = (1 - minY) * self.imageView.bounds.size.height;
+    const NSInteger width = (minX - maxX) * CGRectGetWidth(self.imageView.bounds);
+    const NSInteger height = (minY - maxY) * self.imageView.bounds.size.height;
+    
+    CALayer* outline = [[CALayer alloc] init];
+    outline.frame = CGRectMake(xCord, yCord, width, height);
+    outline.borderWidth = 1.0f;
+    outline.borderColor = [UIColor redColor].CGColor;
+    // NSLog(@"%@", box.)
+    [self.imageView.layer addSublayer:outline];
+}
+
+#pragma mark - AVCaptureVideoDataOutputSampleBufferDelegate
+- (void)captureOutput:(AVCaptureOutput *)output didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
+    
+    if (self.isScaningText) {
+        if (!CMSampleBufferGetImageBuffer(sampleBuffer)) {
+            return;
+        }
+        
+        id dict = nil;
+        
+        CFTypeRef ref = CMGetAttachment(sampleBuffer, kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix, nil);
+        if (ref) {
+            dict = VNImageOptionCameraIntrinsics;
+        }
+        VNImageRequestHandler* requestHadler = [[VNImageRequestHandler alloc] initWithCVPixelBuffer:CMSampleBufferGetImageBuffer(sampleBuffer) orientation:6 options:dict];
+        
+        @try {
+            
+            [requestHadler performRequests:self.request error:nil];
+            
+        }
+        @catch (NSException *exception) {
+            NSLog(@"AAA - %@", exception.reason);
+        }
+    }
+    
+    
+}
 
 
 #pragma mark - Orientation

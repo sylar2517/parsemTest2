@@ -131,7 +131,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="0.14999999999999999" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="CdW-ll-KQA" secondAttribute="bottom" id="EbT-vL-t2T"/>
                                     <constraint firstAttribute="trailing" secondItem="CdW-ll-KQA" secondAttribute="trailing" id="OdL-us-ofW"/>
@@ -141,21 +141,61 @@
                                     <constraint firstItem="CdW-ll-KQA" firstAttribute="top" secondItem="jeg-n1-oEe" secondAttribute="top" id="zcN-pr-uea"/>
                                 </constraints>
                             </view>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ppp-Xu-MWC">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </imageView>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zjr-DJ-TM6">
+                                <rect key="frame" x="20" y="807" width="374" height="50"/>
+                                <color key="backgroundColor" white="0.198041524" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="Vak-2F-yEN"/>
+                                </constraints>
+                                <state key="normal" title="Выход">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="actionExit:" destination="2E8-fA-OsS" eventType="touchUpInside" id="jMX-Rg-jJI"/>
+                                    <action selector="actionExit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wRH-vG-zJX"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lzo-oe-MHC">
+                                <rect key="frame" x="20" y="747" width="374" height="50"/>
+                                <color key="backgroundColor" white="0.198041524" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="sj7-te-DiN"/>
+                                </constraints>
+                                <state key="normal" title="Сканировать">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="actionScan:" destination="2E8-fA-OsS" eventType="touchUpInside" id="3HL-qs-Die"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="3KB-aU-Eat" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="2ki-h2-JI2"/>
+                            <constraint firstItem="ppp-Xu-MWC" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="7xu-Rx-x6s"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Zjr-DJ-TM6" secondAttribute="bottom" constant="5" id="8Cc-Ba-1Y8"/>
                             <constraint firstItem="X0G-fz-TG5" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="-20" id="9jQ-De-a6S"/>
                             <constraint firstItem="3KB-aU-Eat" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="Qv0-Us-GmZ"/>
+                            <constraint firstAttribute="bottom" secondItem="ppp-Xu-MWC" secondAttribute="bottom" id="Rfd-j6-l3N"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="X0G-fz-TG5" secondAttribute="trailing" constant="10" id="SWk-xe-vL7"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Zjr-DJ-TM6" secondAttribute="trailing" constant="20" id="UmO-KQ-yu4"/>
                             <constraint firstItem="yMi-Sw-5F4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Wny-yY-cvw"/>
                             <constraint firstItem="X0G-fz-TG5" firstAttribute="top" secondItem="jeg-n1-oEe" secondAttribute="bottom" constant="8" id="Xhy-Sg-qQi"/>
                             <constraint firstItem="X0G-fz-TG5" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="YBk-mY-N1v"/>
+                            <constraint firstItem="lzo-oe-MHC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Zvz-Cu-fDY"/>
+                            <constraint firstItem="Zjr-DJ-TM6" firstAttribute="top" secondItem="lzo-oe-MHC" secondAttribute="bottom" constant="10" id="b9P-oW-ofe"/>
                             <constraint firstItem="yMi-Sw-5F4" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="haa-Kw-CBR"/>
                             <constraint firstItem="jeg-n1-oEe" firstAttribute="trailing" secondItem="X0G-fz-TG5" secondAttribute="trailing" id="lql-Wp-3KE"/>
+                            <constraint firstItem="ppp-Xu-MWC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="lvy-HO-xm8"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="lzo-oe-MHC" secondAttribute="trailing" constant="20" id="n5Y-Tc-fxG"/>
                             <constraint firstItem="X0G-fz-TG5" firstAttribute="top" secondItem="MgU-C6-aHc" secondAttribute="bottom" constant="8" id="oT1-bN-udU"/>
                             <constraint firstItem="MgU-C6-aHc" firstAttribute="centerX" secondItem="X0G-fz-TG5" secondAttribute="centerX" id="p0D-eN-wYT"/>
+                            <constraint firstItem="Zjr-DJ-TM6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="qI6-DP-JOb"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ppp-Xu-MWC" secondAttribute="trailing" id="qrU-CG-2zP"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -165,11 +205,15 @@
                     <connections>
                         <outlet property="QRScanButton" destination="QaU-48-Ujt" id="YNP-lz-3EL"/>
                         <outlet property="backButton" destination="3KB-aU-Eat" id="dKE-wo-i5O"/>
+                        <outlet property="bottomConstrain" destination="9jQ-De-a6S" id="jXI-XA-y6c"/>
                         <outlet property="conterButton" destination="CdW-ll-KQA" id="xXq-gc-a4N"/>
                         <outlet property="conterView" destination="jeg-n1-oEe" id="yZ8-P0-Zxc"/>
+                        <outlet property="exitButton" destination="Zjr-DJ-TM6" id="xc9-mF-7U7"/>
+                        <outlet property="imageView" destination="ppp-Xu-MWC" id="eBu-Kp-6UJ"/>
                         <outlet property="imageViewQR" destination="yMi-Sw-5F4" id="MTf-qx-Uid"/>
                         <outlet property="snapButton" destination="T4N-ry-tGe" id="v6R-Y4-BZi"/>
                         <outlet property="snapButtonView" destination="MgU-C6-aHc" id="eOR-05-Auv"/>
+                        <outlet property="textScanButton" destination="lzo-oe-MHC" id="qrk-pO-dAv"/>
                         <outlet property="toolBarView" destination="X0G-fz-TG5" id="GaG-mU-WYY"/>
                         <outletCollection property="buttons" destination="kfK-94-hJi" id="F7k-Za-UtI"/>
                         <outletCollection property="buttons" destination="EZX-fl-WmD" id="hWj-9v-ZXR"/>
@@ -180,7 +224,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1132" y="556"/>
+            <point key="canvasLocation" x="-1133.3333333333335" y="555.80357142857144"/>
         </scene>
         <!--История-->
         <scene sceneID="uIa-fI-0N5">
