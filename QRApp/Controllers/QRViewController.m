@@ -10,6 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Vision/Vision.h>
 
+#import "WebViewController.h"
 #import "PopUpForCameraOrGallery.h"
 #import "ResultViewController.h"
 //#import "TextScanViewController.h"
@@ -25,7 +26,10 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 
 @property(strong, nonatomic) NSArray* request;
 @property(assign, nonatomic) BOOL haveResult;
+@property(assign, nonatomic) BOOL takePhoto;
 @property(assign, nonatomic) NSInteger buttonPressed;
+@property(strong, nonatomic) NSMutableArray* tempForPhoto;
+
 
 @property(strong, nonatomic) AVCaptureSession* session;
 @property(assign, nonatomic) AVCamSetupResult setupResult;
@@ -46,7 +50,8 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.buttonPressed = 10;
+    self.buttonPressed = 0;
+    self.tempForPhoto = [NSMutableArray array];
     
     self.session = [[AVCaptureSession alloc] init];
     [self initSessionForQR:YES];
@@ -92,13 +97,6 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appMovedToBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
 }
-#pragma mark - NSNotification
--(void)appMovedToForeground:(NSNotification*)notification{
-    [self.session startRunning];
-}
--(void)appMovedToBackground:(NSNotification*)notification{
-    [self.session stopRunning];
-}
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -118,6 +116,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     });
 
     self.haveResult = YES;
+    [self.tempForPhoto removeAllObjects];
 }
 
 - (void)dealloc
@@ -125,10 +124,12 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     self.imageView = nil;
     [self.session stopRunning];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self.tempForPhoto removeAllObjects];
 }
 - (void)viewDidLayoutSubviews{
-    
+
     self.video.frame = self.imageView.frame;
+    
 }
 #pragma mark - SessionSettings
 -(void)initSessionForQR:(BOOL) boolVal{
@@ -142,6 +143,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
         [self.view.layer addSublayer:layer];
         layer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     }
+    
 
     self.sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
     
@@ -240,6 +242,10 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     self.outputText = [[AVCaptureVideoDataOutput alloc] init];
     if ([self.session canAddOutput:self.outputText]) {
         [self.session addOutput:self.outputText];
+        
+        self.outputText.videoSettings = [NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedInt:kCVPixelFormatType_32BGRA]
+                                                                    forKey:(NSString*)kCVPixelBufferPixelFormatTypeKey];
+        self.outputText.alwaysDiscardsLateVideoFrames = YES;
         [self.outputText setSampleBufferDelegate:sampleBufferDelegate queue:dispatch_get_main_queue()];
     } else {
         NSLog(@"No output");
@@ -249,6 +255,13 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     }
     [self.session commitConfiguration];
     self.isBusy = YES;
+}
+-(void)reloadSession{
+    [self.session beginConfiguration];
+    [self.session removeInput:self.imput];
+    [self.session removeOutput:self.output];
+    [self.session removeOutput:self.outputText];
+    [self.session commitConfiguration];
 }
 #pragma mark - Actions
 -(void)handleLeftSwipe:(UISwipeGestureRecognizer*)sender{
@@ -275,18 +288,15 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 
 
 - (IBAction)actionScanQR:(UIButton *)sender {
+    [self buttonCliked:sender];
     
     if (sender.tag == self.buttonPressed) {
         return;
     }
     
-    if (self.outputText) {
-        [self.session beginConfiguration];
-        [self.session removeInput:self.imput];
-        [self.session removeOutput:self.outputText];
-        [self.session commitConfiguration];
-        [self initSessionForQR:YES];
-    }
+    [self reloadSession];
+    [self initSessionForQR:YES];
+    
     [self buttonCliked:sender];
     
     self.buttonPressed = sender.tag;
@@ -294,45 +304,32 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 
 - (IBAction)actionScanPDF:(UIButton *)sender {
 
+    
     if (sender.tag == self.buttonPressed) {
         return;
     }
     
-    BOOL needUpdate = NO;
-    if (self.output) {
-        [self.session beginConfiguration];
-        [self.session removeInput:self.imput];
-        [self.session removeOutput:self.output];
-        [self.session commitConfiguration];
-//        [self initSessionForQR:NO];
-        needUpdate = YES;
-    }
-    if (self.isBusy) {
-        [self.session beginConfiguration];
-        [self.session removeInput:self.imput];
-        [self.session removeOutput:self.outputText];
-        [self.session commitConfiguration];
-        //[self initSessionForQR:YES];
-        needUpdate = YES;
-    }
-    if (needUpdate) {
-        self.isScaningText = NO;
-        [self initSessionForQR:NO];
-    }
-    self.imageView.layer.sublayers = nil;
-    [self.imageView.layer addSublayer:self.video];
-    [self buttonCliked:sender];
+    self.isScaningText = NO;
     
+    if (self.outputText) {
+        for (CALayer *layer in [self.imageView.layer.sublayers copy]) {
+            if (![layer isKindOfClass:[AVCaptureVideoPreviewLayer class]]) {
+                [layer removeFromSuperlayer];
+            }
+        }
+        [self.outputText setSampleBufferDelegate:nil queue:dispatch_get_main_queue()];
+        self.video.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    }
+    
+    [self reloadSession];
+    [self initSessionForQR:NO];
+    
+    [self buttonCliked:sender];
     self.buttonPressed = sender.tag;
 }
 
 - (IBAction)actionBarcode:(UIButton *)sender{
-//    if (self.outputText) {
-//        [self.session removeInput:self.imput];
-//        [self.session removeOutput:self.outputText];
-//        self.outputText = nil;
-//        [self initSessionForQR:YES];
-//    }
+
     if (sender.tag == self.buttonPressed) {
         return;
     }
@@ -348,38 +345,21 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     }
     
     [self buttonCliked:sender];
+    self.isScaningText = YES;
+    self.takePhoto = NO;
     
-    BOOL needUpdate = NO;
-    if (self.output) {
-        [self.session beginConfiguration];
-        [self.session removeInput:self.imput];
-        [self.session removeOutput:self.output];
-        [self.session commitConfiguration];
-        //        [self initSessionForQR:NO];
-        needUpdate = YES;
-    }
-    if (self.isBusy) {
-        [self.session beginConfiguration];
-        [self.session removeInput:self.imput];
-        [self.session removeOutput:self.outputText];
-        [self.session commitConfiguration];
-        //[self initSessionForQR:YES];
-        needUpdate = YES;
-    }
-    if (needUpdate) {
-        self.isScaningText = YES;
-        [self initSessionForQR:NO];
-    }
+    [self reloadSession];
+    [self initSessionForQR:NO];
     
-
+    
+    
     AVCaptureVideoPreviewLayer *imageLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.session];
-    imageLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-    imageLayer.frame = self.imageView.frame;
+    //imageLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    imageLayer.frame = self.view.bounds;
     [self.imageView.layer addSublayer:imageLayer];
     self.video = imageLayer;
     
     [self.session commitConfiguration];
-    //self.isScaningText = YES;
     [self detectText];
     self.buttonPressed = sender.tag;
 }
@@ -389,6 +369,8 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 }
 
 - (IBAction)actionMakePhoto:(UIButton *)sender {
+    
+    self.takePhoto = YES;
     
     self.conterView.backgroundColor = [UIColor blackColor];
     UIView* snap = [[UIView alloc] initWithFrame:CGRectMake(0,
@@ -401,19 +383,24 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     [UIView animateWithDuration:0.25 animations:^{
         snap.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8];
         [self.view addSubview:snap];
-        
+       
     } completion:^(BOOL finished) {
         [snap removeFromSuperview];
         [self.view bringSubviewToFront:self.conterButton];
         [self.view bringSubviewToFront:self.conterView];
+        [self.conterButton setTitle:[NSString stringWithFormat:@"%lu", (unsigned long)self.tempForPhoto.count] forState:(UIControlStateNormal)];
     }];
-    [self.conterButton setTitle:@"1" forState:(UIControlStateNormal)];
     
-
 }
 
 - (IBAction)actionWatchPDF:(UIButton *)sender {
     NSLog(@"AAAAAA");
+    if (self.tempForPhoto && self.tempForPhoto.count > 0) {
+        WebViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"webView"];
+        vc.photoArray = self.tempForPhoto;
+        [self.session stopRunning];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 
@@ -422,14 +409,18 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 -(void)exitFromController{
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self.tempForPhoto removeAllObjects];
+    [self.session stopRunning];
+    self.imageView = nil;
+    
     CATransition *transition = [[CATransition alloc] init];
     transition.duration = 0.5;
     transition.type = kCATransitionPush;
     transition.subtype = kCATransitionFromRight;
     [transition setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
     [self.view.window.layer addAnimation:transition forKey:kCATransition];
-    [self.session stopRunning];
-    self.imageView = nil;
+ 
+
     [self.navigationController popToRootViewControllerAnimated:YES];
     self.navigationController.navigationBarHidden = NO;
     [self.tabBarController.tabBar setHidden:NO];
@@ -510,6 +501,8 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     [self.view bringSubviewToFront:self.snapButton];
     [self.view bringSubviewToFront:self.snapButtonView];
     
+    [self.tempForPhoto removeAllObjects];
+    
 }
 #pragma mark - AVCaptureMetadataOutputObjectsDelegate
 - (void)captureOutput:(AVCaptureOutput *)output didOutputMetadataObjects:(NSArray<__kindof AVMetadataObject *> *)metadataObjects fromConnection:(AVCaptureConnection *)connection{
@@ -544,8 +537,11 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            self.imageView.layer.sublayers = nil;
-            [self.imageView.layer addSublayer:self.video];
+            for (CALayer *layer in [self.imageView.layer.sublayers copy]) {
+                if (![layer isKindOfClass:[AVCaptureVideoPreviewLayer class]]) {
+                    [layer removeFromSuperlayer];
+                }
+            }
             
             for (VNTextObservation* region in request.results) {
                 if ([region isEqual:nil]) {
@@ -590,14 +586,14 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     }
     
     
-    const NSInteger xCord = maxX * CGRectGetWidth(self.imageView.bounds);
-    const NSInteger yCord = (1 - minY) * self.imageView.bounds.size.height;
-    const NSInteger width = (minX - maxX) * CGRectGetWidth(self.imageView.bounds);
-    const NSInteger height = (minY - maxY) * self.imageView.bounds.size.height;
+    const NSInteger xCord = maxX * CGRectGetWidth(self.view.frame);
+    const NSInteger yCord = (1 - minY) * CGRectGetHeight(self.view.frame);
+    const NSInteger width = (minX - maxX) * CGRectGetWidth(self.view.frame);
+    const NSInteger height = (minY - maxY) * CGRectGetHeight(self.view.frame);
     
     CALayer* outline = [[CALayer alloc] init];
     outline.frame = CGRectMake(xCord, yCord, width, height);
-    outline.borderWidth = 1.0f;
+    outline.borderWidth = 4.0f;
     outline.borderColor = [UIColor redColor].CGColor;
     // NSLog(@"%@", box.)
     [self.imageView.layer addSublayer:outline];
@@ -627,11 +623,35 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
         @catch (NSException *exception) {
             NSLog(@"AAA - %@", exception.reason);
         }
+    } else if (self.takePhoto) {
+        self.takePhoto = NO;
+        
+        UIImage* image =[self getImageFromSampleBuffer:sampleBuffer];
+        if (image) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tempForPhoto addObject:image];
+            });
+        }
+        
     }
     
     
 }
-
+-(UIImage*)getImageFromSampleBuffer:(CMSampleBufferRef)sampleBuffer{
+    CVImageBufferRef buffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+    if (buffer) {
+        CIImage* ciImage = [CIImage imageWithCVPixelBuffer:buffer];
+        CIContext* context = [CIContext context];
+        
+        CGRect imageRect = CGRectMake(0, 0, CVPixelBufferGetWidth(buffer), CVPixelBufferGetHeight(buffer));
+        
+        CGImageRef image = [context createCGImage:ciImage fromRect:imageRect];
+        if (image) {
+            return [UIImage imageWithCGImage:image scale:UIScreen.mainScreen.scale orientation:(UIImageOrientationRight)];
+        }
+    }
+    return nil;
+}
 
 #pragma mark - Orientation
 - (BOOL)shouldAutorotate {
@@ -640,7 +660,13 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     
     return orientation == UIInterfaceOrientationPortrait ? NO : YES;
 }
-
+#pragma mark - NSNotification
+-(void)appMovedToForeground:(NSNotification*)notification{
+    [self.session startRunning];
+}
+-(void)appMovedToBackground:(NSNotification*)notification{
+    [self.session stopRunning];
+}
 //#pragma mark - Navigation
 //- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 //

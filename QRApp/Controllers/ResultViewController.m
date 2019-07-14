@@ -165,7 +165,7 @@
     //[self.view addSubview:test];
     
 //    UIImage* image = [UIImage imageNamed:@"Cam"];
-//    NSArray* array = @[image];
+////    NSArray* array = @[image];
 //    UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:array applicationActivities:nil];
 //    //avc.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
 //    [self presentViewController:avc animated:YES completion:nil];
