@@ -111,6 +111,7 @@
         HistoryPost* post = [NSEntityDescription insertNewObjectForEntityForName:@"HistoryPost" inManagedObjectContext:[DataManager sharedManager].persistentContainer.viewContext];
         NSDate* now = [NSDate date];
         post.dateOfCreation = now;
+        post.type = @"QR";
         post.value = self.textView.text;
         if (self.qrCodeImageView.image) {
             UIGraphicsBeginImageContext(self.QRCode.size);

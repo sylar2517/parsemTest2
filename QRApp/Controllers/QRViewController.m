@@ -117,6 +117,8 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 
     self.haveResult = YES;
     [self.tempForPhoto removeAllObjects];
+    self.conterButton.hidden = YES;
+    self.conterView.hidden = YES;
 }
 
 - (void)dealloc
@@ -379,15 +381,15 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
                                                             CGRectGetHeight(self.view.bounds))];
     self.conterButton.hidden = NO;
     self.conterView.hidden = NO;
-    
+    [self.view bringSubviewToFront:self.conterButton];
+    [self.view bringSubviewToFront:self.conterView];
+
     [UIView animateWithDuration:0.25 animations:^{
         snap.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.8];
         [self.view addSubview:snap];
        
     } completion:^(BOOL finished) {
         [snap removeFromSuperview];
-        [self.view bringSubviewToFront:self.conterButton];
-        [self.view bringSubviewToFront:self.conterView];
         [self.conterButton setTitle:[NSString stringWithFormat:@"%lu", (unsigned long)self.tempForPhoto.count] forState:(UIControlStateNormal)];
     }];
     
@@ -396,10 +398,13 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 - (IBAction)actionWatchPDF:(UIButton *)sender {
     NSLog(@"AAAAAA");
     if (self.tempForPhoto && self.tempForPhoto.count > 0) {
-        WebViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"webView"];
-        vc.photoArray = self.tempForPhoto;
         [self.session stopRunning];
+        NSArray* array = [NSArray arrayWithArray:self.tempForPhoto];
+        [self.tempForPhoto removeAllObjects];
+        WebViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"webView"];
+        vc.photoArray = array;
         [self.navigationController pushViewController:vc animated:YES];
+       
     }
 }
 

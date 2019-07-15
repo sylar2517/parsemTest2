@@ -19,7 +19,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
     if ([self.result rangeOfString:@"http"].location == NSNotFound) {
         self.openInBrowser.hidden = YES;
     } else {
@@ -62,6 +62,7 @@
         NSDate* now = [NSDate date];
         post.dateOfCreation = now;
         post.value = self.resultTextImageView.text;
+        post.type = @"QR";
         [[DataManager sharedManager] saveContext];
     }
 }
@@ -154,21 +155,35 @@
 }
 
 - (IBAction)actionSave:(UIButton *)sender {
+    UIImage* image = self.resultImageView.image;
+    
+    UIGraphicsBeginImageContext(CGSizeMake(400, 400));
+    [image drawInRect:CGRectMake(0, 0, 400, 400)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    UIImageWriteToSavedPhotosAlbum(newImage, nil, nil, nil);
+    
+    UIAlertController* ac = [UIAlertController alertControllerWithTitle:@"Сохранено" message:nil preferredStyle:(UIAlertControllerStyleAlert)];
+    UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Ок" style:(UIAlertActionStyleCancel) handler:nil];
+    [ac addAction:aa];
+    [self presentViewController:ac animated:YES completion:nil];
 }
 
 - (IBAction)actionExport:(UIButton *)sender {
-    //UIImage* image = self.resultImageView.image;
-//    UIImageView* test = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 300, 300)];
-//    test.image = [self makeQRFromText:test];
-//    UIImage* image = test.image;
-//    [image preferredPresentationSizeForItemProvider];
-    //[self.view addSubview:test];
+
+    UIImage* image = self.resultImageView.image;
     
-//    UIImage* image = [UIImage imageNamed:@"Cam"];
-////    NSArray* array = @[image];
-//    UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:array applicationActivities:nil];
-//    //avc.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
-//    [self presentViewController:avc animated:YES completion:nil];
+    UIGraphicsBeginImageContext(CGSizeMake(400, 400));
+    [image drawInRect:CGRectMake(0, 0, 400, 400)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    NSData *imageData = UIImagePNGRepresentation(newImage);
+    
+    NSArray* array = @[imageData];
+    UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:array applicationActivities:nil];
+    avc.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
+    [self presentViewController:avc animated:YES completion:nil];
+    
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
@@ -176,16 +191,5 @@
 }
 
 
-
-
-// #pragma mark - Navigation
-//
-// // In a storyboard-based application, you will often want to do a little preparation before navigation
-// - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//     if ([segue.identifier isEqualToString:@"webController"]) {
-//         WebViewController* vc = segue.destinationViewController;
-//         vc.URLString = self.resultTextImageView.text;
-//     }
-// }
 
 @end

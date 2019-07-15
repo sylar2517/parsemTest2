@@ -14,6 +14,7 @@
 #import "PopUpForCameraOrGallery.h"
 #import "DataManager.h"
 #import "MainSession.h"
+#import "WebViewController.h"
 
 @interface HistoryScanTVController () <PopUpForCameraOrGalleryDelegate>
 
@@ -115,26 +116,37 @@
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
     [df setDateFormat:@"dd-MM-yyyy HH:mm"];
     cell.dateLabel.text = [df stringFromDate:post.dateOfCreation];
-    //    UIImage* image = [UIImage imageWithData:post.picture];
-    //    //cell.imageViewCell.image = [UIImage imageWithData:post.picture];
-    //    cell.imageViewCell.image = image;
-    // cell.backgroundColor = [UIColor darkGrayColor];
-    //    CIImage *qrImage = [CIImage imageWithData:post.picture];
-    //    float scaleX = cell.imageViewCell.frame.size.width / qrImage.extent.size.width;
-    //    float scaleY = cell.imageViewCell.frame.size.height / qrImage.extent.size.height;
-    //
-    //    qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
-    //    UIImage* image = [UIImage imageWithCIImage:qrImage
-    //                                         scale:[UIScreen mainScreen].scale
-    //                                   orientation:UIImageOrientationUp];
+
 
     
+    if ([post.type isEqualToString:@"QR"]) {
+        cell.nameLabel.text = post.value;
+        cell.imageViewCell.image = [self makeQRFromText:post.value from:cell.imageViewCell];
+        cell.typeLabel.text = @"QR";
+        //    UIImage* image = [UIImage imageWithData:post.picture];
+        //    //cell.imageViewCell.image = [UIImage imageWithData:post.picture];
+        //    cell.imageViewCell.image = image;
+        // cell.backgroundColor = [UIColor darkGrayColor];
+        //    CIImage *qrImage = [CIImage imageWithData:post.picture];
+        //    float scaleX = cell.imageViewCell.frame.size.width / qrImage.extent.size.width;
+        //    float scaleY = cell.imageViewCell.frame.size.height / qrImage.extent.size.height;
+        //
+        //    qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
+        //    UIImage* image = [UIImage imageWithCIImage:qrImage
+        //                                         scale:[UIScreen mainScreen].scale
+        //                                   orientation:UIImageOrientationUp];
+        
+        // cell.imageViewCell.layer.magnificationFilter = kCAFilterNearest;
+        
+    } else if ([post.type isEqualToString:@"PDF"]){
+        cell.nameLabel.text = post.value;
+        cell.imageViewCell.image = [UIImage imageNamed:@"pdf"];
+        cell.imageViewCell.backgroundColor = [UIColor redColor];
+        cell.typeLabel.text = @"PDF";
+    }
     
-    cell.nameLabel.text = post.value;
-    cell.imageViewCell.image = [self makeQRFromText:post.value from:cell.imageViewCell];
-    cell.typeLabel.text = @"QR";
     
-    // cell.imageViewCell.layer.magnificationFilter = kCAFilterNearest;
+    
 }
 
 
@@ -170,9 +182,17 @@
         } else {
             post = [self.fetchedResultsController objectAtIndexPath:indexPath];
         }
-        ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
-        vc.result = post.value;
-        [self presentViewController:vc animated:YES completion:nil];
+        
+        if ([post.type isEqualToString:@"QR"]) {
+            ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
+            vc.result = post.value;
+            [self presentViewController:vc animated:YES completion:nil];
+        } else if ([post.type isEqualToString:@"PDF"]) {
+            WebViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"webView"];
+            vc.post = post;
+            [self presentViewController:vc animated:YES completion:nil];
+        }
+        
     } else {
         
         HistoryPost* post = nil;
@@ -193,7 +213,7 @@
         HistoryCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
         cell.nameLabel.textColor = [UIColor blackColor];
         cell.dateLabel.textColor = [UIColor blackColor];
-        
+        cell.typeLabel.textColor = [UIColor blackColor];
     }
 }
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -218,7 +238,7 @@
         HistoryCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
         cell.nameLabel.textColor = [UIColor whiteColor];
         cell.dateLabel.textColor = [UIColor whiteColor];
-        
+        cell.typeLabel.textColor = [UIColor whiteColor];
     }
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{

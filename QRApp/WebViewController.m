@@ -10,40 +10,63 @@
 #import <WebKit/WebKit.h>
 #import <PDFKit/PDFKit.h>
 
+#import "DataManager.h"
+#import "HistoryPost+CoreDataClass.h"
+#import <CoreData/CoreData.h>
+
 @interface WebViewController () <WKNavigationDelegate>
 @property(strong, nonatomic) NSURL* pdfDoc;
+@property(strong, nonatomic) NSData* pdfData;
 @end
 
 @implementation WebViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    self.webView.navigationDelegate = self;
-    NSLog(@"%@", self.photoArray);
     
-    PDFDocument* pdfDoc = [[PDFDocument alloc] init];
-    for (int i = 0; i < self.photoArray.count; i++) {
-        PDFPage* pdfPage = [[PDFPage alloc] initWithImage:[self.photoArray objectAtIndex:i]];
-        [pdfDoc insertPage:pdfPage atIndex:i];
+    self.webView.navigationDelegate = self;
+    //NSLog(@"%@", self.photoArray);
+    if (self.photoArray) {
+        PDFDocument* pdfDoc = [[PDFDocument alloc] init];
+        for (int i = 0; i < self.photoArray.count; i++) {
+            PDFPage* pdfPage = [[PDFPage alloc] initWithImage:[self.photoArray objectAtIndex:i]];
+            [pdfDoc insertPage:pdfPage atIndex:i];
+        }
+        
+        self.pdfData = pdfDoc.dataRepresentation;
+        
+        NSURL* url = [NSURL URLWithString:@""];
+        [self.webView loadData:self.pdfData
+                      MIMEType:@"application/pdf"
+         characterEncodingName:@"UTF-8"
+                       baseURL:url];
+        
+        NSDate* now = [NSDate date];
+        NSDateFormatter* df = [[NSDateFormatter alloc] init];
+        [df setDateFormat:@"dd-MM-yyyy HH:mm"];
+        
+        NSString* name = [[df stringFromDate:now] stringByAppendingString:@".pdf"];
+        NSURL* url2 = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:name]];
+        [self.pdfData writeToURL:url2 atomically:NO];
+        self.pdfDoc = url2;
     }
-
-    NSData* data = pdfDoc.dataRepresentation;
-
-    NSURL* url = [NSURL URLWithString:@""];
-    [self.webView loadData:data
-                  MIMEType:@"application/pdf"
-     characterEncodingName:@"UTF-8"
-                   baseURL:url];
-
-    NSDate* now = [NSDate date];
-    NSDateFormatter* df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:@"dd-MM-yyyy HH:mm"];
-
-    NSString* name = [[df stringFromDate:now] stringByAppendingString:@".pdf"];
-    NSURL* url2 = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:name]];
-    [data writeToURL:url2 atomically:NO];
-    self.pdfDoc = url2;
+    if (self.post) {
+        self.pdfData = self.post.picture;
+        NSURL* url = [NSURL URLWithString:@""];
+        [self.webView loadData:self.pdfData
+                      MIMEType:@"application/pdf"
+         characterEncodingName:@"UTF-8"
+                       baseURL:url];
+        
+        NSDate* now = [NSDate date];
+        NSDateFormatter* df = [[NSDateFormatter alloc] init];
+        [df setDateFormat:@"dd-MM-yyyy HH:mm"];
+        
+        NSString* name = [[df stringFromDate:now] stringByAppendingString:@".pdf"];
+        NSURL* url2 = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:name]];
+        [self.pdfData writeToURL:url2 atomically:NO];
+        self.pdfDoc = url2;
+    }
     
     //NSString* urlString = @"https://en.wikipedia.org/wiki/QR_code";
 //       NSString* urlString = @"https://www.google.com/search?q=qr+code&newwindow=1&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjTuvCdw7fjAhWNyqYKHc9JA10Q_AUIECgB&biw=1440&bih=718";
@@ -52,17 +75,42 @@
 //    [self.webView loadRequest:request];
 
 }
+- (void)dealloc
+{
+    self.webView.navigationDelegate = nil;
+}
 #pragma mark - Actions -
 
 -(IBAction)actionBack:(UIBarButtonItem*)sender{
    
     if (sender.tag == 1) {
         //не сохранять
+        if (!self.post) {
+            [self.navigationController popViewControllerAnimated:YES];
+        } else {
+            [[DataManager sharedManager].persistentContainer.viewContext deleteObject:self.post];
+            [[DataManager sharedManager] saveContext];
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
     } else {
         //сохранить
+        if (!self.post) {
+            HistoryPost* post = [NSEntityDescription insertNewObjectForEntityForName:@"HistoryPost" inManagedObjectContext:[DataManager sharedManager].persistentContainer.viewContext];
+            NSDate* now = [NSDate date];
+            post.dateOfCreation = now;
+            post.value = [NSString stringWithFormat:@"%lu страниц(ы)", (unsigned long)self.photoArray.count];
+            post.type = @"PDF";
+            post.picture = self.pdfData;
+            [[DataManager sharedManager] saveContext];
+            [self.navigationController popViewControllerAnimated:YES];
+            
+        } else {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
+        
     }
         
-    [self.navigationController popViewControllerAnimated:YES];
+   
 }
 
 - (IBAction)actionShare:(UIBarButtonItem *)sender {
@@ -131,7 +179,7 @@
         }
         return;
     }
-    NSLog(@"%@", url);
+    //NSLog(@"%@", url);
 }
 
 - (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation{

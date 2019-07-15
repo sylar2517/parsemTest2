@@ -20,12 +20,12 @@
 		761477A822BFFA0000022E85 /* QRAppUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 761477A722BFFA0000022E85 /* QRAppUITests.m */; };
 		761477B722BFFABF00022E85 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 761477B622BFFABF00022E85 /* AVFoundation.framework */; };
 		7614780122C0262C00022E85 /* HistoryScanTVController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7614780022C0262C00022E85 /* HistoryScanTVController.m */; };
+		762D639722DD00F600013805 /* Posts+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 762D639122DD00F600013805 /* Posts+CoreDataClass.m */; };
+		762D639822DD00F600013805 /* Posts+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 762D639222DD00F600013805 /* Posts+CoreDataProperties.m */; };
+		762D639922DD00F600013805 /* HistoryPost+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 762D639522DD00F600013805 /* HistoryPost+CoreDataClass.m */; };
+		762D639A22DD00F600013805 /* HistoryPost+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 762D639622DD00F600013805 /* HistoryPost+CoreDataProperties.m */; };
 		76371E8222C160DE00AF8E28 /* GalleryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76371E8122C160DE00AF8E28 /* GalleryViewController.m */; };
 		763CD00822C6A3D30009F955 /* DataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 763CD00722C6A3D30009F955 /* DataManager.m */; };
-		763CD01222C6A5A60009F955 /* HistoryPost+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 763CD00C22C6A5A60009F955 /* HistoryPost+CoreDataClass.m */; };
-		763CD01322C6A5A60009F955 /* HistoryPost+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 763CD00D22C6A5A60009F955 /* HistoryPost+CoreDataProperties.m */; };
-		763CD01422C6A5A60009F955 /* Posts+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 763CD01022C6A5A60009F955 /* Posts+CoreDataClass.m */; };
-		763CD01522C6A5A60009F955 /* Posts+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 763CD01122C6A5A60009F955 /* Posts+CoreDataProperties.m */; };
 		763CD01822C6A60C0009F955 /* CoreDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 763CD01722C6A60C0009F955 /* CoreDataTableViewController.m */; };
 		763CD01B22C6B7D20009F955 /* MakeSimpleQRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 763CD01A22C6B7D20009F955 /* MakeSimpleQRViewController.m */; };
 		7653841222C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = 7653841122C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m */; };
@@ -81,18 +81,18 @@
 		761477B622BFFABF00022E85 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		761477FF22C0262C00022E85 /* HistoryScanTVController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistoryScanTVController.h; sourceTree = "<group>"; };
 		7614780022C0262C00022E85 /* HistoryScanTVController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistoryScanTVController.m; sourceTree = "<group>"; };
+		762D638F22DD00F600013805 /* Posts+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Posts+CoreDataProperties.h"; sourceTree = "<group>"; };
+		762D639022DD00F600013805 /* Posts+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Posts+CoreDataClass.h"; sourceTree = "<group>"; };
+		762D639122DD00F600013805 /* Posts+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Posts+CoreDataClass.m"; sourceTree = "<group>"; };
+		762D639222DD00F600013805 /* Posts+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Posts+CoreDataProperties.m"; sourceTree = "<group>"; };
+		762D639322DD00F600013805 /* HistoryPost+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HistoryPost+CoreDataProperties.h"; sourceTree = "<group>"; };
+		762D639422DD00F600013805 /* HistoryPost+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HistoryPost+CoreDataClass.h"; sourceTree = "<group>"; };
+		762D639522DD00F600013805 /* HistoryPost+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "HistoryPost+CoreDataClass.m"; sourceTree = "<group>"; };
+		762D639622DD00F600013805 /* HistoryPost+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "HistoryPost+CoreDataProperties.m"; sourceTree = "<group>"; };
 		76371E8022C160DE00AF8E28 /* GalleryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GalleryViewController.h; sourceTree = "<group>"; };
 		76371E8122C160DE00AF8E28 /* GalleryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GalleryViewController.m; sourceTree = "<group>"; };
 		763CD00622C6A3D30009F955 /* DataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataManager.h; sourceTree = "<group>"; };
 		763CD00722C6A3D30009F955 /* DataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataManager.m; sourceTree = "<group>"; };
-		763CD00A22C6A5A60009F955 /* HistoryPost+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HistoryPost+CoreDataProperties.h"; sourceTree = "<group>"; };
-		763CD00B22C6A5A60009F955 /* HistoryPost+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HistoryPost+CoreDataClass.h"; sourceTree = "<group>"; };
-		763CD00C22C6A5A60009F955 /* HistoryPost+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "HistoryPost+CoreDataClass.m"; sourceTree = "<group>"; };
-		763CD00D22C6A5A60009F955 /* HistoryPost+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "HistoryPost+CoreDataProperties.m"; sourceTree = "<group>"; };
-		763CD00E22C6A5A60009F955 /* Posts+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Posts+CoreDataProperties.h"; sourceTree = "<group>"; };
-		763CD00F22C6A5A60009F955 /* Posts+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Posts+CoreDataClass.h"; sourceTree = "<group>"; };
-		763CD01022C6A5A60009F955 /* Posts+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Posts+CoreDataClass.m"; sourceTree = "<group>"; };
-		763CD01122C6A5A60009F955 /* Posts+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Posts+CoreDataProperties.m"; sourceTree = "<group>"; };
 		763CD01622C6A60C0009F955 /* CoreDataTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreDataTableViewController.h; sourceTree = "<group>"; };
 		763CD01722C6A60C0009F955 /* CoreDataTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoreDataTableViewController.m; sourceTree = "<group>"; };
 		763CD01922C6B7D20009F955 /* MakeSimpleQRViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MakeSimpleQRViewController.h; sourceTree = "<group>"; };
@@ -253,14 +253,14 @@
 		763CD00922C6A5840009F955 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				763CD00A22C6A5A60009F955 /* HistoryPost+CoreDataProperties.h */,
-				763CD00B22C6A5A60009F955 /* HistoryPost+CoreDataClass.h */,
-				763CD00C22C6A5A60009F955 /* HistoryPost+CoreDataClass.m */,
-				763CD00D22C6A5A60009F955 /* HistoryPost+CoreDataProperties.m */,
-				763CD00E22C6A5A60009F955 /* Posts+CoreDataProperties.h */,
-				763CD00F22C6A5A60009F955 /* Posts+CoreDataClass.h */,
-				763CD01022C6A5A60009F955 /* Posts+CoreDataClass.m */,
-				763CD01122C6A5A60009F955 /* Posts+CoreDataProperties.m */,
+				762D638F22DD00F600013805 /* Posts+CoreDataProperties.h */,
+				762D639022DD00F600013805 /* Posts+CoreDataClass.h */,
+				762D639122DD00F600013805 /* Posts+CoreDataClass.m */,
+				762D639222DD00F600013805 /* Posts+CoreDataProperties.m */,
+				762D639322DD00F600013805 /* HistoryPost+CoreDataProperties.h */,
+				762D639422DD00F600013805 /* HistoryPost+CoreDataClass.h */,
+				762D639522DD00F600013805 /* HistoryPost+CoreDataClass.m */,
+				762D639622DD00F600013805 /* HistoryPost+CoreDataProperties.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -413,16 +413,16 @@
 				765D66C622CBFFAF00F79EDC /* SettingsViewController.m in Sources */,
 				7614778522BFF9FF00022E85 /* QRViewController.m in Sources */,
 				7606926E22C3F8D000BB9D6E /* HistoryCell.m in Sources */,
-				763CD01422C6A5A60009F955 /* Posts+CoreDataClass.m in Sources */,
+				762D639722DD00F600013805 /* Posts+CoreDataClass.m in Sources */,
 				7614779322BFFA0000022E85 /* main.m in Sources */,
 				7654A6AF22CFF6F9004D7C5F /* TextScanViewController.m in Sources */,
 				76C0533922D6776F00F55DEC /* MainSession.m in Sources */,
+				762D639A22DD00F600013805 /* HistoryPost+CoreDataProperties.m in Sources */,
 				7614778222BFF9FF00022E85 /* AppDelegate.m in Sources */,
 				7614780122C0262C00022E85 /* HistoryScanTVController.m in Sources */,
-				763CD01222C6A5A60009F955 /* HistoryPost+CoreDataClass.m in Sources */,
-				763CD01522C6A5A60009F955 /* Posts+CoreDataProperties.m in Sources */,
-				763CD01322C6A5A60009F955 /* HistoryPost+CoreDataProperties.m in Sources */,
 				76371E8222C160DE00AF8E28 /* GalleryViewController.m in Sources */,
+				762D639922DD00F600013805 /* HistoryPost+CoreDataClass.m in Sources */,
+				762D639822DD00F600013805 /* Posts+CoreDataProperties.m in Sources */,
 				7653841222C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m in Sources */,
 				76B257F822C93A60002E22D5 /* CreationViewController.m in Sources */,
 				7606927122C4069200BB9D6E /* ResultViewController.m in Sources */,
