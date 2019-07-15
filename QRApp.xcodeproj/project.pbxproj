@@ -30,11 +30,9 @@
 		763CD01B22C6B7D20009F955 /* MakeSimpleQRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 763CD01A22C6B7D20009F955 /* MakeSimpleQRViewController.m */; };
 		7653841222C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = 7653841122C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m */; };
 		7654A67222CFCE9F004D7C5F /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7654A67122CFCE9F004D7C5F /* Vision.framework */; };
-		7654A6AF22CFF6F9004D7C5F /* TextScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7654A6AE22CFF6F9004D7C5F /* TextScanViewController.m */; };
 		765D66C622CBFFAF00F79EDC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765D66C522CBFFAF00F79EDC /* SettingsViewController.m */; };
 		76B257F222C8EA52002E22D5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76B257F122C8EA51002E22D5 /* WebKit.framework */; };
 		76B257F822C93A60002E22D5 /* CreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B257F722C93A60002E22D5 /* CreationViewController.m */; };
-		76C0533922D6776F00F55DEC /* MainSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 76C0533822D6776F00F55DEC /* MainSession.m */; };
 		76FBC54E22DBC2EF00B3FBC3 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76FBC54D22DBC2EF00B3FBC3 /* WebViewController.m */; };
 		76FBC55022DBCBC100B3FBC3 /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76FBC54F22DBCBC100B3FBC3 /* PDFKit.framework */; };
 /* End PBXBuildFile section */
@@ -100,15 +98,11 @@
 		7653841022C0D9EC00D6EDDE /* PopUpForCameraOrGallery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PopUpForCameraOrGallery.h; sourceTree = "<group>"; };
 		7653841122C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PopUpForCameraOrGallery.m; sourceTree = "<group>"; };
 		7654A67122CFCE9F004D7C5F /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
-		7654A6AD22CFF6F9004D7C5F /* TextScanViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextScanViewController.h; sourceTree = "<group>"; };
-		7654A6AE22CFF6F9004D7C5F /* TextScanViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextScanViewController.m; sourceTree = "<group>"; };
 		765D66C422CBFFAF00F79EDC /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		765D66C522CBFFAF00F79EDC /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		76B257F122C8EA51002E22D5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		76B257F622C93A60002E22D5 /* CreationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CreationViewController.h; sourceTree = "<group>"; };
 		76B257F722C93A60002E22D5 /* CreationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CreationViewController.m; sourceTree = "<group>"; };
-		76C0533722D6776F00F55DEC /* MainSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainSession.h; sourceTree = "<group>"; };
-		76C0533822D6776F00F55DEC /* MainSession.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainSession.m; sourceTree = "<group>"; };
 		76FBC54C22DBC2EF00B3FBC3 /* WebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		76FBC54D22DBC2EF00B3FBC3 /* WebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		76FBC54F22DBCBC100B3FBC3 /* PDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDFKit.framework; path = System/Library/Frameworks/PDFKit.framework; sourceTree = SDKROOT; };
@@ -173,6 +167,8 @@
 				763CD01722C6A60C0009F955 /* CoreDataTableViewController.m */,
 				765D66C422CBFFAF00F79EDC /* SettingsViewController.h */,
 				765D66C522CBFFAF00F79EDC /* SettingsViewController.m */,
+				76FBC54C22DBC2EF00B3FBC3 /* WebViewController.h */,
+				76FBC54D22DBC2EF00B3FBC3 /* WebViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -208,15 +204,12 @@
 				7614778122BFF9FF00022E85 /* AppDelegate.m */,
 				7614778622BFF9FF00022E85 /* Main.storyboard */,
 				7614778C22BFFA0000022E85 /* Assets.xcassets */,
-				76FBC54C22DBC2EF00B3FBC3 /* WebViewController.h */,
-				76FBC54D22DBC2EF00B3FBC3 /* WebViewController.m */,
 				763CD00622C6A3D30009F955 /* DataManager.h */,
 				763CD00722C6A3D30009F955 /* DataManager.m */,
 				7614778E22BFFA0000022E85 /* LaunchScreen.storyboard */,
 				7614779122BFFA0000022E85 /* Info.plist */,
 				7614779222BFFA0000022E85 /* main.m */,
 				7614778922BFF9FF00022E85 /* QRApp.xcdatamodeld */,
-				76FBC54B22DBC20C00B3FBC3 /* Trash */,
 			);
 			path = QRApp;
 			sourceTree = "<group>";
@@ -263,17 +256,6 @@
 				762D639622DD00F600013805 /* HistoryPost+CoreDataProperties.m */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		76FBC54B22DBC20C00B3FBC3 /* Trash */ = {
-			isa = PBXGroup;
-			children = (
-				76C0533722D6776F00F55DEC /* MainSession.h */,
-				76C0533822D6776F00F55DEC /* MainSession.m */,
-				7654A6AD22CFF6F9004D7C5F /* TextScanViewController.h */,
-				7654A6AE22CFF6F9004D7C5F /* TextScanViewController.m */,
-			);
-			path = Trash;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -415,8 +397,6 @@
 				7606926E22C3F8D000BB9D6E /* HistoryCell.m in Sources */,
 				762D639722DD00F600013805 /* Posts+CoreDataClass.m in Sources */,
 				7614779322BFFA0000022E85 /* main.m in Sources */,
-				7654A6AF22CFF6F9004D7C5F /* TextScanViewController.m in Sources */,
-				76C0533922D6776F00F55DEC /* MainSession.m in Sources */,
 				762D639A22DD00F600013805 /* HistoryPost+CoreDataProperties.m in Sources */,
 				7614778222BFF9FF00022E85 /* AppDelegate.m in Sources */,
 				7614780122C0262C00022E85 /* HistoryScanTVController.m in Sources */,
