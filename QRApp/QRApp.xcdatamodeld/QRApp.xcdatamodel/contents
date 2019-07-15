@@ -3,11 +3,12 @@
     <entity name="HistoryPost" representedClassName="HistoryPost" parentEntity="Posts" syncable="YES">
         <attribute name="dateOfCreation" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="picture" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Posts" representedClassName="Posts" isAbstract="YES" syncable="YES"/>
     <elements>
-        <element name="HistoryPost" positionX="466.33203125" positionY="-11743.09765625" width="128" height="88"/>
+        <element name="HistoryPost" positionX="466.33203125" positionY="-11743.09765625" width="128" height="103"/>
         <element name="Posts" positionX="630.10546875" positionY="-11882.203125" width="128" height="43"/>
     </elements>
 </model>

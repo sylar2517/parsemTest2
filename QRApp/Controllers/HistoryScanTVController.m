@@ -86,6 +86,17 @@
 }
 
 #pragma mark - UITableViewDataSourse
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString* identifier = @"historyCell";
+    HistoryCell* cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
+    //    if (!cell) {
+    //        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
+    //        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    //    }
+    [self configureCell:cell atIndexPath:indexPath];
+    return cell;
+}
+
 - (void)configureCell:(HistoryCell *)cell atIndexPath:(NSIndexPath*)indexPath{
     HistoryPost* post = nil;
     if (self.filterObject) {
@@ -94,7 +105,7 @@
         post = [self.fetchedResultsController objectAtIndexPath:indexPath];
     }
     //HistoryPost* post = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.nameLabel.text = post.value;
+   
     //cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     cell.tintColor = [UIColor blackColor];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -103,7 +114,6 @@
     
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
     [df setDateFormat:@"dd-MM-yyyy HH:mm"];
-    
     cell.dateLabel.text = [df stringFromDate:post.dateOfCreation];
     //    UIImage* image = [UIImage imageWithData:post.picture];
     //    //cell.imageViewCell.image = [UIImage imageWithData:post.picture];
@@ -117,9 +127,12 @@
     //    UIImage* image = [UIImage imageWithCIImage:qrImage
     //                                         scale:[UIScreen mainScreen].scale
     //                                   orientation:UIImageOrientationUp];
-    
-    cell.imageViewCell.image = [self makeQRFromText:post.value from:cell.imageViewCell];
 
+    
+    
+    cell.nameLabel.text = post.value;
+    cell.imageViewCell.image = [self makeQRFromText:post.value from:cell.imageViewCell];
+    cell.typeLabel.text = @"QR";
     
     // cell.imageViewCell.layer.magnificationFilter = kCAFilterNearest;
 }
@@ -151,7 +164,12 @@
     
     if (!self.isEditing) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        HistoryPost* post = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        HistoryPost* post = nil;
+        if (self.filterObject) {
+            post = [self.filterObject objectAtIndex:indexPath.row];
+        } else {
+            post = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        }
         ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
         vc.result = post.value;
         [self presentViewController:vc animated:YES completion:nil];

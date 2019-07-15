@@ -47,16 +47,16 @@
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString* identifier = @"historyCell";
-    HistoryCell* cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
-//    if (!cell) {
-//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
-//        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-//    }
-    [self configureCell:cell atIndexPath:indexPath];
-    return cell;
-}
+//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    static NSString* identifier = @"historyCell";
+//    HistoryCell* cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
+////    if (!cell) {
+////        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
+////        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+////    }
+//    [self configureCell:cell atIndexPath:indexPath];
+//    return cell;
+//}
 
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
