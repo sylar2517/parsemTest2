@@ -9,12 +9,12 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-@class HistoryPost;
+@class HistoryPost, QRPost;
 @interface ResultViewController : UIViewController
 @property(strong, nonatomic)NSString* result;
 @property(strong, nonatomic)HistoryPost* post;
 @property(assign, nonatomic)BOOL fromCamera;
-
+@property(strong, nonatomic)QRPost* postQR;
 
 @property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) IBOutlet UIImageView *resultImageView;

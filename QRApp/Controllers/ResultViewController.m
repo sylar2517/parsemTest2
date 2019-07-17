@@ -10,6 +10,7 @@
 #import "DataManager.h"
 #import "HistoryPost+CoreDataClass.h"
 #import <CoreData/CoreData.h>
+#import "QRPost+CoreDataClass.h"
 
 @interface ResultViewController () <UITextViewDelegate>
 
@@ -44,8 +45,15 @@
         self.resultTextImageView.text = self.result;
         [self makeQRFromText:self.result];
         [self checkLing:self.result];
-        
         [self save];
+        
+    } else if (self.postQR && !self.fromCamera){
+        self.resultTextImageView.text = self.postQR.value;
+        [self checkLing:self.postQR.value];
+        NSData* dataPicture = self.postQR.data;
+        self.resultImageView.layer.magnificationFilter = kCAFilterNearest;
+        self.resultImageView.image = [UIImage imageWithData:dataPicture];
+        
     } else {
         [self dismissViewControllerAnimated:YES completion:nil];
         NSLog(@"Error result");
@@ -118,7 +126,6 @@
     }
 
 }
-
 
 #pragma mark - Actions
 - (IBAction)actionBack:(UIButton *)sender {

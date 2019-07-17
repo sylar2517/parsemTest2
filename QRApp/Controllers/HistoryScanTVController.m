@@ -362,7 +362,7 @@
     UIAlertController* ac2 = [UIAlertController alertControllerWithTitle:@"Очистить историю?" message:nil preferredStyle:(UIAlertControllerStyleAlert)];
     UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Отмена" style:(UIAlertActionStyleCancel) handler:nil];
     UIAlertAction* clear = [UIAlertAction actionWithTitle:@"Да" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-        [[DataManager sharedManager] deleteHistory];
+        [[DataManager sharedManager] deleteHistoryScan];
         [self.tableView reloadData];
     }];
     

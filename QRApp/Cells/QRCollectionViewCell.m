@@ -30,4 +30,11 @@
     self.infoButton.layer.masksToBounds = YES;
 }
 
+- (IBAction)actionDelete:(UIButton *)sender {
+    [self.delegate deleteCellForIndexPath:self.post];
+}
+
+- (IBAction)actionShow:(UIButton *)sender {
+    [self.delegate showCellForQR:self.post];
+}
 @end

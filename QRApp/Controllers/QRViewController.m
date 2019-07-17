@@ -96,6 +96,9 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appMovedToForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appMovedToBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     
+    //autorotate
+    
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -658,13 +661,24 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     return nil;
 }
 
-#pragma mark - Orientation
-- (BOOL)shouldAutorotate {
-    
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    
-    return orientation == UIInterfaceOrientationPortrait ? NO : YES;
-}
+//#pragma mark - Orientation
+////- (BOOL)shouldAutorotate {
+////
+////    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+////
+////    return orientation == UIInterfaceOrientationPortrait ? NO : YES;
+////}
+////- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+////{
+////    return UIInterfaceOrientationMaskPortrait;
+////}
+////-(BOOL)shouldAutorotate {
+////    return YES;
+////}
+////-(UIInterfaceOrientationMask)supportedInterfaceOrientations
+////{
+////    return UIInterfaceOrientationMaskPortrait;
+////}
 #pragma mark - NSNotification
 -(void)appMovedToForeground:(NSNotification*)notification{
     [self.session startRunning];

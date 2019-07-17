@@ -17,7 +17,7 @@
     });
     return manager;
 }
--(void) deleteHistory{
+-(void) deleteAll{
     NSArray* resultArray = [self allObjects];
     for (id object in resultArray) {
         [self.persistentContainer.viewContext deleteObject:object];
@@ -26,6 +26,35 @@
    
 }
 
+-(void)deleteHistoryScan{
+    NSFetchRequest* request = [[NSFetchRequest alloc] init];
+    NSEntityDescription* description = [NSEntityDescription entityForName:@"HistoryPost" inManagedObjectContext:self.persistentContainer.viewContext];
+    [request setEntity:description];
+    NSError* reqestError = nil;
+    NSArray* resultArray = [self.persistentContainer.viewContext executeFetchRequest:request error:&reqestError];
+    if (reqestError) {
+        NSLog(@"%@", [reqestError localizedDescription]);
+    }
+    for (id object in resultArray) {
+        [self.persistentContainer.viewContext deleteObject:object];
+    }
+    [self.persistentContainer.viewContext save:nil];
+}
+
+-(void)deleteQR{
+    NSFetchRequest* request = [[NSFetchRequest alloc] init];
+    NSEntityDescription* description = [NSEntityDescription entityForName:@"QRPost" inManagedObjectContext:self.persistentContainer.viewContext];
+    [request setEntity:description];
+    NSError* reqestError = nil;
+    NSArray* resultArray = [self.persistentContainer.viewContext executeFetchRequest:request error:&reqestError];
+    if (reqestError) {
+        NSLog(@"%@", [reqestError localizedDescription]);
+    }
+    for (id object in resultArray) {
+        [self.persistentContainer.viewContext deleteObject:object];
+    }
+    [self.persistentContainer.viewContext save:nil];
+}
 -(NSArray*)allObjects{
     NSFetchRequest* request = [[NSFetchRequest alloc] init];
     NSEntityDescription* description = [NSEntityDescription entityForName:@"Posts" inManagedObjectContext:self.persistentContainer.viewContext];

@@ -32,6 +32,10 @@
 		7653841222C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = 7653841122C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m */; };
 		7654A67222CFCE9F004D7C5F /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7654A67122CFCE9F004D7C5F /* Vision.framework */; };
 		765D66C622CBFFAF00F79EDC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765D66C522CBFFAF00F79EDC /* SettingsViewController.m */; };
+		768562ED22DF90A000971F25 /* QRPost+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 768562EB22DF90A000971F25 /* QRPost+CoreDataClass.m */; };
+		768562EE22DF90A000971F25 /* QRPost+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 768562EC22DF90A000971F25 /* QRPost+CoreDataProperties.m */; };
+		768562F122DF920E00971F25 /* СhooseQRTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 768562F022DF920E00971F25 /* СhooseQRTableViewController.m */; };
+		768562F422DFA71300971F25 /* EnterTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 768562F322DFA71300971F25 /* EnterTextViewController.m */; };
 		76B257F222C8EA52002E22D5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76B257F122C8EA51002E22D5 /* WebKit.framework */; };
 		76B257F822C93A60002E22D5 /* CreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B257F722C93A60002E22D5 /* CreationViewController.m */; };
 		76FBC54E22DBC2EF00B3FBC3 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76FBC54D22DBC2EF00B3FBC3 /* WebViewController.m */; };
@@ -103,6 +107,14 @@
 		7654A67122CFCE9F004D7C5F /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		765D66C422CBFFAF00F79EDC /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		765D66C522CBFFAF00F79EDC /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		768562E922DF90A000971F25 /* QRPost+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QRPost+CoreDataProperties.h"; sourceTree = "<group>"; };
+		768562EA22DF90A000971F25 /* QRPost+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QRPost+CoreDataClass.h"; sourceTree = "<group>"; };
+		768562EB22DF90A000971F25 /* QRPost+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "QRPost+CoreDataClass.m"; sourceTree = "<group>"; };
+		768562EC22DF90A000971F25 /* QRPost+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "QRPost+CoreDataProperties.m"; sourceTree = "<group>"; };
+		768562EF22DF920D00971F25 /* СhooseQRTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "СhooseQRTableViewController.h"; sourceTree = "<group>"; };
+		768562F022DF920E00971F25 /* СhooseQRTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "СhooseQRTableViewController.m"; sourceTree = "<group>"; };
+		768562F222DFA71300971F25 /* EnterTextViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EnterTextViewController.h; sourceTree = "<group>"; };
+		768562F322DFA71300971F25 /* EnterTextViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EnterTextViewController.m; sourceTree = "<group>"; };
 		76B257F122C8EA51002E22D5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		76B257F622C93A60002E22D5 /* CreationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CreationViewController.h; sourceTree = "<group>"; };
 		76B257F722C93A60002E22D5 /* CreationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CreationViewController.m; sourceTree = "<group>"; };
@@ -209,6 +221,10 @@
 				7614778122BFF9FF00022E85 /* AppDelegate.m */,
 				7614778622BFF9FF00022E85 /* Main.storyboard */,
 				7614778C22BFFA0000022E85 /* Assets.xcassets */,
+				768562EF22DF920D00971F25 /* СhooseQRTableViewController.h */,
+				768562F022DF920E00971F25 /* СhooseQRTableViewController.m */,
+				768562F222DFA71300971F25 /* EnterTextViewController.h */,
+				768562F322DFA71300971F25 /* EnterTextViewController.m */,
 				763CD00622C6A3D30009F955 /* DataManager.h */,
 				763CD00722C6A3D30009F955 /* DataManager.m */,
 				7614778E22BFFA0000022E85 /* LaunchScreen.storyboard */,
@@ -251,6 +267,10 @@
 		763CD00922C6A5840009F955 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				768562E922DF90A000971F25 /* QRPost+CoreDataProperties.h */,
+				768562EA22DF90A000971F25 /* QRPost+CoreDataClass.h */,
+				768562EB22DF90A000971F25 /* QRPost+CoreDataClass.m */,
+				768562EC22DF90A000971F25 /* QRPost+CoreDataProperties.m */,
 				762D638F22DD00F600013805 /* Posts+CoreDataProperties.h */,
 				762D639022DD00F600013805 /* Posts+CoreDataClass.h */,
 				762D639122DD00F600013805 /* Posts+CoreDataClass.m */,
@@ -399,11 +419,15 @@
 				7617905622DE65270038F9D4 /* QRCollectionViewCell.m in Sources */,
 				763CD00822C6A3D30009F955 /* DataManager.m in Sources */,
 				765D66C622CBFFAF00F79EDC /* SettingsViewController.m in Sources */,
+				768562F122DF920E00971F25 /* СhooseQRTableViewController.m in Sources */,
 				7614778522BFF9FF00022E85 /* QRViewController.m in Sources */,
 				7606926E22C3F8D000BB9D6E /* HistoryCell.m in Sources */,
+				768562EE22DF90A000971F25 /* QRPost+CoreDataProperties.m in Sources */,
 				762D639722DD00F600013805 /* Posts+CoreDataClass.m in Sources */,
 				7614779322BFFA0000022E85 /* main.m in Sources */,
 				762D639A22DD00F600013805 /* HistoryPost+CoreDataProperties.m in Sources */,
+				768562ED22DF90A000971F25 /* QRPost+CoreDataClass.m in Sources */,
+				768562F422DFA71300971F25 /* EnterTextViewController.m in Sources */,
 				7614778222BFF9FF00022E85 /* AppDelegate.m in Sources */,
 				7614780122C0262C00022E85 /* HistoryScanTVController.m in Sources */,
 				76371E8222C160DE00AF8E28 /* GalleryViewController.m in Sources */,

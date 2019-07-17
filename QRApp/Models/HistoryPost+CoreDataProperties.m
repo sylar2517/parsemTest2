@@ -2,7 +2,7 @@
 //  HistoryPost+CoreDataProperties.m
 //  QRApp
 //
-//  Created by Сергей Семин on 16/07/2019.
+//  Created by Сергей Семин on 18/07/2019.
 //  Copyright © 2019 Сергей Семин. All rights reserved.
 //
 //

@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 //- (IBAction)test:(id)sender;
 
+- (IBAction)actionDeleteAllQR:(UIButton *)sender;
 
 
 @end

@@ -1,5 +1,5 @@
 //
-//  HistoryPost+CoreDataProperties.h
+//  QRPost+CoreDataProperties.h
 //  QRApp
 //
 //  Created by Сергей Семин on 18/07/2019.
@@ -7,17 +7,17 @@
 //
 //
 
-#import "HistoryPost+CoreDataClass.h"
+#import "QRPost+CoreDataClass.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface HistoryPost (CoreDataProperties)
+@interface QRPost (CoreDataProperties)
 
-+ (NSFetchRequest<HistoryPost *> *)fetchRequest;
++ (NSFetchRequest<QRPost *> *)fetchRequest;
 
 @property (nullable, nonatomic, copy) NSDate *dateOfCreation;
-@property (nullable, nonatomic, retain) NSData *picture;
+@property (nullable, nonatomic, retain) NSData *data;
 @property (nullable, nonatomic, copy) NSString *type;
 @property (nullable, nonatomic, copy) NSString *value;
 
