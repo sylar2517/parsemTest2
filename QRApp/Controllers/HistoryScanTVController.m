@@ -13,7 +13,7 @@
 #import "ResultViewController.h"
 #import "PopUpForCameraOrGallery.h"
 #import "DataManager.h"
-#import "MainSession.h"
+
 #import "WebViewController.h"
 
 @interface HistoryScanTVController () <PopUpForCameraOrGalleryDelegate>
@@ -121,22 +121,10 @@
     
     if ([post.type isEqualToString:@"QR"]) {
         cell.nameLabel.text = post.value;
-        cell.imageViewCell.image = [self makeQRFromText:post.value from:cell.imageViewCell];
+        cell.imageViewCell.layer.magnificationFilter = kCAFilterNearest;
+        cell.imageViewCell.image = [UIImage imageWithData:post.picture];
         cell.typeLabel.text = @"QR";
-        //    UIImage* image = [UIImage imageWithData:post.picture];
-        //    //cell.imageViewCell.image = [UIImage imageWithData:post.picture];
-        //    cell.imageViewCell.image = image;
-        // cell.backgroundColor = [UIColor darkGrayColor];
-        //    CIImage *qrImage = [CIImage imageWithData:post.picture];
-        //    float scaleX = cell.imageViewCell.frame.size.width / qrImage.extent.size.width;
-        //    float scaleY = cell.imageViewCell.frame.size.height / qrImage.extent.size.height;
-        //
-        //    qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
-        //    UIImage* image = [UIImage imageWithCIImage:qrImage
-        //                                         scale:[UIScreen mainScreen].scale
-        //                                   orientation:UIImageOrientationUp];
-        
-        // cell.imageViewCell.layer.magnificationFilter = kCAFilterNearest;
+
         
     } else if ([post.type isEqualToString:@"PDF"]){
         cell.nameLabel.text = post.value;
@@ -149,26 +137,6 @@
     
 }
 
-
--(UIImage*)makeQRFromText:(NSString*)text from:(UIImageView*)imageView{
-    
-    NSData *stringData = [text dataUsingEncoding: NSUTF8StringEncoding];
-    
-    CIFilter *qrFilter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
-    [qrFilter setValue:stringData forKey:@"inputMessage"];
-    [qrFilter setValue:@"H" forKey:@"inputCorrectionLevel"];
-    
-    CIImage *qrImage = qrFilter.outputImage;
-    float scaleX = imageView.frame.size.width / qrImage.extent.size.width;
-    float scaleY = imageView.frame.size.height / qrImage.extent.size.height;
-    
-    qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
-    
-    return [UIImage imageWithCIImage:qrImage
-                               scale:[UIScreen mainScreen].scale
-                         orientation:UIImageOrientationUp];
-    
-}
 
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -185,7 +153,8 @@
         
         if ([post.type isEqualToString:@"QR"]) {
             ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
-            vc.result = post.value;
+            vc.post = post;
+            vc.fromCamera = NO;
             [self presentViewController:vc animated:YES completion:nil];
         } else if ([post.type isEqualToString:@"PDF"]) {
             WebViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"webView"];

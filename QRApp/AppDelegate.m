@@ -8,9 +8,9 @@
 
 #import "AppDelegate.h"
 #import "DataManager.h"
-#import "MainSession.h"
+
 @interface AppDelegate ()
-@property(assign, nonatomic) BOOL isFirstTime;
+
 @end
 
 @implementation AppDelegate
@@ -19,10 +19,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 //    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-   // [[DataManager sharedManager] deleteAllObject];
-    self.isFirstTime = YES;
-//    [MainSession sharedSession].isStart = NO;
-//    [MainSession sharedSessionForScanText].isStartText = NO;
+    
     return YES;
 }
 
@@ -48,19 +45,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    
-//    if (self.isFirstTime) {
-//        self.isFirstTime = !self.isFirstTime;
-//    } else {
-//        if (![[MainSession sharedSession] isRunning]) {
-//            [[MainSession sharedSession] startRunning];
-//            [[MainSession sharedSessionForScanText] stopRunning];
-//        }
-//        if (![[MainSession sharedSessionForScanText] isRunning]) {
-//            [[MainSession sharedSessionForScanText] startRunning];
-//            [[MainSession sharedSession] stopRunning];
-//        }
-//    }
+
 }
 
 

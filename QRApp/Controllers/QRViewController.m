@@ -591,10 +591,10 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     }
     
     
-    const NSInteger xCord = maxX * CGRectGetWidth(self.view.frame);
-    const NSInteger yCord = (1 - minY) * CGRectGetHeight(self.view.frame);
-    const NSInteger width = (minX - maxX) * CGRectGetWidth(self.view.frame);
-    const NSInteger height = (minY - maxY) * CGRectGetHeight(self.view.frame);
+    const NSInteger xCord = maxX * CGRectGetWidth(self.video.frame);
+    const NSInteger yCord = (1 - minY) * CGRectGetHeight(self.video.frame);
+    const NSInteger width = (minX - maxX) * CGRectGetWidth(self.video.frame);
+    const NSInteger height = (minY - maxY) * CGRectGetHeight(self.video.frame);
     
     CALayer* outline = [[CALayer alloc] init];
     outline.frame = CGRectMake(xCord, yCord, width, height);

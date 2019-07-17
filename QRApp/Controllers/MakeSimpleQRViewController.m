@@ -17,6 +17,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.navigationController.navigationBarHidden = YES;
+    [self.tabBarController.tabBar setHidden:YES];
     
     for (UIButton* but in self.buttonsOutletCollection) {
         but.layer.cornerRadius = 10;
@@ -41,12 +43,8 @@
 
 #pragma mark - NSNotificationCenter
 -(void)keyboardWillAppear:(NSNotification*)notification{
-//    NSNumber* test = [notification.userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey];
-//    CGRect rect = [test CGRectValue];
-  //  NSLog(@"%@", notification.userInfo);
+
     if (self.view.frame.origin.y == 0) {
-        //self.levelConstrain.constant = -CGRectGetHeight(rect);
-        
         [UIView animateWithDuration:0.25 animations:^{
             self.levelConstrain.constant = -50;
         }];
@@ -59,33 +57,39 @@
 }
 
 #pragma mark - Actions
-- (IBAction)actionEndOfPrint:(UITextField *)sender {
-    [self makeQR];
-}
-
 - (IBAction)actionBack:(UIButton *)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)actionExport:(UIButton *)sender {
+    UIImage* image = self.resultImageView.image;
+    
+    UIGraphicsBeginImageContext(CGSizeMake(400, 400));
+    [image drawInRect:CGRectMake(0, 0, 400, 400)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    NSData *imageData = UIImagePNGRepresentation(newImage);
+    
+    NSArray* array = @[imageData];
+    UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:array applicationActivities:nil];
+    avc.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
+    [self presentViewController:avc animated:YES completion:nil];
 }
 
 - (IBAction)actionSaveImage:(UIButton *)sender {
-//    UIImage* image = [self makeQRForSaveOrExport];
-//    
-//    UIGraphicsBeginImageContext(CGSizeMake(400, 400));
-//    image = UIGraphicsGetImageFromCurrentImageContext();
-////    image = [self makeQRForSaveOrExport];
-//    UIGraphicsEndImageContext();
-//    UIImageView* imageview = [[UIImageView alloc] initWithImage:image];
-//    [self.view addSubview:imageview];
-//    //NSData *imageData = UIImageJPEGRepresentation(image, 0.7);
-//    NSLog(@"%@", image);
-////    NSArray* array = @[image];
-////    UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:array applicationActivities:nil];
-////    //avc.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
-//    [self presentViewController:avc animated:YES completion:nil];
 
+    UIImage* image = self.resultImageView.image;
+    
+    UIGraphicsBeginImageContext(CGSizeMake(400, 400));
+    [image drawInRect:CGRectMake(0, 0, 400, 400)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    UIImageWriteToSavedPhotosAlbum(newImage, nil, nil, nil);
+    
+    UIAlertController* ac = [UIAlertController alertControllerWithTitle:@"Сохранено" message:nil preferredStyle:(UIAlertControllerStyleAlert)];
+    UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Ок" style:(UIAlertActionStyleCancel) handler:nil];
+    [ac addAction:aa];
+    [self presentViewController:ac animated:YES completion:nil];
     
 }
 
@@ -97,24 +101,21 @@
 
 #pragma matk -  UITextFieldDelegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
-    if ([self.textField.text isEqual:nil]) {
+    if ([self.textField.text isEqual:nil] && self.textField.text.length > 0) {
         return YES;
     }
-    [self makeQR];
+    [self makeQRFromString:self.textField.text];
     [self.textField resignFirstResponder];
     return YES;
 }
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
 
-//    if (textField.text.length == 1 && [string isEqualToString:@""]) {
-//    
-//    }
-    [self makeQR];
+    [self makeQRFromString:[textField.text stringByAppendingString:string]];
     return YES;
 }
 #pragma matk - private Methods
--(void)makeQR{
-    NSData *stringData = [self.textField.text dataUsingEncoding: NSUTF8StringEncoding];
+-(void)makeQRFromString:(NSString*)string{
+    NSData *stringData = [string dataUsingEncoding: NSUTF8StringEncoding];
     
     CIFilter *qrFilter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
     [qrFilter setValue:stringData forKey:@"inputMessage"];

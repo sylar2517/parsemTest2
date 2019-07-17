@@ -20,15 +20,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if ([self.result rangeOfString:@"http"].location == NSNotFound) {
-        self.openInBrowser.hidden = YES;
-    } else {
-        self.openInBrowser.hidden = NO;
-        self.openInBrowser.tintColor = [UIColor whiteColor];
-    }
-    
     self.mainView.layer.cornerRadius = 10;
     self.mainView.layer.masksToBounds = YES;
+    
+    self.resultTextImageView.editable = NO;
+    self.resultTextImageView.layer.cornerRadius = 10;
+    self.resultTextImageView.layer.masksToBounds = YES;
     
     NSArray* buttons = [[NSArray alloc] initWithObjects:self.copingButton, self.openInBrowser, self.backButton,self.saveButton, self.exportButton, nil];
     for (UIButton*but in buttons) {
@@ -36,23 +33,34 @@
         but.layer.masksToBounds = YES;
     }
 
+    if (self.post && !self.fromCamera) {
+        self.resultTextImageView.text = self.post.value;
+        [self checkLing:self.post.value];
+        NSData* dataPicture = self.post.picture;
+        self.resultImageView.layer.magnificationFilter = kCAFilterNearest;
+        self.resultImageView.image = [UIImage imageWithData:dataPicture];
+        
+    } else if (self.result && self.fromCamera){
+        self.resultTextImageView.text = self.result;
+        [self makeQRFromText:self.result];
+        [self checkLing:self.result];
+        
+        [self save];
+    } else {
+        [self dismissViewControllerAnimated:YES completion:nil];
+        NSLog(@"Error result");
+    }
     
-    self.resultTextImageView.text = self.result;
-    self.resultTextImageView.editable = NO;
-    self.resultTextImageView.layer.cornerRadius = 10;
-    self.resultTextImageView.layer.masksToBounds = YES;
+    
+    
+    
     
     self.copingButton.tintColor = self.backButton.tintColor = [UIColor whiteColor];
     
-    [self makeQRFromText];
-    self.resultTextImageView.delegate = self;
+    //[self makeQRFromText];
+    //self.resultTextImageView.delegate = self;
     
-    [self save];
-}
-
-#pragma mark - UITextViewDelegate
-- (void)textViewDidEndEditing:(UITextView *)textView{
-    [self makeQRFromText];
+    
 }
 
 #pragma mark - Methods
@@ -63,85 +71,58 @@
         post.dateOfCreation = now;
         post.value = self.resultTextImageView.text;
         post.type = @"QR";
+        
+        UIImage* image = self.resultImageView.image;
+        
+        UIGraphicsBeginImageContext(CGSizeMake(400, 400));
+        [image drawInRect:CGRectMake(0, 0, 400, 400)];
+        UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        NSData *imageData = UIImagePNGRepresentation(newImage);
+        post.picture = imageData;
+        
         [[DataManager sharedManager] saveContext];
     }
 }
 
--(void)makeQRFromText{
-    //    CIImage* ciImage = [self createQRForString:self.result];
-    //    UIImage* image = [UIImage imageWithCIImage:ciImage];
-    //    self.resultImageView.image = image;
-//    CIImage *qrImage = [self createQRForString:self.result];
-//    float scaleX = self.resultImageView.frame.size.width / qrImage.extent.size.width;
-//    float scaleY = self.resultImageView.frame.size.height / qrImage.extent.size.height;
-//
-//    qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
-//
-//    self.resultImageView.image = [UIImage imageWithCIImage:qrImage
-//                                                     scale:[UIScreen mainScreen].scale
-//                                               orientation:UIImageOrientationUp];
-    
-        
-    NSData *stringData = [self.result dataUsingEncoding: NSUTF8StringEncoding];
-    
+-(void)makeQRFromText:(NSString*)string{
+    NSData *stringData = [string dataUsingEncoding: NSUTF8StringEncoding];
+
     CIFilter *qrFilter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
     [qrFilter setValue:stringData forKey:@"inputMessage"];
     [qrFilter setValue:@"H" forKey:@"inputCorrectionLevel"];
-    
+
     CIImage *qrImage = qrFilter.outputImage;
     float scaleX = self.resultImageView.frame.size.width / qrImage.extent.size.width;
     float scaleY = self.resultImageView.frame.size.height / qrImage.extent.size.height;
-    
+
     qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
-    
+
     self.resultImageView.image = [UIImage imageWithCIImage:qrImage
                                                      scale:[UIScreen mainScreen].scale
                                                orientation:UIImageOrientationUp];
-        
+
 
 }
-//- (CIImage *)createQRForString:(NSString *)qrString {
-//    NSData *stringData = [qrString dataUsingEncoding: NSISOLatin1StringEncoding];
-//    
-//    CIFilter *qrFilter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
-//    [qrFilter setValue:stringData forKey:@"inputMessage"];
-//
-//    return qrFilter.outputImage;
-//    
-//    //    HistoryPost* post = [NSEntityDescription insertNewObjectForEntityForName:@"HistoryPost" inManagedObjectContext:[DataManager sharedManager].persistentContainer.viewContext];
-//        NSDate* now = [NSDate date];
-//        post.dateOfCreation = now;
-//        post.value = qrString;
-//        post.picture = stringData;
-//    //
-//    //    [[DataManager sharedManager] saveContext];
-//}
--(UIImage*)makeQRFromText:(UIImageView*)image{
+-(void)checkLing:(NSString*)string{
+
+    BOOL result =   [string rangeOfString:@"www"].location != NSNotFound ||
+                    [string rangeOfString:@"http"].location != NSNotFound ||
+                    [string rangeOfString:@"com"].location != NSNotFound;
     
-    
-    NSData *stringData = [self.result dataUsingEncoding: NSUTF8StringEncoding];
-    
-    CIFilter *qrFilter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
-    [qrFilter setValue:stringData forKey:@"inputMessage"];
-    [qrFilter setValue:@"H" forKey:@"inputCorrectionLevel"];
-    
-    CIImage *qrImage = qrFilter.outputImage;
-    float scaleX = image.frame.size.width / qrImage.extent.size.width;
-    float scaleY = image.frame.size.height / qrImage.extent.size.height;
-    
-    qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
-    
-    return  [UIImage imageWithCIImage:qrImage
-                                 scale:[UIScreen mainScreen].scale
-                           orientation:UIImageOrientationUp];
-    
-    
+    if (result) {
+        
+        self.openInBrowser.hidden = NO;
+    } else {
+        self.openInBrowser.hidden = YES;
+    }
+
 }
+
 
 #pragma mark - Actions
 - (IBAction)actionBack:(UIButton *)sender {
     [self.resultTextImageView resignFirstResponder];
-    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

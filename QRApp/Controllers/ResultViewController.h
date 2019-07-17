@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
+@class HistoryPost;
 @interface ResultViewController : UIViewController
 @property(strong, nonatomic)NSString* result;
+@property(strong, nonatomic)HistoryPost* post;
 @property(assign, nonatomic)BOOL fromCamera;
 
 

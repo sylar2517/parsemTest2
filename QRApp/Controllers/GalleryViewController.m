@@ -114,12 +114,14 @@
         post.type = @"QR";
         post.value = self.textView.text;
         if (self.qrCodeImageView.image) {
-            UIGraphicsBeginImageContext(self.QRCode.size);
-            [self.QRCode drawInRect:CGRectMake(0, 0, self.QRCode.size.width, self.QRCode.size.height)];
+            UIImage* image = self.qrCodeImageView.image;
+            
+            UIGraphicsBeginImageContext(CGSizeMake(400, 400));
+            [image drawInRect:CGRectMake(0, 0, 400, 400)];
             UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
-            NSData* date = UIImagePNGRepresentation(newImage);
-            post.picture = date;
+            NSData *imageData = UIImagePNGRepresentation(newImage);
+            post.picture = imageData;
         }
         
         

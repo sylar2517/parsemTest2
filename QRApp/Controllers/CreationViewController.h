@@ -15,7 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIButton *simpleQR;
 @property (weak, nonatomic) IBOutlet UIButton *customQR;
 
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 
+//- (IBAction)test:(id)sender;
 
 
 

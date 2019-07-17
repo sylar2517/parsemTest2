@@ -8,7 +8,6 @@
 
 #import "CoreDataTableViewController.h"
 #import "DataManager.h"
-#import "HistoryCell.h"
 
 @interface CoreDataTableViewController ()
 
@@ -47,18 +46,6 @@
 }
 
 
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    static NSString* identifier = @"historyCell";
-//    HistoryCell* cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
-////    if (!cell) {
-////        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
-////        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-////    }
-//    [self configureCell:cell atIndexPath:indexPath];
-//    return cell;
-//}
-
-
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
     return YES;
@@ -81,7 +68,7 @@
 }
 
 
-- (void)configureCell:(HistoryCell *)cell atIndexPath:(NSIndexPath*)indexPath {
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath*)indexPath {
     
 }
 

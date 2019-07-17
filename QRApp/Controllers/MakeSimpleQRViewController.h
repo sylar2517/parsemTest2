@@ -14,14 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic) IBOutlet UIImageView *resultImageView;
 @property (weak, nonatomic) IBOutlet UITextField *textField;
-//@property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIView *menuView;
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *buttonsOutletCollection;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *levelConstrain;
 
 
-
-- (IBAction)actionEndOfPrint:(UITextField *)sender;
 - (IBAction)actionBack:(UIButton *)sender;
 - (IBAction)actionExport:(UIButton *)sender;
 - (IBAction)actionSaveImage:(UIButton *)sender;

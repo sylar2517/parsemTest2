@@ -20,6 +20,7 @@
 		761477A822BFFA0000022E85 /* QRAppUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 761477A722BFFA0000022E85 /* QRAppUITests.m */; };
 		761477B722BFFABF00022E85 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 761477B622BFFABF00022E85 /* AVFoundation.framework */; };
 		7614780122C0262C00022E85 /* HistoryScanTVController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7614780022C0262C00022E85 /* HistoryScanTVController.m */; };
+		7617905622DE65270038F9D4 /* QRCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7617905522DE65270038F9D4 /* QRCollectionViewCell.m */; };
 		762D639722DD00F600013805 /* Posts+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 762D639122DD00F600013805 /* Posts+CoreDataClass.m */; };
 		762D639822DD00F600013805 /* Posts+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 762D639222DD00F600013805 /* Posts+CoreDataProperties.m */; };
 		762D639922DD00F600013805 /* HistoryPost+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 762D639522DD00F600013805 /* HistoryPost+CoreDataClass.m */; };
@@ -79,6 +80,8 @@
 		761477B622BFFABF00022E85 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		761477FF22C0262C00022E85 /* HistoryScanTVController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistoryScanTVController.h; sourceTree = "<group>"; };
 		7614780022C0262C00022E85 /* HistoryScanTVController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistoryScanTVController.m; sourceTree = "<group>"; };
+		7617905422DE65270038F9D4 /* QRCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QRCollectionViewCell.h; sourceTree = "<group>"; };
+		7617905522DE65270038F9D4 /* QRCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QRCollectionViewCell.m; sourceTree = "<group>"; };
 		762D638F22DD00F600013805 /* Posts+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Posts+CoreDataProperties.h"; sourceTree = "<group>"; };
 		762D639022DD00F600013805 /* Posts+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Posts+CoreDataClass.h"; sourceTree = "<group>"; };
 		762D639122DD00F600013805 /* Posts+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Posts+CoreDataClass.m"; sourceTree = "<group>"; };
@@ -142,6 +145,8 @@
 			children = (
 				7606926C22C3F8D000BB9D6E /* HistoryCell.h */,
 				7606926D22C3F8D000BB9D6E /* HistoryCell.m */,
+				7617905422DE65270038F9D4 /* QRCollectionViewCell.h */,
+				7617905522DE65270038F9D4 /* QRCollectionViewCell.m */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -391,6 +396,7 @@
 				7614778B22BFF9FF00022E85 /* QRApp.xcdatamodeld in Sources */,
 				76FBC54E22DBC2EF00B3FBC3 /* WebViewController.m in Sources */,
 				763CD01B22C6B7D20009F955 /* MakeSimpleQRViewController.m in Sources */,
+				7617905622DE65270038F9D4 /* QRCollectionViewCell.m in Sources */,
 				763CD00822C6A3D30009F955 /* DataManager.m in Sources */,
 				765D66C622CBFFAF00F79EDC /* SettingsViewController.m in Sources */,
 				7614778522BFF9FF00022E85 /* QRViewController.m in Sources */,
