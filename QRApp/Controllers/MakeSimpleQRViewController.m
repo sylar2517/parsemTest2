@@ -60,22 +60,24 @@
 
 #pragma mark - Actions
 - (IBAction)actionBack:(UIButton *)sender {
-    QRPost* post = [NSEntityDescription insertNewObjectForEntityForName:@"QRPost" inManagedObjectContext:[DataManager sharedManager].persistentContainer.viewContext];
-    NSDate* now = [NSDate date];
-    post.dateOfCreation = now;
-    post.type = @"Простой";
-    post.value = self.textField.text;
-
-    UIImage* image = self.resultImageView.image;
-
-    UIGraphicsBeginImageContext(CGSizeMake(400, 400));
-    [image drawInRect:CGRectMake(0, 0, 400, 400)];
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    NSData *imageData = UIImagePNGRepresentation(newImage);
-    post.data = imageData;
-
-    [[DataManager sharedManager] saveContext];
+    if (self.textField.text.length > 0) {
+        QRPost* post = [NSEntityDescription insertNewObjectForEntityForName:@"QRPost" inManagedObjectContext:[DataManager sharedManager].persistentContainer.viewContext];
+        NSDate* now = [NSDate date];
+        post.dateOfCreation = now;
+        post.type = @"Простой";
+        post.value = self.textField.text;
+        
+        UIImage* image = self.resultImageView.image;
+        
+        UIGraphicsBeginImageContext(CGSizeMake(400, 400));
+        [image drawInRect:CGRectMake(0, 0, 400, 400)];
+        UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        NSData *imageData = UIImagePNGRepresentation(newImage);
+        post.data = imageData;
+        
+        [[DataManager sharedManager] saveContext];
+    }
 
     [self.navigationController popViewControllerAnimated:YES];
 }

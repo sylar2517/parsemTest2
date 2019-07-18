@@ -13,8 +13,8 @@
 #import "WebViewController.h"
 #import "PopUpForCameraOrGallery.h"
 #import "ResultViewController.h"
-//#import "TextScanViewController.h"
-//#import "MainSession.h"
+#import <AudioToolbox/AudioToolbox.h>
+
 typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     AVCamSetupResultSuccess,
     AVCamSetupResultNotAutorized,
@@ -521,6 +521,8 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
             if (object.type == AVMetadataObjectTypeQRCode && self.haveResult) {
                 
                 self.haveResult = NO;
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+                AudioServicesPlayAlertSound (1117);
                 ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
                 vc.result = object.stringValue;
                 vc.fromCamera = YES;

@@ -29,6 +29,7 @@
 		763CD00822C6A3D30009F955 /* DataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 763CD00722C6A3D30009F955 /* DataManager.m */; };
 		763CD01822C6A60C0009F955 /* CoreDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 763CD01722C6A60C0009F955 /* CoreDataTableViewController.m */; };
 		763CD01B22C6B7D20009F955 /* MakeSimpleQRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 763CD01A22C6B7D20009F955 /* MakeSimpleQRViewController.m */; };
+		764AF5AE22E0991E00A63293 /* CustomQRTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 764AF5AD22E0991E00A63293 /* CustomQRTableViewController.m */; };
 		7653841222C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = 7653841122C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m */; };
 		7654A67222CFCE9F004D7C5F /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7654A67122CFCE9F004D7C5F /* Vision.framework */; };
 		765D66C622CBFFAF00F79EDC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765D66C522CBFFAF00F79EDC /* SettingsViewController.m */; };
@@ -36,6 +37,8 @@
 		768562EE22DF90A000971F25 /* QRPost+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 768562EC22DF90A000971F25 /* QRPost+CoreDataProperties.m */; };
 		768562F122DF920E00971F25 /* СhooseQRTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 768562F022DF920E00971F25 /* СhooseQRTableViewController.m */; };
 		768562F422DFA71300971F25 /* EnterTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 768562F322DFA71300971F25 /* EnterTextViewController.m */; };
+		76A92CDD22E1040400777070 /* ContactsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A92CDB22E1040400777070 /* ContactsUI.framework */; };
+		76A92CDE22E1040400777070 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A92CDC22E1040400777070 /* Contacts.framework */; };
 		76B257F222C8EA52002E22D5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76B257F122C8EA51002E22D5 /* WebKit.framework */; };
 		76B257F822C93A60002E22D5 /* CreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B257F722C93A60002E22D5 /* CreationViewController.m */; };
 		76FBC54E22DBC2EF00B3FBC3 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76FBC54D22DBC2EF00B3FBC3 /* WebViewController.m */; };
@@ -102,6 +105,8 @@
 		763CD01722C6A60C0009F955 /* CoreDataTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoreDataTableViewController.m; sourceTree = "<group>"; };
 		763CD01922C6B7D20009F955 /* MakeSimpleQRViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MakeSimpleQRViewController.h; sourceTree = "<group>"; };
 		763CD01A22C6B7D20009F955 /* MakeSimpleQRViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MakeSimpleQRViewController.m; sourceTree = "<group>"; };
+		764AF5AC22E0991E00A63293 /* CustomQRTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomQRTableViewController.h; sourceTree = "<group>"; };
+		764AF5AD22E0991E00A63293 /* CustomQRTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomQRTableViewController.m; sourceTree = "<group>"; };
 		7653841022C0D9EC00D6EDDE /* PopUpForCameraOrGallery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PopUpForCameraOrGallery.h; sourceTree = "<group>"; };
 		7653841122C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PopUpForCameraOrGallery.m; sourceTree = "<group>"; };
 		7654A67122CFCE9F004D7C5F /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
@@ -115,6 +120,8 @@
 		768562F022DF920E00971F25 /* СhooseQRTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "СhooseQRTableViewController.m"; sourceTree = "<group>"; };
 		768562F222DFA71300971F25 /* EnterTextViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EnterTextViewController.h; sourceTree = "<group>"; };
 		768562F322DFA71300971F25 /* EnterTextViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EnterTextViewController.m; sourceTree = "<group>"; };
+		76A92CDB22E1040400777070 /* ContactsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ContactsUI.framework; path = System/Library/Frameworks/ContactsUI.framework; sourceTree = SDKROOT; };
+		76A92CDC22E1040400777070 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		76B257F122C8EA51002E22D5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		76B257F622C93A60002E22D5 /* CreationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CreationViewController.h; sourceTree = "<group>"; };
 		76B257F722C93A60002E22D5 /* CreationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CreationViewController.m; sourceTree = "<group>"; };
@@ -128,6 +135,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76A92CDD22E1040400777070 /* ContactsUI.framework in Frameworks */,
+				76A92CDE22E1040400777070 /* Contacts.framework in Frameworks */,
 				76FBC55022DBCBC100B3FBC3 /* PDFKit.framework in Frameworks */,
 				7654A67222CFCE9F004D7C5F /* Vision.framework in Frameworks */,
 				76B257F222C8EA52002E22D5 /* WebKit.framework in Frameworks */,
@@ -225,6 +234,8 @@
 				768562F022DF920E00971F25 /* СhooseQRTableViewController.m */,
 				768562F222DFA71300971F25 /* EnterTextViewController.h */,
 				768562F322DFA71300971F25 /* EnterTextViewController.m */,
+				764AF5AC22E0991E00A63293 /* CustomQRTableViewController.h */,
+				764AF5AD22E0991E00A63293 /* CustomQRTableViewController.m */,
 				763CD00622C6A3D30009F955 /* DataManager.h */,
 				763CD00722C6A3D30009F955 /* DataManager.m */,
 				7614778E22BFFA0000022E85 /* LaunchScreen.storyboard */,
@@ -256,6 +267,8 @@
 		761477B522BFFABF00022E85 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				76A92CDC22E1040400777070 /* Contacts.framework */,
+				76A92CDB22E1040400777070 /* ContactsUI.framework */,
 				76FBC54F22DBCBC100B3FBC3 /* PDFKit.framework */,
 				7654A67122CFCE9F004D7C5F /* Vision.framework */,
 				76B257F122C8EA51002E22D5 /* WebKit.framework */,
@@ -428,6 +441,7 @@
 				762D639A22DD00F600013805 /* HistoryPost+CoreDataProperties.m in Sources */,
 				768562ED22DF90A000971F25 /* QRPost+CoreDataClass.m in Sources */,
 				768562F422DFA71300971F25 /* EnterTextViewController.m in Sources */,
+				764AF5AE22E0991E00A63293 /* CustomQRTableViewController.m in Sources */,
 				7614778222BFF9FF00022E85 /* AppDelegate.m in Sources */,
 				7614780122C0262C00022E85 /* HistoryScanTVController.m in Sources */,
 				76371E8222C160DE00AF8E28 /* GalleryViewController.m in Sources */,

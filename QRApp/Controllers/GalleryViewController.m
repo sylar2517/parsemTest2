@@ -11,6 +11,7 @@
 #import "HistoryPost+CoreDataClass.h"
 #import <CoreData/CoreData.h>
 
+#import <AudioToolbox/AudioToolbox.h>
 @interface GalleryViewController ()
 ////<UITextViewDelegate>
 @property(strong, nonatomic)UIImage* QRCode;
@@ -179,6 +180,8 @@
                 self.textView.text =qrFeature.messageString;
                 [self makeQRFromText:qrFeature.messageString];
                 self.isHaveResult = YES;
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+                AudioServicesPlayAlertSound (1117);
             }
         } else {
             self.textView.text =@"Ничего не обнаруженно";

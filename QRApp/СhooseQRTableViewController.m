@@ -8,6 +8,7 @@
 
 #import "СhooseQRTableViewController.h"
 #import "EnterTextViewController.h"
+#import "CustomQRTableViewController.h"
 
 @interface ChooseQRTableViewController ()  <EnterTextViewControllerDelegate>
 @end
@@ -24,21 +25,19 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     self.navigationController.navigationBarHidden = NO;
-    UIBarButtonItem* back = [[UIBarButtonItem alloc] initWithTitle:@"Назад" style:(UIBarButtonItemStylePlain) target:self action:@selector(actionBack:)];
-    back.tintColor = [UIColor whiteColor];
-    self.navigationItem.leftBarButtonItem = back;
+    self.navigationItem.leftBarButtonItem.tintColor = [UIColor whiteColor];
     
 }
-#pragma mark - actionsBarButton
--(void)actionBack:(UIBarButtonItem*)sender{
-    [self.navigationController popViewControllerAnimated:YES];
-}
+//- (void)viewDidAppear:(BOOL)animated{
+//    [super viewDidAppear:animated];
+//    [self.navigationItem setTitle:@""];
+//}
 
 #pragma mark - Table view data source
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
   
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row < 3) {
+    if (indexPath.row < 3 || indexPath.row == 4 || indexPath.row == 5) {
         EnterTextViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"EnterTextViewController"];
         vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         vc.modalPresentationStyle = UIModalPresentationOverFullScreen;
@@ -53,6 +52,7 @@
         switch (indexPath.row) {
             case 0:
                 vc.startString = @"Введите свой текст";
+                vc.type = @"text";
                 break;
             case 1:
                 vc.startString = @"Введите свою электронную почту";
@@ -62,7 +62,13 @@
                 vc.startString = @"Введите свою ссылку";
                 vc.type = @"url";
                 break;
-                
+            case 4:
+                vc.type = @"date";
+                break;
+            case 5:
+                vc.startString = @"Введите свой номер";
+                vc.type = @"phone";
+                break;
             default:
                 break;
         }
@@ -70,8 +76,12 @@
         [self presentViewController:vc animated:YES completion:nil];
     }
 }
--(void)textTransfer:(NSString*)string{
-    NSLog(@"AAA - %@", string);
+-(void)textTransfer:(NSString*)string forType:(NSString*)type{
+    NSLog(@"AAA - %@", type);
+    CustomQRTableViewController* tvc = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateQRTVC"];
+    tvc.titleText = string;
+    tvc.typeQR = type;
+    [self.navigationController pushViewController:tvc animated:YES];
 }
     
 //- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
