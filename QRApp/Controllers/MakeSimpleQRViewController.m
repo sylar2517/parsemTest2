@@ -85,8 +85,8 @@
 - (IBAction)actionExport:(UIButton *)sender {
     UIImage* image = self.resultImageView.image;
     
-    UIGraphicsBeginImageContext(CGSizeMake(400, 400));
-    [image drawInRect:CGRectMake(0, 0, 400, 400)];
+    UIGraphicsBeginImageContext(CGSizeMake(50, 50));
+    [image drawInRect:CGRectMake(0, 0, 50, 50)];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     NSData *imageData = UIImagePNGRepresentation(newImage);

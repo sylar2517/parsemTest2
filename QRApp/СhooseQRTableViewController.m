@@ -72,10 +72,15 @@
             default:
                 break;
         }
-        
         [self presentViewController:vc animated:YES completion:nil];
+    }  else {
+        UITableViewController* tvc = [self.storyboard instantiateViewControllerWithIdentifier:@"testIDForPush"];
+        [self.navigationController pushViewController:tvc animated:YES];
     }
+
+    
 }
+#pragma mark - EnterTextViewControllerDelegate
 -(void)textTransfer:(NSString*)string forType:(NSString*)type{
     NSLog(@"AAA - %@", type);
     CustomQRTableViewController* tvc = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateQRTVC"];

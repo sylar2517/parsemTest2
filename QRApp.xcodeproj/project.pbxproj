@@ -41,6 +41,7 @@
 		76A92CDE22E1040400777070 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A92CDC22E1040400777070 /* Contacts.framework */; };
 		76B257F222C8EA52002E22D5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76B257F122C8EA51002E22D5 /* WebKit.framework */; };
 		76B257F822C93A60002E22D5 /* CreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B257F722C93A60002E22D5 /* CreationViewController.m */; };
+		76B5429222E1D9ED00123E06 /* ContactTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B5429122E1D9ED00123E06 /* ContactTableViewController.m */; };
 		76FBC54E22DBC2EF00B3FBC3 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76FBC54D22DBC2EF00B3FBC3 /* WebViewController.m */; };
 		76FBC55022DBCBC100B3FBC3 /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76FBC54F22DBCBC100B3FBC3 /* PDFKit.framework */; };
 /* End PBXBuildFile section */
@@ -125,6 +126,8 @@
 		76B257F122C8EA51002E22D5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		76B257F622C93A60002E22D5 /* CreationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CreationViewController.h; sourceTree = "<group>"; };
 		76B257F722C93A60002E22D5 /* CreationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CreationViewController.m; sourceTree = "<group>"; };
+		76B5429022E1D9ED00123E06 /* ContactTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactTableViewController.h; sourceTree = "<group>"; };
+		76B5429122E1D9ED00123E06 /* ContactTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactTableViewController.m; sourceTree = "<group>"; };
 		76FBC54C22DBC2EF00B3FBC3 /* WebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		76FBC54D22DBC2EF00B3FBC3 /* WebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		76FBC54F22DBCBC100B3FBC3 /* PDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDFKit.framework; path = System/Library/Frameworks/PDFKit.framework; sourceTree = SDKROOT; };
@@ -230,6 +233,8 @@
 				7614778122BFF9FF00022E85 /* AppDelegate.m */,
 				7614778622BFF9FF00022E85 /* Main.storyboard */,
 				7614778C22BFFA0000022E85 /* Assets.xcassets */,
+				76B5429022E1D9ED00123E06 /* ContactTableViewController.h */,
+				76B5429122E1D9ED00123E06 /* ContactTableViewController.m */,
 				768562EF22DF920D00971F25 /* СhooseQRTableViewController.h */,
 				768562F022DF920E00971F25 /* СhooseQRTableViewController.m */,
 				768562F222DFA71300971F25 /* EnterTextViewController.h */,
@@ -446,6 +451,7 @@
 				7614780122C0262C00022E85 /* HistoryScanTVController.m in Sources */,
 				76371E8222C160DE00AF8E28 /* GalleryViewController.m in Sources */,
 				762D639922DD00F600013805 /* HistoryPost+CoreDataClass.m in Sources */,
+				76B5429222E1D9ED00123E06 /* ContactTableViewController.m in Sources */,
 				762D639822DD00F600013805 /* Posts+CoreDataProperties.m in Sources */,
 				7653841222C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m in Sources */,
 				76B257F822C93A60002E22D5 /* CreationViewController.m in Sources */,
