@@ -85,11 +85,15 @@
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
     [df setDateFormat:@"dd/MM/yy HH:mm"];
     cell.dateLabel.text = [NSString stringWithFormat:@"%@  %@", [df stringFromDate:post.dateOfCreation], post.type];
+    cell.infoLabel.text = post.value;
     
     if ([post.type isEqualToString:@"Простой"]) {
-        cell.infoLabel.text = post.value;
+        
         NSData* dataPicture = post.data;
         cell.imageCell.layer.magnificationFilter = kCAFilterNearest;
+        cell.imageCell.image = [UIImage imageWithData:dataPicture];
+    } else if (![post.type isEqualToString:@"Простой"]) {
+        NSData* dataPicture = post.data;
         cell.imageCell.image = [UIImage imageWithData:dataPicture];
     }
 //другие типы

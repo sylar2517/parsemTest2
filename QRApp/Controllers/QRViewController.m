@@ -528,6 +528,24 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
                 vc.fromCamera = YES;
                 [self presentViewController:vc animated:YES completion:nil];
                 
+            } else if ((object.type == AVMetadataObjectTypeAztecCode || object.type == AVMetadataObjectTypeDataMatrixCode) && self.haveResult) {
+                
+                self.haveResult = NO;
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+                AudioServicesPlayAlertSound (1117);
+                
+                //[NSString stringWithFormat:@"Это не QR %@", object.stringValue];
+                UIAlertController* ac = [UIAlertController alertControllerWithTitle: @"Это не QR" message:nil preferredStyle:(UIAlertControllerStyleActionSheet)];
+                
+                UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Отмена" style:(UIAlertActionStyleCancel) handler:nil];
+                UIAlertAction* editing = [UIAlertAction actionWithTitle: [NSString stringWithFormat:@"%@", object.stringValue] style:(UIAlertActionStyleDefault) handler:nil];
+                
+                
+                [ac addAction:editing];
+                [ac addAction:aa];
+                
+                [self presentViewController:ac animated:YES completion:nil];
+                
             }
         }
     }

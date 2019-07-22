@@ -33,6 +33,7 @@
 		7653841222C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = 7653841122C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m */; };
 		7654A67222CFCE9F004D7C5F /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7654A67122CFCE9F004D7C5F /* Vision.framework */; };
 		765D66C622CBFFAF00F79EDC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765D66C522CBFFAF00F79EDC /* SettingsViewController.m */; };
+		7684C15A22E5D17E007A72C7 /* Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 7684C15922E5D17E007A72C7 /* Color.m */; };
 		768562ED22DF90A000971F25 /* QRPost+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 768562EB22DF90A000971F25 /* QRPost+CoreDataClass.m */; };
 		768562EE22DF90A000971F25 /* QRPost+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 768562EC22DF90A000971F25 /* QRPost+CoreDataProperties.m */; };
 		768562F122DF920E00971F25 /* СhooseQRTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 768562F022DF920E00971F25 /* СhooseQRTableViewController.m */; };
@@ -113,6 +114,8 @@
 		7654A67122CFCE9F004D7C5F /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		765D66C422CBFFAF00F79EDC /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		765D66C522CBFFAF00F79EDC /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		7684C15822E5D17E007A72C7 /* Color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
+		7684C15922E5D17E007A72C7 /* Color.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Color.m; sourceTree = "<group>"; };
 		768562E922DF90A000971F25 /* QRPost+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QRPost+CoreDataProperties.h"; sourceTree = "<group>"; };
 		768562EA22DF90A000971F25 /* QRPost+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QRPost+CoreDataClass.h"; sourceTree = "<group>"; };
 		768562EB22DF90A000971F25 /* QRPost+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "QRPost+CoreDataClass.m"; sourceTree = "<group>"; };
@@ -198,6 +201,14 @@
 				765D66C522CBFFAF00F79EDC /* SettingsViewController.m */,
 				76FBC54C22DBC2EF00B3FBC3 /* WebViewController.h */,
 				76FBC54D22DBC2EF00B3FBC3 /* WebViewController.m */,
+				76B5429022E1D9ED00123E06 /* ContactTableViewController.h */,
+				76B5429122E1D9ED00123E06 /* ContactTableViewController.m */,
+				768562EF22DF920D00971F25 /* СhooseQRTableViewController.h */,
+				768562F022DF920E00971F25 /* СhooseQRTableViewController.m */,
+				768562F222DFA71300971F25 /* EnterTextViewController.h */,
+				768562F322DFA71300971F25 /* EnterTextViewController.m */,
+				764AF5AC22E0991E00A63293 /* CustomQRTableViewController.h */,
+				764AF5AD22E0991E00A63293 /* CustomQRTableViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -233,14 +244,8 @@
 				7614778122BFF9FF00022E85 /* AppDelegate.m */,
 				7614778622BFF9FF00022E85 /* Main.storyboard */,
 				7614778C22BFFA0000022E85 /* Assets.xcassets */,
-				76B5429022E1D9ED00123E06 /* ContactTableViewController.h */,
-				76B5429122E1D9ED00123E06 /* ContactTableViewController.m */,
-				768562EF22DF920D00971F25 /* СhooseQRTableViewController.h */,
-				768562F022DF920E00971F25 /* СhooseQRTableViewController.m */,
-				768562F222DFA71300971F25 /* EnterTextViewController.h */,
-				768562F322DFA71300971F25 /* EnterTextViewController.m */,
-				764AF5AC22E0991E00A63293 /* CustomQRTableViewController.h */,
-				764AF5AD22E0991E00A63293 /* CustomQRTableViewController.m */,
+				7684C15822E5D17E007A72C7 /* Color.h */,
+				7684C15922E5D17E007A72C7 /* Color.m */,
 				763CD00622C6A3D30009F955 /* DataManager.h */,
 				763CD00722C6A3D30009F955 /* DataManager.m */,
 				7614778E22BFFA0000022E85 /* LaunchScreen.storyboard */,
@@ -452,6 +457,7 @@
 				76371E8222C160DE00AF8E28 /* GalleryViewController.m in Sources */,
 				762D639922DD00F600013805 /* HistoryPost+CoreDataClass.m in Sources */,
 				76B5429222E1D9ED00123E06 /* ContactTableViewController.m in Sources */,
+				7684C15A22E5D17E007A72C7 /* Color.m in Sources */,
 				762D639822DD00F600013805 /* Posts+CoreDataProperties.m in Sources */,
 				7653841222C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m in Sources */,
 				76B257F822C93A60002E22D5 /* CreationViewController.m in Sources */,
