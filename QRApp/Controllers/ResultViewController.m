@@ -113,18 +113,25 @@
 
 }
 -(void)checkLing:(NSString*)string{
+//
+//    BOOL result =   [string rangeOfString:@"www"].location != NSNotFound ||
+//                    [string rangeOfString:@"http"].location != NSNotFound ||
+//                    [string rangeOfString:@"com"].location != NSNotFound;
+//
+//    if (result) {
+//
+//        self.openInBrowser.hidden = NO;
+//    } else {
+//        self.openInBrowser.hidden = YES;
+//    }
+    NSDataDetector* detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
+    NSArray* matches = [detector matchesInString:string options:0 range:NSMakeRange(0, [string length])];
 
-    BOOL result =   [string rangeOfString:@"www"].location != NSNotFound ||
-                    [string rangeOfString:@"http"].location != NSNotFound ||
-                    [string rangeOfString:@"com"].location != NSNotFound;
-    
-    if (result) {
-        
-        self.openInBrowser.hidden = NO;
+    if (matches.count > 0) {
+         self.openInBrowser.hidden = NO;
     } else {
         self.openInBrowser.hidden = YES;
     }
-
 }
 
 #pragma mark - Actions
@@ -138,7 +145,11 @@
 }
 
 - (IBAction)actionOpenInBrowser:(id)sender {
-    NSURL* URL = [NSURL URLWithString:self.resultTextImageView.text];
+
+    NSDataDetector* detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
+    NSArray* matches = [detector matchesInString:self.resultTextImageView.text options:0 range:NSMakeRange(0, [self.resultTextImageView.text length])];
+    NSURL* URL = [(NSTextCheckingResult*)[matches firstObject] URL];
+    
     [[UIApplication sharedApplication] openURL:URL options:@{} completionHandler:nil];
 }
 
@@ -161,8 +172,8 @@
 
     UIImage* image = self.resultImageView.image;
     
-    UIGraphicsBeginImageContext(CGSizeMake(400, 400));
-    [image drawInRect:CGRectMake(0, 0, 400, 400)];
+    UIGraphicsBeginImageContext(CGSizeMake(50, 50));
+    [image drawInRect:CGRectMake(0, 0, 50, 50)];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     NSData *imageData = UIImagePNGRepresentation(newImage);

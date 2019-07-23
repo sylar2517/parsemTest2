@@ -16,13 +16,17 @@ typedef enum {
     ColorSchemeTypeHSV = 1
 } ColorSchemeType;
 
-@interface CustomQRTableViewController () <UITextFieldDelegate>
+@interface CustomQRTableViewController () <UITextFieldDelegate,UINavigationControllerDelegate , UIImagePickerControllerDelegate>
 
 @property (assign, nonatomic) BOOL isBackground;
 @property (strong, nonatomic) Color* backgroundColor;
 @property (strong, nonatomic) Color* frontColor;
 @property (assign, nonatomic) BOOL cutBackgroundColorRow;
 @property (assign, nonatomic) BOOL cutFrontColorRow;
+
+@property(strong, nonatomic)UIImagePickerController* imagePickerController;
+@property(strong, nonatomic)UIImage* selectedImage;
+
 @end
 
 @implementation CustomQRTableViewController
@@ -58,8 +62,6 @@ typedef enum {
 }
 #pragma mark - UIBarButtonItem
 -(void)actionSave:(UIBarButtonItem*)sender{
-    
-    #warning SAVING
     
     QRPost* post = [NSEntityDescription insertNewObjectForEntityForName:@"QRPost" inManagedObjectContext:[DataManager sharedManager].persistentContainer.viewContext];
     NSDate* now = [NSDate date];
@@ -141,7 +143,46 @@ typedef enum {
                                            orientation:UIImageOrientationUp];
 
 }
-
+//-(void)makeQRWithLogo:(NSString*)string{
+//
+//    if (self.selectedImage) {
+//        NSData *stringData = [string dataUsingEncoding: NSUTF8StringEncoding];
+//
+//        CIFilter *qrFilter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+//        [qrFilter setValue:stringData forKey:@"inputMessage"];
+//        [qrFilter setValue:@"H" forKey:@"inputCorrectionLevel"];
+//
+//        CIFilter* colorFilter =  [CIFilter filterWithName:@"CIFalseColor"];
+//        [colorFilter setValue:qrFilter.outputImage forKey:@"inputImage"];
+//
+//        [colorFilter setValue:[CIColor colorWithRed:self.frontColor.red green:self.frontColor.green blue:self.frontColor.blue] forKey:@"inputColor0"];
+//        [colorFilter setValue:[CIColor colorWithRed:self.backgroundColor.red green:self.backgroundColor.green blue:self.backgroundColor.blue] forKey:@"inputColor1"];
+//        [colorFilter setValue:[CIColor colorWithRed:self.backgroundColor.red green:self.backgroundColor.green blue:self.backgroundColor.blue] forKey:@"inputColor1"];
+//
+//        CIFilter* filter = [CIFilter filterWithName:@"CISourceOverCompositing"];
+//        //[filter setValue:colorFilter.outputImage forKey:@"inputImage"];
+//        CGAffineTransform test = CGAffineTransformMakeTranslation((CGRectGetMidX(self.QRImageView.frame) - self.selectedImage.size.width/2),
+//                                                                   (CGRectGetMidY(self.QRImageView.frame) - self.selectedImage.size.height/2));
+//        [filter setValue:self.selectedImage forKey:@"inputBackgroundImage"];
+////        [filter setValue: forKey:@"inputImage"];
+//        CIImage *qrImage = filter.outputImage;
+//        qrImage = [qrImage imageByApplyingTransform:test];
+//
+////        float scaleX = 0.5*self.QRImageView.frame.size.width / qrImage.extent.size.width;
+////        float scaleY = 0.5*self.QRImageView.frame.size.height / qrImage.extent.size.height;
+////
+////        qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
+//
+//        self.QRImageView.image = [UIImage imageWithCIImage:qrImage
+//                                                     scale:[UIScreen mainScreen].scale
+//                                               orientation:UIImageOrientationUp];
+//        #warning TEST2
+//    } else {
+//        return;
+//    }
+//
+//
+//}
 -(void)refreshScreen {
     //с помощью крутилок меняем цвет главного экрана
 //    CGFloat red = self.redComponentSlider.value/255;
@@ -311,6 +352,9 @@ typedef enum {
         self.isBackground = NO;
     }
     [self refreshScreen];
+    if (self.selectedImage) {
+        self.QRImageView.image = [self imageByCombiningImage:self.QRImageView.image withImage:self.selectedImage];
+    }
 }
 
 - (IBAction)actionChangeColorScheme:(UISegmentedControl *)sender {
@@ -322,6 +366,9 @@ typedef enum {
     }
     
     [self changeColorFor:sender.selectedSegmentIndex];
+    if (self.selectedImage) {
+        self.QRImageView.image = [self imageByCombiningImage:self.QRImageView.image withImage:self.selectedImage];
+    }
 }
 
 - (IBAction)actionRollUP:(UIButton *)sender {
@@ -361,6 +408,57 @@ typedef enum {
         [sender setTitle:@"Свернуть" forState:(UIControlStateNormal)];
     }
     [self.tableView reloadData];
+}
+
+- (IBAction)actionAddLogo:(UIButton *)sender {
+    UIImagePickerController* vc = [[UIImagePickerController alloc] init];
+    vc.delegate = self;
+    
+    vc.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    vc.allowsEditing = NO;
+    self.imagePickerController =vc;
+    [self presentViewController:vc animated:YES completion:nil];   
+}
+#pragma mark - UIImagePickerControllerDelegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    UIImage *image = info[UIImagePickerControllerOriginalImage];
+    if (image) {
+        self.selectedImage = image;
+        [self.imagePickerController dismissViewControllerAnimated:YES completion:^{
+            self.QRImageView.image = [self imageByCombiningImage:self.QRImageView.image withImage:image];
+        }];
+        
+    }
+}
+
+- (UIImage*)imageByCombiningImage:(UIImage*)firstImage withImage:(UIImage*)secondImage {
+    UIImage *image = nil;
+    
+    CGSize size = self.QRImageView.frame.size;
+
+   // UIGraphicsBeginImageContext(size);
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    [firstImage drawInRect:CGRectMake(0,0,size.width, size.height)];
+    
+    CGFloat widthSecondImage = 0.3 * CGRectGetWidth(self.QRImageView.frame);
+    CGRect rectForsecondImage = CGRectMake(size.width / 2 - widthSecondImage/2,size.width / 2 - widthSecondImage/2,widthSecondImage, widthSecondImage);
+    [[UIColor colorWithRed:self.backgroundColor.red green:self.backgroundColor.green blue:self.backgroundColor.blue alpha:1] setFill];
+    [[UIBezierPath bezierPathWithOvalInRect:rectForsecondImage] fill];
+    
+    CGRect interiorBox = CGRectInset(rectForsecondImage, 1, 1);
+    UIBezierPath *interior = [UIBezierPath bezierPathWithOvalInRect:interiorBox];
+    [interior addClip];
+    
+    [secondImage drawInRect:rectForsecondImage];
+    image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    return image;
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    [self dismissViewControllerAnimated:NO completion:nil];
+    [self.imagePickerController dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark - Table view delegate
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath{

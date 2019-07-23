@@ -164,13 +164,20 @@
     
     [self presentViewController:ac2 animated:YES completion:nil];
 }
-- (void)showCellForQR:(QRPost*)post{
+//- (void)showCellForQR:(QRPost*)post{
+////    ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
+////    vc.postQR = post;
+////    vc.fromCamera = NO;
+////    [self presentViewController:vc animated:YES completion:nil];
+//}
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    QRPost* post = [self.history objectAtIndex:indexPath.row];
     ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
     vc.postQR = post;
     vc.fromCamera = NO;
     [self presentViewController:vc animated:YES completion:nil];
-}
 
+}
 
 /*
  #pragma mark - Navigation

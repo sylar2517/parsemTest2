@@ -52,6 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (IBAction)actionRollFrontPanel:(UIButton *)sender;
 
+- (IBAction)actionAddLogo:(UIButton *)sender;
 
 @end
 
