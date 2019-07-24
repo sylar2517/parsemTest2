@@ -479,7 +479,7 @@ typedef enum {
         return 199;
     }
     
-    return 50;
+    return 75;
 }
 #pragma mark - TextField delegate
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{

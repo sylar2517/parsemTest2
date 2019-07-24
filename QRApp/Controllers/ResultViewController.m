@@ -11,6 +11,7 @@
 #import "HistoryPost+CoreDataClass.h"
 #import <CoreData/CoreData.h>
 #import "QRPost+CoreDataClass.h"
+#import "ZoomViewController.h"
 
 @interface ResultViewController () <UITextViewDelegate>
 
@@ -172,8 +173,8 @@
 
     UIImage* image = self.resultImageView.image;
     
-    UIGraphicsBeginImageContext(CGSizeMake(50, 50));
-    [image drawInRect:CGRectMake(0, 0, 50, 50)];
+    UIGraphicsBeginImageContext(CGSizeMake(400, 400));
+    [image drawInRect:CGRectMake(0, 0, 400, 400)];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     NSData *imageData = UIImagePNGRepresentation(newImage);
@@ -189,6 +190,20 @@
     [self.resultTextImageView resignFirstResponder];
 }
 
-
-
+#pragma mark - Segue;
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqualToString:@"zoomSegue"]) {
+        ZoomViewController* vc = segue.destinationViewController;
+        UIImage* image = self.resultImageView.image;
+        
+        UIGraphicsBeginImageContext(CGSizeMake(400, 400));
+        [image drawInRect:CGRectMake(0, 0, 400, 400)];
+        UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+        
+        vc.transferedImage = newImage;
+    }
+}
 @end

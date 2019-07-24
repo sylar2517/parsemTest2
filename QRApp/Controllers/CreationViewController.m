@@ -92,7 +92,11 @@
         NSData* dataPicture = post.data;
         cell.imageCell.layer.magnificationFilter = kCAFilterNearest;
         cell.imageCell.image = [UIImage imageWithData:dataPicture];
-    } else if (![post.type isEqualToString:@"Простой"]) {
+    } else if ([post.type isEqualToString:@"contact"]) {
+        cell.infoLabel.text = @"Контакт";
+        NSData* dataPicture = post.data;
+        cell.imageCell.image = [UIImage imageWithData:dataPicture];
+    }  else if (![post.type isEqualToString:@"Простой"]) {
         NSData* dataPicture = post.data;
         cell.imageCell.image = [UIImage imageWithData:dataPicture];
     }

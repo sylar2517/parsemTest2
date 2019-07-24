@@ -43,6 +43,7 @@
 		76B257F222C8EA52002E22D5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76B257F122C8EA51002E22D5 /* WebKit.framework */; };
 		76B257F822C93A60002E22D5 /* CreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B257F722C93A60002E22D5 /* CreationViewController.m */; };
 		76B5429222E1D9ED00123E06 /* ContactTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B5429122E1D9ED00123E06 /* ContactTableViewController.m */; };
+		76E17EA322E8899D00E4B33F /* ZoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E17EA222E8899D00E4B33F /* ZoomViewController.m */; };
 		76FBC54E22DBC2EF00B3FBC3 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76FBC54D22DBC2EF00B3FBC3 /* WebViewController.m */; };
 		76FBC55022DBCBC100B3FBC3 /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76FBC54F22DBCBC100B3FBC3 /* PDFKit.framework */; };
 /* End PBXBuildFile section */
@@ -131,6 +132,8 @@
 		76B257F722C93A60002E22D5 /* CreationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CreationViewController.m; sourceTree = "<group>"; };
 		76B5429022E1D9ED00123E06 /* ContactTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactTableViewController.h; sourceTree = "<group>"; };
 		76B5429122E1D9ED00123E06 /* ContactTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactTableViewController.m; sourceTree = "<group>"; };
+		76E17EA122E8899D00E4B33F /* ZoomViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZoomViewController.h; sourceTree = "<group>"; };
+		76E17EA222E8899D00E4B33F /* ZoomViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZoomViewController.m; sourceTree = "<group>"; };
 		76FBC54C22DBC2EF00B3FBC3 /* WebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		76FBC54D22DBC2EF00B3FBC3 /* WebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		76FBC54F22DBCBC100B3FBC3 /* PDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDFKit.framework; path = System/Library/Frameworks/PDFKit.framework; sourceTree = SDKROOT; };
@@ -243,6 +246,8 @@
 				7614778022BFF9FF00022E85 /* AppDelegate.h */,
 				7614778122BFF9FF00022E85 /* AppDelegate.m */,
 				7614778622BFF9FF00022E85 /* Main.storyboard */,
+				76E17EA122E8899D00E4B33F /* ZoomViewController.h */,
+				76E17EA222E8899D00E4B33F /* ZoomViewController.m */,
 				7614778C22BFFA0000022E85 /* Assets.xcassets */,
 				7684C15822E5D17E007A72C7 /* Color.h */,
 				7684C15922E5D17E007A72C7 /* Color.m */,
@@ -447,6 +452,7 @@
 				7606926E22C3F8D000BB9D6E /* HistoryCell.m in Sources */,
 				768562EE22DF90A000971F25 /* QRPost+CoreDataProperties.m in Sources */,
 				762D639722DD00F600013805 /* Posts+CoreDataClass.m in Sources */,
+				76E17EA322E8899D00E4B33F /* ZoomViewController.m in Sources */,
 				7614779322BFFA0000022E85 /* main.m in Sources */,
 				762D639A22DD00F600013805 /* HistoryPost+CoreDataProperties.m in Sources */,
 				768562ED22DF90A000971F25 /* QRPost+CoreDataClass.m in Sources */,
