@@ -56,6 +56,7 @@
     self.toolbarItems = self.withExport;
 }
 
+
 - (NSFetchedResultsController*) fetchedResultsController {
     if (_fetchedResultsController != nil) {
         return _fetchedResultsController;

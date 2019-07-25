@@ -15,6 +15,10 @@
 #import "ResultViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 
+
+#import "ScrollViewController.h"
+
+
 typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     AVCamSetupResultSuccess,
     AVCamSetupResultNotAutorized,
@@ -69,24 +73,11 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     self.conterView.layer.cornerRadius = 0.5 * self.conterView.bounds.size.width;;
     self.conterView.layer.masksToBounds = YES;
     
-    self.backButton.layer.cornerRadius = 0.5 * self.backButton.bounds.size.width;;
-    self.backButton.layer.masksToBounds = YES;
-    
     self.snapButtonView.layer.cornerRadius = 0.5 * self.snapButtonView.bounds.size.width;;
     self.snapButtonView.layer.masksToBounds = YES;
     
     self.snapButton.layer.cornerRadius = 0.5 * self.snapButton.bounds.size.width;;
     self.snapButton.layer.masksToBounds = YES;
-    
-    self.navigationController.navigationBarHidden = YES;
-    [self.tabBarController.tabBar setHidden:YES];
-    
-    
-    
-    //add exit
-    UISwipeGestureRecognizer* leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleLeftSwipe:)];
-    leftSwipe.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.view addGestureRecognizer:leftSwipe];
     
     //go to Scan
     
@@ -95,10 +86,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     //add notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appMovedToForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appMovedToBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    
-    //autorotate
-    
-    
+   
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -269,11 +257,6 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     [self.session commitConfiguration];
 }
 #pragma mark - Actions
--(void)handleLeftSwipe:(UISwipeGestureRecognizer*)sender{
-    [self exitFromController];
-}
-
-
 - (IBAction)actionFlashOnCliked:(UIButton *)sender {
      AVCaptureDevice *flashLight = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     if ([flashLight isTorchAvailable] && [flashLight isTorchModeSupported:AVCaptureTorchModeOn])
@@ -369,9 +352,6 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     self.buttonPressed = sender.tag;
 }
 
-- (IBAction)actionExit:(UIButton *)sender {
-    [self exitFromController];
-}
 
 - (IBAction)actionMakePhoto:(UIButton *)sender {
     
@@ -399,41 +379,21 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 }
 
 - (IBAction)actionWatchPDF:(UIButton *)sender {
-    NSLog(@"AAAAAA");
+   
     if (self.tempForPhoto && self.tempForPhoto.count > 0) {
         [self.session stopRunning];
-        NSArray* array = [NSArray arrayWithArray:self.tempForPhoto];
-        [self.tempForPhoto removeAllObjects];
+
         WebViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"webView"];
-        vc.photoArray = array;
-        [self.navigationController pushViewController:vc animated:YES];
-       
+        vc.photoArray = self.tempForPhoto;
+        
+        [self presentViewController:vc animated:YES completion:nil];
     }
 }
 
 
 
 #pragma mark - Methods
--(void)exitFromController{
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self.tempForPhoto removeAllObjects];
-    [self.session stopRunning];
-    self.imageView = nil;
-    
-    CATransition *transition = [[CATransition alloc] init];
-    transition.duration = 0.5;
-    transition.type = kCATransitionPush;
-    transition.subtype = kCATransitionFromRight;
-    [transition setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    [self.view.window.layer addAnimation:transition forKey:kCATransition];
- 
 
-    [self.navigationController popToRootViewControllerAnimated:YES];
-    self.navigationController.navigationBarHidden = NO;
-    [self.tabBarController.tabBar setHidden:NO];
-    
-}
 -(void)buttonCliked:(UIButton*)sender{
     for (UIButton* but in self.buttons) {
         if ([but isEqual:sender]) {
@@ -458,14 +418,15 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 
         [UIView animateWithDuration:0.5 animations:^{
             self.imageViewQR.hidden = NO;
-            self.backButton.hidden = NO;
+            //self.backButton.hidden = NO;
             [self.view layoutIfNeeded];
         }];
         
     } else if (sender.tag == 1){
         noQR();
         [self allHidden];
-        self.backButton.hidden = self.snapButton.hidden = self.snapButtonView.hidden = self.conterView.hidden = NO;
+//        self.backButton.hidden =
+        self.snapButton.hidden = self.snapButtonView.hidden = self.conterView.hidden = NO;
         
         [UIView animateWithDuration:0.5 animations:^{
             self.snapButton.hidden = self.snapButtonView.hidden = NO;
@@ -477,7 +438,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
         [self allHidden];
 
         CGFloat width = CGRectGetHeight(self.view.bounds);
-        self.bottomConstrain.constant = -(width - CGRectGetHeight(self.toolBarView.bounds) - 20);
+        self.bottomConstrain.constant = (width - CGRectGetHeight(self.toolBarView.bounds) - 20);
         
         [UIView animateWithDuration:1 animations:^{
             self.textScanButton.hidden = NO;
@@ -489,10 +450,10 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
         noQR();
         [self allHidden];
         [UIView animateWithDuration:0.5 animations:^{
-            self.backButton.hidden = NO;
+//            self.backButton.hidden = NO;
             [self.view layoutIfNeeded];
         }];
-        self.backButton.hidden = NO;
+//        self.backButton.hidden = NO;
     }
 }
 -(void)allHidden{
@@ -500,14 +461,15 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     self.snapButton.hidden = self.snapButtonView.hidden =self.conterView.hidden = YES;
     self.snapButton.hidden = self.snapButtonView.hidden = YES;
     self.textScanButton.hidden = self.exitButton.hidden = YES;
-    
-    self.backButton.hidden = YES;
-    self.bottomConstrain.constant = 0;
+    self.conterButton.hidden = YES;
+//    self.backButton.hidden = YES;
+    self.bottomConstrain.constant = 20;
     [self.view bringSubviewToFront:self.toolBarView];
     [self.view bringSubviewToFront:self.imageViewQR];
-    [self.view bringSubviewToFront:self.backButton];
+//    [self.view bringSubviewToFront:self.backButton];
     [self.view bringSubviewToFront:self.snapButton];
     [self.view bringSubviewToFront:self.snapButtonView];
+    [self.view bringSubviewToFront:self.conterButton];
     
     [self.tempForPhoto removeAllObjects];
     
@@ -681,24 +643,6 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     return nil;
 }
 
-//#pragma mark - Orientation
-////- (BOOL)shouldAutorotate {
-////
-////    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-////
-////    return orientation == UIInterfaceOrientationPortrait ? NO : YES;
-////}
-////- (UIInterfaceOrientationMask)supportedInterfaceOrientations
-////{
-////    return UIInterfaceOrientationMaskPortrait;
-////}
-////-(BOOL)shouldAutorotate {
-////    return YES;
-////}
-////-(UIInterfaceOrientationMask)supportedInterfaceOrientations
-////{
-////    return UIInterfaceOrientationMaskPortrait;
-////}
 #pragma mark - NSNotification
 -(void)appMovedToForeground:(NSNotification*)notification{
     [self.session startRunning];
@@ -706,12 +650,6 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 -(void)appMovedToBackground:(NSNotification*)notification{
     [self.session stopRunning];
 }
-//#pragma mark - Navigation
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//
-//    if ([segue.identifier isEqualToString:@"fromQRtoText"]) {
-//
-//    }
-//}
+
 
 @end

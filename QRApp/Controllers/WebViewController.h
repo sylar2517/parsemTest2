@@ -11,7 +11,11 @@
 NS_ASSUME_NONNULL_BEGIN
 @class WKWebView, HistoryPost;
 @interface WebViewController : UIViewController
-@property(strong, nonatomic) NSArray* photoArray;
+
+
+//@property(assign, nonatomic) BOOL dissmiss;
+@property(strong, nonatomic) NSMutableArray* photoArray;
+
 @property(strong, nonatomic) HistoryPost* post;
 @property (weak, nonatomic) IBOutlet WKWebView *webView;
 

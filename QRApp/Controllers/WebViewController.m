@@ -25,7 +25,7 @@
     [super viewDidLoad];
     
     self.webView.navigationDelegate = self;
-    //NSLog(@"%@", self.photoArray);
+    
     if (self.photoArray) {
         PDFDocument* pdfDoc = [[PDFDocument alloc] init];
         for (int i = 0; i < self.photoArray.count; i++) {
@@ -49,8 +49,8 @@
         NSURL* url2 = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:name]];
         [self.pdfData writeToURL:url2 atomically:NO];
         self.pdfDoc = url2;
-    }
-    if (self.post) {
+        
+    } else if (self.post) {
         self.pdfData = self.post.picture;
         NSURL* url = [NSURL URLWithString:@""];
         [self.webView loadData:self.pdfData
@@ -67,16 +67,11 @@
         [self.pdfData writeToURL:url2 atomically:NO];
         self.pdfDoc = url2;
     }
-    
-    //NSString* urlString = @"https://en.wikipedia.org/wiki/QR_code";
-//       NSString* urlString = @"https://www.google.com/search?q=qr+code&newwindow=1&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjTuvCdw7fjAhWNyqYKHc9JA10Q_AUIECgB&biw=1440&bih=718";
-//    NSURL* url = [NSURL URLWithString:urlString];
-//    NSURLRequest* request = [NSURLRequest requestWithURL:url];
-//    [self.webView loadRequest:request];
 
 }
 - (void)dealloc
 {
+    [self.photoArray removeAllObjects];
     self.webView.navigationDelegate = nil;
 }
 #pragma mark - Actions -
@@ -86,8 +81,10 @@
     if (sender.tag == 1) {
         //не сохранять
         if (!self.post) {
-            [self.navigationController popViewControllerAnimated:YES];
+
+             [self dismissViewControllerAnimated:YES completion:nil];
         } else {
+            
             [[DataManager sharedManager].persistentContainer.viewContext deleteObject:self.post];
             [[DataManager sharedManager] saveContext];
             [self dismissViewControllerAnimated:YES completion:nil];
@@ -102,7 +99,8 @@
             post.type = @"PDF";
             post.picture = self.pdfData;
             [[DataManager sharedManager] saveContext];
-            [self.navigationController popViewControllerAnimated:YES];
+
+            [self dismissViewControllerAnimated:YES completion:nil];
             
         } else {
             [self dismissViewControllerAnimated:YES completion:nil];

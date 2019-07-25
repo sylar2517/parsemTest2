@@ -33,6 +33,7 @@
 		7653841222C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = 7653841122C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m */; };
 		7654A67222CFCE9F004D7C5F /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7654A67122CFCE9F004D7C5F /* Vision.framework */; };
 		765D66C622CBFFAF00F79EDC /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765D66C522CBFFAF00F79EDC /* SettingsViewController.m */; };
+		7663F4AF22EA306200BCFF9D /* ScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7663F4AE22EA306200BCFF9D /* ScrollViewController.m */; };
 		7684C15A22E5D17E007A72C7 /* Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 7684C15922E5D17E007A72C7 /* Color.m */; };
 		768562ED22DF90A000971F25 /* QRPost+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 768562EB22DF90A000971F25 /* QRPost+CoreDataClass.m */; };
 		768562EE22DF90A000971F25 /* QRPost+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 768562EC22DF90A000971F25 /* QRPost+CoreDataProperties.m */; };
@@ -115,6 +116,8 @@
 		7654A67122CFCE9F004D7C5F /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		765D66C422CBFFAF00F79EDC /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		765D66C522CBFFAF00F79EDC /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		7663F4AD22EA306200BCFF9D /* ScrollViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScrollViewController.h; sourceTree = "<group>"; };
+		7663F4AE22EA306200BCFF9D /* ScrollViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScrollViewController.m; sourceTree = "<group>"; };
 		7684C15822E5D17E007A72C7 /* Color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
 		7684C15922E5D17E007A72C7 /* Color.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Color.m; sourceTree = "<group>"; };
 		768562E922DF90A000971F25 /* QRPost+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QRPost+CoreDataProperties.h"; sourceTree = "<group>"; };
@@ -212,6 +215,8 @@
 				768562F322DFA71300971F25 /* EnterTextViewController.m */,
 				764AF5AC22E0991E00A63293 /* CustomQRTableViewController.h */,
 				764AF5AD22E0991E00A63293 /* CustomQRTableViewController.m */,
+				76E17EA122E8899D00E4B33F /* ZoomViewController.h */,
+				76E17EA222E8899D00E4B33F /* ZoomViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -246,9 +251,9 @@
 				7614778022BFF9FF00022E85 /* AppDelegate.h */,
 				7614778122BFF9FF00022E85 /* AppDelegate.m */,
 				7614778622BFF9FF00022E85 /* Main.storyboard */,
-				76E17EA122E8899D00E4B33F /* ZoomViewController.h */,
-				76E17EA222E8899D00E4B33F /* ZoomViewController.m */,
 				7614778C22BFFA0000022E85 /* Assets.xcassets */,
+				7663F4AD22EA306200BCFF9D /* ScrollViewController.h */,
+				7663F4AE22EA306200BCFF9D /* ScrollViewController.m */,
 				7684C15822E5D17E007A72C7 /* Color.h */,
 				7684C15922E5D17E007A72C7 /* Color.m */,
 				763CD00622C6A3D30009F955 /* DataManager.h */,
@@ -465,6 +470,7 @@
 				76B5429222E1D9ED00123E06 /* ContactTableViewController.m in Sources */,
 				7684C15A22E5D17E007A72C7 /* Color.m in Sources */,
 				762D639822DD00F600013805 /* Posts+CoreDataProperties.m in Sources */,
+				7663F4AF22EA306200BCFF9D /* ScrollViewController.m in Sources */,
 				7653841222C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m in Sources */,
 				76B257F822C93A60002E22D5 /* CreationViewController.m in Sources */,
 				7606927122C4069200BB9D6E /* ResultViewController.m in Sources */,
