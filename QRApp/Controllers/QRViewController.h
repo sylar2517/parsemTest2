@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class ScrollViewController;
 @interface QRViewController : UIViewController
-
+@property (weak, nonatomic) ScrollViewController* parent;
 
 @property (weak, nonatomic) IBOutlet UIView *toolBarView;
 @property (weak, nonatomic) IBOutlet UIButton *QRScanButton;

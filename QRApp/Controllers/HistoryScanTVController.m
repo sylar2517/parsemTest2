@@ -15,6 +15,7 @@
 #import "DataManager.h"
 
 #import "WebViewController.h"
+#import "ScrollViewController.h"
 
 @interface HistoryScanTVController () <PopUpForCameraOrGalleryDelegate>
 
@@ -54,6 +55,7 @@
     self.withOutExport = @[cancel, flex, delete];
     
     self.toolbarItems = self.withExport;
+    
 }
 
 
@@ -106,14 +108,24 @@
     } else {
         post = [self.fetchedResultsController objectAtIndexPath:indexPath];
     }
-    //HistoryPost* post = [self.fetchedResultsController objectAtIndexPath:indexPath];
    
-    //cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-    cell.tintColor = [UIColor blackColor];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.nameLabel.textColor = [UIColor whiteColor];
     cell.dateLabel.textColor = [UIColor whiteColor];
+    cell.typeLabel.textColor = [UIColor whiteColor];
     
+    if (self.tempObjectArray.count > 0) {
+        for (HistoryPost* postAdd in self.tempObjectArray) {
+            if ([postAdd isEqual:post]) {
+                cell.nameLabel.textColor = [UIColor blackColor];
+                cell.dateLabel.textColor = [UIColor blackColor];
+                cell.typeLabel.textColor = [UIColor blackColor];
+            }
+        }
+    }
+    
+    cell.tintColor = [UIColor blackColor];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+   
     NSDateFormatter* df = [[NSDateFormatter alloc] init];
     [df setDateFormat:@"dd-MM-yyyy HH:mm"];
     cell.dateLabel.text = [df stringFromDate:post.dateOfCreation];
@@ -228,20 +240,20 @@
     return 3;
 }
 
-- (nullable UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath{
-    UIContextualAction* action = [UIContextualAction contextualActionWithStyle:(UIContextualActionStyleNormal) title:@"Удалить" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        HistoryPost* post = nil;
-        if (self.filterObject) {
-            post = [self.filterObject objectAtIndex:indexPath.row];
-        } else {
-            post = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        }
-        [[DataManager sharedManager].persistentContainer.viewContext deleteObject:post];
-        [[DataManager sharedManager] saveContext];
-    }];
-    action.backgroundColor = [UIColor redColor];
-    return [UISwipeActionsConfiguration configurationWithActions:@[action]];
-}
+//- (nullable UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath{
+//    UIContextualAction* action = [UIContextualAction contextualActionWithStyle:(UIContextualActionStyleNormal) title:@"Удалить" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+//        HistoryPost* post = nil;
+//        if (self.filterObject) {
+//            post = [self.filterObject objectAtIndex:indexPath.row];
+//        } else {
+//            post = [self.fetchedResultsController objectAtIndexPath:indexPath];
+//        }
+//        [[DataManager sharedManager].persistentContainer.viewContext deleteObject:post];
+//        [[DataManager sharedManager] saveContext];
+//    }];
+//    action.backgroundColor = [UIColor redColor];
+//    return [UISwipeActionsConfiguration configurationWithActions:@[action]];
+//}
 
 #pragma mark -  UISearchBarDelegate
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
@@ -252,7 +264,7 @@
     [searchBar resignFirstResponder];
     [searchBar setShowsCancelButton:NO animated:YES];
     searchBar.text = nil;
-    self.filterObject = nil;
+    [self.filterObject removeAllObjects];
     [self.tableView reloadData];
 }
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
@@ -409,7 +421,7 @@
 
 -(void)actionCancelEditing:(UIBarButtonItem*)sender{
     self.isEditing = !self.isEditing;
-
+    [self.tempObjectArray removeAllObjects];
     [self.navigationController setToolbarHidden:YES animated:YES];
     [self.tableView setEditing:self.isEditing animated:YES];
     [self.tableView reloadData];
@@ -438,5 +450,10 @@
         vc.delegate = self;
         //vc.fromMenu = YES;
     }
+//    if ([segue.identifier isEqualToString:@"historySegue"]) {
+////        HistoryScanTVController* vc = segue.destinationViewController ;
+////        self.delegate = vc;
+//    }
+
 }
 @end

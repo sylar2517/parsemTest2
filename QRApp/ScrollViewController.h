@@ -10,9 +10,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class ScrollViewController;
+@protocol ScrollViewControllerDelegate
+- (void) changeScreen:(BOOL)stopSession;
+@end
+
 @interface ScrollViewController : UIViewController
 
+@property (nonatomic, weak) id <ScrollViewControllerDelegate> delegate;
+
+
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *widthConstrain;
+
+
 
 @end
 

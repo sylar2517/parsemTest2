@@ -13,7 +13,7 @@
 
 #import <AudioToolbox/AudioToolbox.h>
 @interface GalleryViewController ()
-////<UITextViewDelegate>
+
 @property(strong, nonatomic)UIImage* QRCode;
 @property(assign, nonatomic)BOOL isHaveResult;
 @end
@@ -45,10 +45,10 @@
     
     //self.delegate = self;
 }
-- (void)dealloc
-{
-//    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
+//- (void)dealloc
+//{
+////    [[NSNotificationCenter defaultCenter] removeObserver:self];
+//}
 
 //#pragma mark - NSNotificationCenter
 //-(void)keyboardWillAppear:(NSNotification*)notification{

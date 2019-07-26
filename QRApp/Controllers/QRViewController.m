@@ -26,7 +26,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 };
 
 
-@interface QRViewController () <AVCaptureMetadataOutputObjectsDelegate,AVCaptureVideoDataOutputSampleBufferDelegate>
+@interface QRViewController () <AVCaptureMetadataOutputObjectsDelegate,AVCaptureVideoDataOutputSampleBufferDelegate, ScrollViewControllerDelegate>
 
 @property(strong, nonatomic) NSArray* request;
 @property(assign, nonatomic) BOOL haveResult;
@@ -86,13 +86,9 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     //add notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appMovedToForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appMovedToBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-   
-}
 
-- (void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    //Start scan
-
+    self.parent.delegate = self;
+    
     dispatch_async(self.sessionQueue, ^{
         switch (self.setupResult) {
             case AVCamSetupResultSuccess:
@@ -100,11 +96,30 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
                 [self.session startRunning];
             }
                 break;
-
+                
             default:
                 break;
         }
     });
+
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    //Start scan
+
+//    dispatch_async(self.sessionQueue, ^{
+//        switch (self.setupResult) {
+//            case AVCamSetupResultSuccess:
+//            {
+//                [self.session startRunning];
+//            }
+//                break;
+//
+//            default:
+//                break;
+//        }
+//    });
 
     self.haveResult = YES;
     [self.tempForPhoto removeAllObjects];
@@ -123,6 +138,15 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 
     self.video.frame = self.imageView.frame;
     
+}
+
+- (void) changeScreen:(BOOL)stopSession{
+    
+    if (stopSession) {
+        [self.session stopRunning];
+    } else {
+        [self.session startRunning];
+    }
 }
 #pragma mark - SessionSettings
 -(void)initSessionForQR:(BOOL) boolVal{
@@ -358,7 +382,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     self.takePhoto = YES;
     
     self.conterView.backgroundColor = [UIColor blackColor];
-    UIView* snap = [[UIView alloc] initWithFrame:CGRectMake(0,
+    __block UIView* snap = [[UIView alloc] initWithFrame:CGRectMake(0,
                                                             0,
                                                             CGRectGetWidth(self.view.bounds),
                                                             CGRectGetHeight(self.view.bounds))];
@@ -373,6 +397,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
        
     } completion:^(BOOL finished) {
         [snap removeFromSuperview];
+        snap = nil;
         [self.conterButton setTitle:[NSString stringWithFormat:@"%lu", (unsigned long)self.tempForPhoto.count] forState:(UIControlStateNormal)];
     }];
     

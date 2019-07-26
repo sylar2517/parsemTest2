@@ -114,17 +114,7 @@
 
 }
 -(void)checkLing:(NSString*)string{
-//
-//    BOOL result =   [string rangeOfString:@"www"].location != NSNotFound ||
-//                    [string rangeOfString:@"http"].location != NSNotFound ||
-//                    [string rangeOfString:@"com"].location != NSNotFound;
-//
-//    if (result) {
-//
-//        self.openInBrowser.hidden = NO;
-//    } else {
-//        self.openInBrowser.hidden = YES;
-//    }
+
     NSDataDetector* detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
     NSArray* matches = [detector matchesInString:string options:0 range:NSMakeRange(0, [string length])];
 
