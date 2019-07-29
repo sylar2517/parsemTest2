@@ -19,6 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id <ScrollViewControllerDelegate> delegate;
 
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+
+
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *widthConstrain;
 

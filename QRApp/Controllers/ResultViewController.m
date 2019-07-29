@@ -35,6 +35,18 @@
         but.layer.masksToBounds = YES;
     }
 
+    self.openInBrowser.titleLabel.numberOfLines = 1;
+    self.openInBrowser.titleLabel.adjustsFontSizeToFitWidth = YES;
+    self.openInBrowser.titleLabel.lineBreakMode = NSLineBreakByClipping;
+    
+    self.saveButton.titleLabel.numberOfLines = 1;
+    self.saveButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    self.saveButton.titleLabel.lineBreakMode = NSLineBreakByClipping;
+    
+    self.exportButton.titleLabel.numberOfLines = 1;
+    self.exportButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+    self.exportButton.titleLabel.lineBreakMode = NSLineBreakByClipping;
+    
     if (self.post && !self.fromCamera) {
         self.resultTextImageView.text = self.post.value;
         [self checkLing:self.post.value];
@@ -47,14 +59,6 @@
         [self makeQRFromText:self.result];
         [self checkLing:self.result];
         [self save];
-        
-    } else if (self.postQR && !self.fromCamera){
-        self.resultTextImageView.text = self.postQR.value;
-        [self checkLing:self.postQR.value];
-        NSData* dataPicture = self.postQR.data;
-        self.resultImageView.layer.magnificationFilter = kCAFilterNearest;
-        self.resultImageView.image = [UIImage imageWithData:dataPicture];
-        
     } else {
         [self dismissViewControllerAnimated:YES completion:nil];
         NSLog(@"Error result");

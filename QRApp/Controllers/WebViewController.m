@@ -78,10 +78,11 @@
 
 -(IBAction)actionBack:(UIBarButtonItem*)sender{
    
+    
+    
     if (sender.tag == 1) {
         //не сохранять
         if (!self.post) {
-
              [self dismissViewControllerAnimated:YES completion:nil];
         } else {
             
@@ -107,6 +108,7 @@
         }
         
     }
+    [self.photoArray removeAllObjects];
         
    
 }

@@ -9,14 +9,14 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-@class PopUpForCameraOrGallery;
-@protocol PopUpForCameraOrGalleryDelegate
-- (void) presentCamera;
-@end
+//@class PopUpForCameraOrGallery;
+//@protocol PopUpForCameraOrGalleryDelegate
+//- (void) presentCamera;
+//@end
 
 @interface PopUpForCameraOrGallery : UIViewController
 
-@property (nonatomic, weak) id <PopUpForCameraOrGalleryDelegate> delegate;
+//@property (nonatomic, weak) id <PopUpForCameraOrGalleryDelegate> delegate;
 
 @property (weak, nonatomic) IBOutlet UIView *popUpView;
 @property (weak, nonatomic) IBOutlet UIView *galleryView;

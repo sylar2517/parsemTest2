@@ -310,20 +310,23 @@ typedef enum {
     
     if (interValue != ColorSchemeTypeRGB) {
         color = [UIColor colorWithRed:red green:green blue:blue alpha:1];
-        if ([color getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha]) {
-            color = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
-//            self.redComponentSlider.value = hue * 255;
-//            self.greenComponentSlider.value = saturation * 255;
-//            self.blueComponentSlider.value = brightness * 255;
-        }
+        [color getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+        
+//        if ([color getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha]) {
+//            color = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
+////            self.redComponentSlider.value = hue * 255;
+////            self.greenComponentSlider.value = saturation * 255;
+////            self.blueComponentSlider.value = brightness * 255;
+//        }
     } else {
         color = [UIColor colorWithHue:red saturation:green brightness:blue alpha:1];
-        if ([color getRed:&hue green:&saturation blue:&brightness alpha:&alpha]) {
-            color = [UIColor colorWithRed:hue green:saturation blue:brightness alpha:1];
-//            self.redComponentSlider.value = hue * 255;
-//            self.greenComponentSlider.value = saturation * 255;
-//            self.blueComponentSlider.value = brightness * 255;
-        }
+        [color getRed:&hue green:&saturation blue:&brightness alpha:&alpha];
+//        if ([color getRed:&hue green:&saturation blue:&brightness alpha:&alpha]) {
+//            color = [UIColor colorWithRed:hue green:saturation blue:brightness alpha:1];
+////            self.redComponentSlider.value = hue * 255;
+////            self.greenComponentSlider.value = saturation * 255;
+////            self.blueComponentSlider.value = brightness * 255;
+ //       }
         
     }
     

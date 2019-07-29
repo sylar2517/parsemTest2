@@ -11,13 +11,14 @@
 #import "HistoryCell.h"
 #import "HistoryPost+CoreDataClass.h"
 #import "ResultViewController.h"
-#import "PopUpForCameraOrGallery.h"
+//#import "PopUpForCameraOrGallery.h"
 #import "DataManager.h"
 
 #import "WebViewController.h"
 #import "ScrollViewController.h"
 
-@interface HistoryScanTVController () <PopUpForCameraOrGalleryDelegate>
+@interface HistoryScanTVController () <ScrollViewControllerDelegate>
+///<PopUpForCameraOrGalleryDelegate>
 
 @property(strong, nonatomic)NSMutableArray* filterObject;
 @property(assign, nonatomic)BOOL isFiltered;
@@ -58,6 +59,9 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+}
 
 - (NSFetchedResultsController*) fetchedResultsController {
     if (_fetchedResultsController != nil) {
@@ -87,6 +91,17 @@
 }
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [self.searchBar resignFirstResponder];
+}
+
+#pragma mark - ScrollViewControllerDelegate
+
+- (void) changeScreen:(BOOL)stopSession{
+    
+    if (stopSession) {
+        self.navigationController.navigationBarHidden = NO;
+        [self.tabBarController.tabBar setHidden:NO];
+        [self.tableView reloadData];
+    }
 }
 
 #pragma mark - UITableViewDataSourse
@@ -155,20 +170,27 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
    // [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+    
+    if ([self.searchBar isFirstResponder]) {
+        [self.searchBar resignFirstResponder];
+    }
+    
     if (!self.isEditing) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         HistoryPost* post = nil;
         if (self.filterObject) {
+            
             post = [self.filterObject objectAtIndex:indexPath.row];
         } else {
             post = [self.fetchedResultsController objectAtIndexPath:indexPath];
         }
         
         if ([post.type isEqualToString:@"QR"]) {
-            ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
-            vc.post = post;
-            vc.fromCamera = NO;
-            [self presentViewController:vc animated:YES completion:nil];
+            [self.hsDelegate historyScanTVControllerPresentResult:post];
+//            ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
+//            vc.post = post;
+//            vc.fromCamera = NO;
+//            [self presentViewController:vc animated:YES completion:nil];
         } else if ([post.type isEqualToString:@"PDF"]) {
             WebViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"webView"];
             vc.post = post;
@@ -240,21 +262,6 @@
     return 3;
 }
 
-//- (nullable UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath{
-//    UIContextualAction* action = [UIContextualAction contextualActionWithStyle:(UIContextualActionStyleNormal) title:@"Удалить" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-//        HistoryPost* post = nil;
-//        if (self.filterObject) {
-//            post = [self.filterObject objectAtIndex:indexPath.row];
-//        } else {
-//            post = [self.fetchedResultsController objectAtIndexPath:indexPath];
-//        }
-//        [[DataManager sharedManager].persistentContainer.viewContext deleteObject:post];
-//        [[DataManager sharedManager] saveContext];
-//    }];
-//    action.backgroundColor = [UIColor redColor];
-//    return [UISwipeActionsConfiguration configurationWithActions:@[action]];
-//}
-
 #pragma mark -  UISearchBarDelegate
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     [searchBar setShowsCancelButton:YES animated:YES];
@@ -264,8 +271,18 @@
     [searchBar resignFirstResponder];
     [searchBar setShowsCancelButton:NO animated:YES];
     searchBar.text = nil;
-    [self.filterObject removeAllObjects];
+    self.filterObject = nil;
+    
+    if (self.isEditing) {
+        self.isEditing = !self.isEditing;
+    }
+    
+    [self.tempObjectArray removeAllObjects];
+    [self.navigationController setToolbarHidden:YES animated:YES];
+    [self.tableView setEditing:self.isEditing animated:YES];
     [self.tableView reloadData];
+    
+
 }
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText{
 
@@ -279,7 +296,7 @@
         self.filterObject = [NSMutableArray array];
         [self filterContentForSearchText:searchText];
     }
-//
+
 }
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
     [searchBar resignFirstResponder];
@@ -287,9 +304,7 @@
 #pragma mark -  Private Methods
 - (void)filterContentForSearchText:(NSString*)searchText
 {
-    //    self.savedSearchTerm = searchText;
-    //
-    //    freshData = NO;
+
     
     if (searchText !=nil)
     {
@@ -312,12 +327,7 @@
         }
         
         
-    }
-    //    else {
-    //        self.filterObject = nil;
-    //    }
-    else
-    {
+    } else {
         NSPredicate *predicate =[NSPredicate predicateWithFormat:@"All"];
         [self.fetchedResultsController.fetchRequest setPredicate:predicate];
         self.filterObject = nil;
@@ -331,9 +341,7 @@
     }
     
     [self.tableView reloadData];
-    
-    //    [searchBar resignFirstResponder];
-    //    [_shadeView setAlpha:0.0f];
+
     
 }
 
@@ -410,12 +418,31 @@
 -(void)actionDelete:(UIBarButtonItem*)sender{
     
     if (self.tempObjectArray.count != 0 && self.tempObjectArray) {
-        for (HistoryPost* post in self.tempObjectArray) {
+
+        [self.searchBar resignFirstResponder];
+        [self.searchBar setShowsCancelButton:NO animated:YES];
+        self.searchBar.text = nil;
+        self.filterObject = nil;
+        
+        if (self.isEditing) {
+            self.isEditing = !self.isEditing;
+        }
+        
+        
+        NSArray* array = [NSArray arrayWithArray:self.tempObjectArray];
+        [self.tempObjectArray removeAllObjects];
+        [self.navigationController setToolbarHidden:YES animated:NO];
+        [self.tableView setEditing:self.isEditing animated:NO];
+        [self.tableView reloadData];
+        
+        
+        for (HistoryPost* post in array) {
             [[DataManager sharedManager].persistentContainer.viewContext deleteObject:post];
         }
         [[DataManager sharedManager] saveContext];
-        [self.tempObjectArray removeAllObjects];
+       
         [self.tableView reloadData];
+        
     }
 }
 
@@ -425,35 +452,5 @@
     [self.navigationController setToolbarHidden:YES animated:YES];
     [self.tableView setEditing:self.isEditing animated:YES];
     [self.tableView reloadData];
-}
-
-#pragma mark - PopUpForCameraOrGalleryDelegate
-- (void) presentCamera{
-    QRViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"cameraController"];
-    CATransition *transition = [[CATransition alloc] init];
-    transition.duration = 0.3;
-    transition.type = kCATransitionPush;
-    transition.subtype = kCATransitionFromLeft;
-    [transition setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    [self.view.window.layer addAnimation:transition forKey:kCATransition];
-    [self.navigationController pushViewController:vc animated:NO];
-}
-
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-    if ([segue.identifier isEqualToString:@"popUpForCamera"]) {
-        PopUpForCameraOrGallery* vc = segue.destinationViewController;
-        vc.delegate = self;
-        //vc.fromMenu = YES;
-    }
-//    if ([segue.identifier isEqualToString:@"historySegue"]) {
-////        HistoryScanTVController* vc = segue.destinationViewController ;
-////        self.delegate = vc;
-//    }
-
 }
 @end

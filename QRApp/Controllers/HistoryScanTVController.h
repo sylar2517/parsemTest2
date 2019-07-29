@@ -9,11 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "CoreDataTableViewController.h"
 NS_ASSUME_NONNULL_BEGIN
-@class ScrollViewController;
+@class ScrollViewController, HistoryScanTVController, HistoryPost;
+@protocol HistoryScanTVControllerDelegate
+- (void)historyScanTVControllerPresentResult:(HistoryPost*)post;
+@end
+
+
 @interface HistoryScanTVController : CoreDataTableViewController <NSFetchedResultsControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
-
+@property (nonatomic, weak) id <HistoryScanTVControllerDelegate> hsDelegate;
 
 - (IBAction)actionSettings:(id)sender;
 

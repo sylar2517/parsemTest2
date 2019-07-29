@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 //@property(assign, nonatomic) BOOL dissmiss;
-@property(strong, nonatomic) NSMutableArray* photoArray;
+@property(weak, nonatomic) NSMutableArray* photoArray;
 
 @property(strong, nonatomic) HistoryPost* post;
 @property (weak, nonatomic) IBOutlet WKWebView *webView;
