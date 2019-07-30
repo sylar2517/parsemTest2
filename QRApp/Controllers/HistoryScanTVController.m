@@ -14,6 +14,8 @@
 //#import "PopUpForCameraOrGallery.h"
 #import "DataManager.h"
 
+#import "ContactTableViewController.h"
+
 #import "WebViewController.h"
 #import "ScrollViewController.h"
 
@@ -57,10 +59,15 @@
     
     self.toolbarItems = self.withExport;
     
+    
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
+  
+    [self.navigationItem setTitle:@"История"];
+    
 }
 
 - (NSFetchedResultsController*) fetchedResultsController {
@@ -148,7 +155,17 @@
 
     
     if ([post.type isEqualToString:@"QR"]) {
-        cell.nameLabel.text = post.value;
+        if ([post.value rangeOfString:@"MECARD:"].location != NSNotFound) {
+            if ([self findNameAndLastName:post.value]) {
+                cell.nameLabel.text = [NSString stringWithFormat:@"Контакт - %@", [self findNameAndLastName:post.value]];
+            } else {
+                cell.nameLabel.text = @"Контакт";
+            }
+
+        } else {
+            cell.nameLabel.text = post.value;
+        }
+        
         cell.imageViewCell.layer.magnificationFilter = kCAFilterNearest;
         cell.imageViewCell.image = [UIImage imageWithData:post.picture];
         cell.typeLabel.text = @"QR";
@@ -165,7 +182,31 @@
     
 }
 
-
+-(NSString*)findNameAndLastName:(NSString*)string{
+    NSArray* array = [string componentsSeparatedByString:@";"];
+    
+    NSString* name = nil;
+    
+    for (NSString* str in array) {
+        if ([str rangeOfString:@"N:"].location != NSNotFound) {
+            NSString* test = [str substringFromIndex:[str rangeOfString:@"N:"].location + 2];
+            
+            NSArray* nameAndLastName = [test componentsSeparatedByString:@","];
+            
+            if (nameAndLastName.count == 2) {
+                name = [NSString stringWithFormat:@"%@ %@", nameAndLastName.firstObject, nameAndLastName.lastObject];
+            } else {
+                nameAndLastName = [test componentsSeparatedByString:@" "];
+                if (nameAndLastName.count == 2) {
+                    name = [NSString stringWithFormat:@"%@ %@", nameAndLastName.firstObject, nameAndLastName.lastObject];
+                }
+            }
+            
+            
+        }
+    }
+    return name;
+}
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
    // [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -186,10 +227,18 @@
         }
         
         if ([post.type isEqualToString:@"QR"]) {
-            [self.hsDelegate historyScanTVControllerPresentResult:post];
+            if ([post.value rangeOfString:@"MECARD:"].location != NSNotFound) {
+                ContactTableViewController* tvc = [self.storyboard instantiateViewControllerWithIdentifier:@"testIDForPush"];
+                tvc.meCard = post.value;
+                [self.navigationController pushViewController:tvc animated:YES];
+            } else {
+                [self.hsDelegate historyScanTVControllerPresentResult:post];
+            }
+            
 //            ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
 //            vc.post = post;
 //            vc.fromCamera = NO;
+//            vc.delegate = self;
 //            [self presentViewController:vc animated:YES completion:nil];
         } else if ([post.type isEqualToString:@"PDF"]) {
             WebViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"webView"];

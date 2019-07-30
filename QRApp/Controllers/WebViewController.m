@@ -24,7 +24,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.webView.navigationDelegate = self;
+    //self.webView.navigationDelegate = self;
     
     if (self.photoArray) {
         PDFDocument* pdfDoc = [[PDFDocument alloc] init];
@@ -160,39 +160,39 @@
 //    }
 //    
 //}
-#pragma mark - WKNavigationDelegate -
-
-- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler{
-    NSURLRequest *request = navigationAction.request;
-    
-    decisionHandler(WKNavigationActionPolicyAllow);
-    
-    NSString *url = [[request URL]absoluteString];
-    
-    if ([url hasPrefix:@"cmd"]) {
-        NSString* command = [url substringFromIndex:4];
-        if ([command isEqualToString:@"show_allert"]) {
-            UIAlertController* ac = [UIAlertController alertControllerWithTitle:@"Error" message:command preferredStyle:(UIAlertControllerStyleAlert)];
-            UIAlertAction* actionCansel = [UIAlertAction actionWithTitle:@"cansel" style:(UIAlertActionStyleCancel) handler:nil];
-            [ac addAction:actionCansel];
-            [self presentViewController:ac animated:YES completion:nil];
-        }
-        return;
-    }
-    //NSLog(@"%@", url);
-}
-
-- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation{
-
-}
-
-- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{
-
-}
-
-- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error{
-
-}
+//#pragma mark - WKNavigationDelegate -
+//
+//- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler{
+//    NSURLRequest *request = navigationAction.request;
+//
+//    decisionHandler(WKNavigationActionPolicyAllow);
+//
+//    NSString *url = [[request URL]absoluteString];
+//
+//    if ([url hasPrefix:@"cmd"]) {
+//        NSString* command = [url substringFromIndex:4];
+//        if ([command isEqualToString:@"show_allert"]) {
+//            UIAlertController* ac = [UIAlertController alertControllerWithTitle:@"Error" message:command preferredStyle:(UIAlertControllerStyleAlert)];
+//            UIAlertAction* actionCansel = [UIAlertAction actionWithTitle:@"cansel" style:(UIAlertActionStyleCancel) handler:nil];
+//            [ac addAction:actionCansel];
+//            [self presentViewController:ac animated:YES completion:nil];
+//        }
+//        return;
+//    }
+//    //NSLog(@"%@", url);
+//}
+//
+//- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation{
+//
+//}
+//
+//- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{
+//
+//}
+//
+//- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error{
+//
+//}
 /*
  #pragma mark - Navigation
  

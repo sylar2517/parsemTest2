@@ -12,9 +12,10 @@
 
 #import <Contacts/Contacts.h>
 #import <ContactsUI/ContactsUI.h>
-@interface ContactTableViewController () <UITextFieldDelegate, EnterTextViewControllerDelegate, CNContactPickerDelegate>
+@interface ContactTableViewController () <UITextFieldDelegate, EnterTextViewControllerDelegate, CNContactPickerDelegate, CNContactViewControllerDelegate>
 
 @property (strong, nonatomic)NSString* result;
+@property (strong, nonatomic) CNContactViewController *cncVC;
 @end
 
 @implementation ContactTableViewController
@@ -30,16 +31,85 @@
     self.contactButton.layer.cornerRadius = 10;
     self.contactButton.layer.masksToBounds = YES;
     self.navigationController.navigationBar.topItem.title = @"Назад";
+    self.navigationController.navigationBarHidden = NO;
     
-    UIBarButtonItem* go = [[UIBarButtonItem alloc] initWithTitle:@"Далее" style:(UIBarButtonItemStyleDone) target:self action:@selector(actionGo:)];
-    self.navigationItem.rightBarButtonItem = go;
     
     for (UITextField* textField in self.textFields) {
         textField.delegate = self;
     }
     
+    if (self.meCard) {
+        self.navigationController.navigationBar.tintColor = [UIColor lightGrayColor];
+        [self.contactButton setTitle:@"Сохранить контакт" forState:(UIControlStateNormal)];
+        
+        NSArray* array = [self.meCard componentsSeparatedByString:@";"];
+        
+        for (NSString* str in array) {
+            if ([str rangeOfString:@"N:"].location != NSNotFound) {
+                NSString* test = [str substringFromIndex:[str rangeOfString:@"N:"].location + 2];
+               
+                NSArray* nameAndLastName = [test componentsSeparatedByString:@","];
+                if (nameAndLastName.count == 2) {
+                    if (test) {
+                        [self.navigationItem setTitle:[NSString stringWithFormat:@"%@ %@", nameAndLastName.firstObject, nameAndLastName.lastObject]];
+                    } else {
+                        [self.navigationItem setTitle:@"Контакт"];
+                    }
+                    [(UITextField*)[self.textFields objectAtIndex:1] setText:[nameAndLastName firstObject]];
+                    [(UITextField*)[self.textFields objectAtIndex:0] setText:[nameAndLastName lastObject]];
+                } else {
+                    nameAndLastName = [test componentsSeparatedByString:@" "];
+                    if (nameAndLastName.count == 2) {
+                        if (test) {
+                            [self.navigationItem setTitle:[NSString stringWithFormat:@"%@ %@", nameAndLastName.firstObject, nameAndLastName.lastObject]];
+                        } else {
+                            [self.navigationItem setTitle:@"Контакт"];
+                        }
+                        [(UITextField*)[self.textFields objectAtIndex:1] setText:[nameAndLastName firstObject]];
+                        [(UITextField*)[self.textFields objectAtIndex:0] setText:[nameAndLastName lastObject]];
+                    } else {
+                        if (test) {
+                            [self.navigationItem setTitle:test];
+                        } else {
+                            [self.navigationItem setTitle:@"Контакт"];
+                        }
+                        [(UITextField*)[self.textFields objectAtIndex:0] setText:test];
+                    }
+                }
+            } else if ([str rangeOfString:@"TEL:"].location != NSNotFound){
+                NSString* test = [str substringFromIndex:[str rangeOfString:@"TEL:"].location + 4];
+                [(UITextField*)[self.textFields objectAtIndex:2] setText:test];
+            } else if ([str rangeOfString:@"EMAIL:"].location != NSNotFound){
+                NSString* test = [str substringFromIndex:[str rangeOfString:@"EMAIL:"].location + 6];
+                [(UITextField*)[self.textFields objectAtIndex:3] setText:test];
+            } else if ([str rangeOfString:@"URL:"].location != NSNotFound){
+                NSString* test = [str substringFromIndex:[str rangeOfString:@"URL:"].location + 4];
+                [(UITextField*)[self.textFields objectAtIndex:4] setText:test];
+            } else if ([str rangeOfString:@"NOTE:"].location != NSNotFound){
+                NSString* test = [str substringFromIndex:[str rangeOfString:@"NOTE:"].location + 5];
+                [(UITextField*)[self.textFields objectAtIndex:5] setText:test];
+            } else if ([str rangeOfString:@"NICKNAME:"].location != NSNotFound){
+                NSString* test = [str substringFromIndex:[str rangeOfString:@"NICKNAME:"].location + 9];
+                [(UITextField*)[self.textFields objectAtIndex:6] setText:test];
+            } else if ([str rangeOfString:@"ADR:"].location != NSNotFound){
+                NSString* test = [str substringFromIndex:[str rangeOfString:@"ADR:"].location + 4];
+                [(UITextField*)[self.textFields objectAtIndex:7] setText:test];
+            }  else if ([str rangeOfString:@"BDAY:"].location != NSNotFound){
+                NSString* test = [str substringFromIndex:[str rangeOfString:@"BDAY:"].location + 5];
+                [(UITextField*)[self.textFields objectAtIndex:8] setText:test];
+            }
+            
+        }
+        
+    } else {
+        UIBarButtonItem* go = [[UIBarButtonItem alloc] initWithTitle:@"Далее" style:(UIBarButtonItemStyleDone) target:self action:@selector(actionGo:)];
+        self.navigationItem.rightBarButtonItem = go;
+    }
+    
+    
     
 }
+
 #pragma mark - UIBarButtonItem
 -(void)actionGo:(UIBarButtonItem*)sender{
     NSInteger counter = 0;
@@ -90,13 +160,64 @@
 }
 #pragma mark - Action
 - (IBAction)actionSelectContact:(UIButton *)sender {
-    CNContactPickerViewController* vc = [[CNContactPickerViewController alloc] init];
-    vc.delegate = self;
-    [self presentViewController:vc animated:YES completion:nil];
+    if (!self.meCard) {
+        CNContactPickerViewController* vc = [[CNContactPickerViewController alloc] init];
+        vc.delegate = self;
+        [self presentViewController:vc animated:YES completion:nil];
+    } else {
+        CNContactStore *store = [[CNContactStore alloc] init];
+        
+        // create contact
+       
+        CNMutableContact *contact = [[CNMutableContact alloc] init];
+        contact.familyName = [[self.textFields objectAtIndex:1] valueForKey:@"text"];
+        contact.givenName = [[self.textFields objectAtIndex:0] valueForKey:@"text"];
+        
+        CNLabeledValue *homePhone = [CNLabeledValue labeledValueWithLabel:CNLabelHome value:[CNPhoneNumber phoneNumberWithStringValue:[[self.textFields objectAtIndex:2] valueForKey:@"text"]]];
+        contact.phoneNumbers = @[homePhone];
+        
+        CNLabeledValue *email = [CNLabeledValue labeledValueWithLabel:CNLabelHome value:[[self.textFields objectAtIndex:3] valueForKey:@"text"] ];
+        contact.emailAddresses = @[email];
+        
+        CNLabeledValue *url = [CNLabeledValue labeledValueWithLabel:CNLabelHome value:[[self.textFields objectAtIndex:3] valueForKey:@"text"] ];
+        contact.urlAddresses = @[url];
+       
+        contact.note = [[self.textFields objectAtIndex:5] valueForKey:@"text"];
+        
+        contact.nickname = [[self.textFields objectAtIndex:6] valueForKey:@"text"];
+
+        
+        
+        CNContactViewController *controller = [CNContactViewController viewControllerForUnknownContact:contact];
+        
+        controller.contactStore = store;
+        controller.delegate = self;
+        
+        self.cncVC = controller;
+        UINavigationController* nav = [[UINavigationController alloc] initWithRootViewController:controller];
+        [self presentViewController:nav animated:YES completion:^{
+            controller.navigationController.navigationBarHidden = NO;
+            UIBarButtonItem* go = [[UIBarButtonItem alloc] initWithTitle:@"Назад" style:(UIBarButtonItemStyleDone) target:self action:@selector(actionBackFromCNC:)];
+            controller.navigationItem.leftBarButtonItem = go;
+        }];
+    }
+    
 }
+-(void)actionBackFromCNC:(UIBarButtonItem*)sender{
+    [self.cncVC dismissViewControllerAnimated:YES completion:nil];
+}
+#pragma mark - CNContactViewControllerDelegate
+- (void)contactViewController:(CNContactViewController *)viewController didCompleteWithContact:(nullable CNContact *)contact{
+    [viewController dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+//-(BOOL)contactViewController:(CNContactViewController *)viewController shouldPerformDefaultActionForContactProperty:(CNContactProperty *)property{
+//    return YES;
+//}
 #pragma mark - CNContactPickerDelegate
 - (void)contactPickerDidCancel:(CNContactPickerViewController *)picker{
     [picker dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)contactPicker:(CNContactPickerViewController *)picker didSelectContact:(CNContact *)contact{
     

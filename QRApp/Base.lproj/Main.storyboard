@@ -767,6 +767,7 @@
         <!--Contact Table View Controller-->
         <scene sceneID="p5y-Yv-zj3">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="P1C-ap-NDT" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController storyboardIdentifier="testIDForPush" id="cSk-6A-FK4" customClass="ContactTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="Nif-26-GjO">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -785,7 +786,9 @@
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="42A-Da-7fC">
                                                     <rect key="frame" x="7" y="0.0" width="400" height="60"/>
                                                     <color key="backgroundColor" white="0.10000000000000001" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <state key="normal" title="Выбрать контакт"/>
+                                                    <state key="normal" title="Выбрать контакт">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </state>
                                                     <connections>
                                                         <action selector="actionSelectContact:" destination="cSk-6A-FK4" eventType="touchUpInside" id="0Y8-fv-BEJ"/>
                                                     </connections>
@@ -1122,7 +1125,6 @@
                         <outletCollection property="textFields" destination="KsP-GG-EBK" id="IDW-Rq-Xyd"/>
                     </connections>
                 </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="P1C-ap-NDT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4379.7101449275369" y="-1423.6607142857142"/>
         </scene>
@@ -1419,6 +1421,7 @@
                                                         <segment title="RGB"/>
                                                         <segment title="HSV"/>
                                                     </segments>
+                                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <connections>
                                                         <action selector="actionChangeColorScheme:" destination="cwA-uP-0dT" eventType="valueChanged" id="Uvn-Bj-c3Y"/>
                                                     </connections>
@@ -1429,6 +1432,7 @@
                                                         <constraint firstAttribute="height" constant="30" id="eUS-EO-Q3k"/>
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="68" id="qJ4-QC-jVX"/>
                                                     </constraints>
+                                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <state key="normal" title="Свернуть"/>
                                                     <connections>
                                                         <action selector="actionRollUP:" destination="cwA-uP-0dT" eventType="touchUpInside" id="Ns4-l4-jvR"/>
@@ -1619,6 +1623,7 @@
                                                         <segment title="RGB"/>
                                                         <segment title="HSV"/>
                                                     </segments>
+                                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <connections>
                                                         <action selector="actionChangeColorScheme:" destination="cwA-uP-0dT" eventType="valueChanged" id="IGw-8n-wKE"/>
                                                     </connections>
@@ -1629,6 +1634,7 @@
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="44" id="PA6-Fo-Bdb"/>
                                                         <constraint firstAttribute="height" constant="30" id="XEV-hy-RGF"/>
                                                     </constraints>
+                                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <state key="normal" title="Свернуть"/>
                                                     <connections>
                                                         <action selector="actionRollFrontPanel:" destination="cwA-uP-0dT" eventType="touchUpInside" id="uJv-db-0Y1"/>
@@ -2759,5 +2765,4 @@
         <image name="text" width="50" height="50"/>
         <image name="url_link" width="64" height="64"/>
     </resources>
-    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
 </document>

@@ -154,6 +154,30 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 //    NSLog(@"2 - %@", self.imageView.layer.sublayers);
 }
 
+
+#pragma mark - touches
+//-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+//{
+//
+//    CGPoint point = [[touches anyObject] locationInView:self.view];
+////    float newX = point.x / self.view.frame.size.width;
+////    float newY = point.y / self.view.frame.size.height;
+//
+//
+//    [self.device lockForConfiguration:nil];
+//    [self.device setFocusPointOfInterest:point];
+//    [self.device setFocusMode:(AVCaptureFocusModeAutoFocus)];
+//    [self.device setExposurePointOfInterest:point];
+//    [self.device setExposureMode:(AVCaptureExposureModeContinuousAutoExposure)];
+//
+//    [self.device unlockForConfiguration];
+//
+////    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+////    view.backgroundColor = UIColor.redColor;
+////    view.center = point;
+////    [self.view addSubview:view];
+////    [self.view bringSubviewToFront:view];
+//}
 #pragma mark - ScrollViewControllerDelegate
 
 - (void) changeScreen:(BOOL)stopSession{
@@ -653,6 +677,24 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 
                 [self presentViewController:ac animated:YES completion:nil];
 
+            } else if ((object.type == AVMetadataObjectTypeCode128Code || object.type == AVMetadataObjectTypeEAN8Code || object.type == AVMetadataObjectTypeUPCECode || object.type == AVMetadataObjectTypeCode39Code)) {
+                //&& self.haveResult
+                // self.haveResult = NO;
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+                AudioServicesPlayAlertSound (1117);
+                
+                //[NSString stringWithFormat:@"Это не QR %@", object.stringValue];
+                UIAlertController* ac = [UIAlertController alertControllerWithTitle: @"Это не QR" message:nil preferredStyle:(UIAlertControllerStyleActionSheet)];
+                
+                UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Отмена" style:(UIAlertActionStyleCancel) handler:nil];
+                UIAlertAction* editing = [UIAlertAction actionWithTitle: [NSString stringWithFormat:@"%@", object.stringValue] style:(UIAlertActionStyleDefault) handler:nil];
+                
+                
+                [ac addAction:editing];
+                [ac addAction:aa];
+                
+                [self presentViewController:ac animated:YES completion:nil];
+                
             }
         }
     }

@@ -25,8 +25,9 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     self.navigationController.navigationBarHidden = NO;
-    self.navigationItem.leftBarButtonItem.tintColor = [UIColor whiteColor];
-    
+//    self.navigationItem.leftBarButtonItem.tintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+//    self.navigationController.navigationBar.translucent = NO;
 }
 //- (void)viewDidAppear:(BOOL)animated{
 //    [super viewDidAppear:animated];

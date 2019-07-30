@@ -47,6 +47,8 @@
     self.exportButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     self.exportButton.titleLabel.lineBreakMode = NSLineBreakByClipping;
     
+    NSLog(@"%@", self.postQR);
+    
     if (self.post && !self.fromCamera) {
         self.resultTextImageView.text = self.post.value;
         [self checkLing:self.post.value];
@@ -59,11 +61,18 @@
         [self makeQRFromText:self.result];
         [self checkLing:self.result];
         [self save];
+        
+    }  else if (self.postQR && !self.fromCamera){
+        self.resultTextImageView.text = self.postQR.value;
+        [self checkLing:self.postQR.value];
+        NSData* dataPicture = self.postQR.data;
+        self.resultImageView.layer.magnificationFilter = kCAFilterNearest;
+        self.resultImageView.image = [UIImage imageWithData:dataPicture];
+        
     } else {
         [self dismissViewControllerAnimated:YES completion:nil];
         NSLog(@"Error result");
     }
-    
     
     
     

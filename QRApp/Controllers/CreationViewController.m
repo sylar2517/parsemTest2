@@ -13,6 +13,7 @@
 
 #import "QRPost+CoreDataClass.h"
 #import "ResultViewController.h"
+#import "ContactTableViewController.h"
 
 @interface CreationViewController () <UICollectionViewDelegate, UICollectionViewDataSource, QRCollectionViewCellDelegate>
 
@@ -169,18 +170,24 @@
     [self presentViewController:ac2 animated:YES completion:nil];
 }
 //- (void)showCellForQR:(QRPost*)post{
-////    ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
-////    vc.postQR = post;
-////    vc.fromCamera = NO;
-////    [self presentViewController:vc animated:YES completion:nil];
+//    ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
+//    vc.postQR = post;
+//    vc.fromCamera = NO;
+//    [self presentViewController:vc animated:YES completion:nil];
 //}
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     QRPost* post = [self.history objectAtIndex:indexPath.row];
-    ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
-    vc.postQR = post;
-    vc.fromCamera = NO;
-    [self presentViewController:vc animated:YES completion:nil];
 
+    if ([post.type isEqualToString:@"contact"]) {
+        ContactTableViewController* tvc = [self.storyboard instantiateViewControllerWithIdentifier:@"testIDForPush"];
+        tvc.meCard = post.value;
+        [self.navigationController pushViewController:tvc animated:YES];
+    } else {
+        ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
+        vc.postQR = post;
+        vc.fromCamera = NO;
+        [self presentViewController:vc animated:YES completion:nil];
+    }
 }
 
 /*
