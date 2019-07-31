@@ -14,8 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(strong, nonatomic)NSString*titleText;
 @property(strong, nonatomic)NSString*typeQR;
 
-@property (weak, nonatomic) IBOutlet UIButton *addIconButton;
 
+
+
+@property (weak, nonatomic) IBOutlet UIButton *addIconButton;
+@property (weak, nonatomic) IBOutlet UIButton *makePhotoButton;
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *QRImageView;
@@ -40,6 +43,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UISlider *frontGreenComponentSlider;
 @property (weak, nonatomic) IBOutlet UISlider *frontBlueComponentSlider;
 
+@property (weak, nonatomic) IBOutlet UITextField *hexBackTextField;
+@property (weak, nonatomic) IBOutlet UITextField *hexFrontTextField;
+
 
 @property (strong, nonatomic) IBOutletCollection(UISlider) NSArray *backGroundSliders;
 @property (weak, nonatomic) IBOutlet UISegmentedControl* colorSchemeControl;
@@ -54,6 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (IBAction)actionAddLogo:(UIButton *)sender;
 
+- (IBAction)actionTakePhoto:(UIButton *)sender;
 @end
 
 NS_ASSUME_NONNULL_END

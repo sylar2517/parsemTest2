@@ -52,8 +52,8 @@ typedef enum {
     self.navigationItem.rightBarButtonItem = rigthItem;
     
 
-    self.addIconButton.layer.cornerRadius = 15;
-    self.addIconButton.layer.masksToBounds = YES;
+    self.addIconButton.layer.cornerRadius = self.makePhotoButton.layer.cornerRadius = 15;
+    self.addIconButton.layer.masksToBounds  = self.makePhotoButton.layer.masksToBounds = YES;
     
     [self initColors];
     
@@ -63,27 +63,69 @@ typedef enum {
 #pragma mark - UIBarButtonItem
 -(void)actionSave:(UIBarButtonItem*)sender{
     
-    QRPost* post = [NSEntityDescription insertNewObjectForEntityForName:@"QRPost" inManagedObjectContext:[DataManager sharedManager].persistentContainer.viewContext];
-    NSDate* now = [NSDate date];
-    post.dateOfCreation = now;
-    post.type = self.typeQR;
-    post.value = self.titleText;
+    if ([self getQRCode]) {
+        QRPost* post = [NSEntityDescription insertNewObjectForEntityForName:@"QRPost" inManagedObjectContext:[DataManager sharedManager].persistentContainer.viewContext];
+        NSDate* now = [NSDate date];
+        post.dateOfCreation = now;
+        post.type = self.typeQR;
+        post.value = self.titleText;
+        
+        UIImage* image = self.QRImageView.image;
+        
+        UIGraphicsBeginImageContext(CGSizeMake(400, 400));
+        [image drawInRect:CGRectMake(0, 0, 400, 400)];
+        UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        NSData *imageData = UIImagePNGRepresentation(newImage);
+        post.data = imageData;
+        
+        [[DataManager sharedManager] saveContext];
+        
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    } else {
+        UIAlertController* ac = [UIAlertController alertControllerWithTitle:@"Данные цвета не подходят" message:nil preferredStyle:(UIAlertControllerStyleAlert)];
+        UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Ок" style:(UIAlertActionStyleCancel) handler:nil];
+        [ac addAction:aa];
+        [self presentViewController:ac animated:YES completion:nil];
+    }
     
-    UIImage* image = self.QRImageView.image;
     
-    UIGraphicsBeginImageContext(CGSizeMake(400, 400));
-    [image drawInRect:CGRectMake(0, 0, 400, 400)];
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    NSData *imageData = UIImagePNGRepresentation(newImage);
-    post.data = imageData;
-    
-    [[DataManager sharedManager] saveContext];
-    
-    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 #pragma mark - Methods
+-(BOOL)getQRCode{
+    @autoreleasepool {
+        
+        NSData* imageData = UIImagePNGRepresentation(self.QRImageView.image);
+        CIImage* ciImage = [CIImage imageWithData:imageData];
+        CIContext* context = [CIContext context];
+        NSDictionary* options = @{ CIDetectorAccuracy : CIDetectorAccuracyHigh }; // Slow but thorough
+        
+        CIDetector* qrDetector = [CIDetector detectorOfType:CIDetectorTypeQRCode
+                                                    context:context
+                                                    options:options];
+        if ([[ciImage properties] valueForKey:(NSString*) kCGImagePropertyOrientation] == nil) {
+            options = @{ CIDetectorImageOrientation : @1};
+        } else {
+            options = @{ CIDetectorImageOrientation : [[ciImage properties] valueForKey:(NSString*) kCGImagePropertyOrientation]};
+        }
+        
+        NSArray * features = [qrDetector featuresInImage:ciImage
+                                                 options:options];
+        if (features != nil && features.count > 0) {
+            for (CIQRCodeFeature* qrFeature in features) {
+                if (qrFeature.messageString) {
+                    return YES;
+                }
+            }
+        }
+        
+        return NO;
+    }
+    
+}
+
+
 -(void)initColors{
     Color* back = [[Color alloc] init];
     Color* front = [[Color alloc] init];
@@ -97,6 +139,20 @@ typedef enum {
     self.frontColor.red = self.frontRedComponentSlider.value/255;
     self.frontColor.green = self.frontGreenComponentSlider.value/255;
     self.frontColor.blue = self.frontBlueComponentSlider.value/255;
+    
+    
+    self.hexBackTextField.text =  [self hexFromUIColor:[UIColor colorWithRed:self.redComponentSlider.value/255
+                                                                       green:self.greenComponentSlider.value/255
+                                                                        blue:self.blueComponentSlider.value/255
+                                                                       alpha:1]];
+    
+    self.hexFrontTextField.text =  [self hexFromUIColor:
+                                    [UIColor colorWithRed:self.frontRedComponentSlider.value/255
+                                                   green:self.frontRedComponentSlider.value/255
+                                                    blue:self.frontRedComponentSlider.value/255
+                                                   alpha:1]];
+    
+    
 }
 -(void)makeQRFromString:(NSString*)string{
     NSData *stringData = [string dataUsingEncoding: NSUTF8StringEncoding];
@@ -143,46 +199,7 @@ typedef enum {
                                            orientation:UIImageOrientationUp];
 
 }
-//-(void)makeQRWithLogo:(NSString*)string{
-//
-//    if (self.selectedImage) {
-//        NSData *stringData = [string dataUsingEncoding: NSUTF8StringEncoding];
-//
-//        CIFilter *qrFilter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
-//        [qrFilter setValue:stringData forKey:@"inputMessage"];
-//        [qrFilter setValue:@"H" forKey:@"inputCorrectionLevel"];
-//
-//        CIFilter* colorFilter =  [CIFilter filterWithName:@"CIFalseColor"];
-//        [colorFilter setValue:qrFilter.outputImage forKey:@"inputImage"];
-//
-//        [colorFilter setValue:[CIColor colorWithRed:self.frontColor.red green:self.frontColor.green blue:self.frontColor.blue] forKey:@"inputColor0"];
-//        [colorFilter setValue:[CIColor colorWithRed:self.backgroundColor.red green:self.backgroundColor.green blue:self.backgroundColor.blue] forKey:@"inputColor1"];
-//        [colorFilter setValue:[CIColor colorWithRed:self.backgroundColor.red green:self.backgroundColor.green blue:self.backgroundColor.blue] forKey:@"inputColor1"];
-//
-//        CIFilter* filter = [CIFilter filterWithName:@"CISourceOverCompositing"];
-//        //[filter setValue:colorFilter.outputImage forKey:@"inputImage"];
-//        CGAffineTransform test = CGAffineTransformMakeTranslation((CGRectGetMidX(self.QRImageView.frame) - self.selectedImage.size.width/2),
-//                                                                   (CGRectGetMidY(self.QRImageView.frame) - self.selectedImage.size.height/2));
-//        [filter setValue:self.selectedImage forKey:@"inputBackgroundImage"];
-////        [filter setValue: forKey:@"inputImage"];
-//        CIImage *qrImage = filter.outputImage;
-//        qrImage = [qrImage imageByApplyingTransform:test];
-//
-////        float scaleX = 0.5*self.QRImageView.frame.size.width / qrImage.extent.size.width;
-////        float scaleY = 0.5*self.QRImageView.frame.size.height / qrImage.extent.size.height;
-////
-////        qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
-//
-//        self.QRImageView.image = [UIImage imageWithCIImage:qrImage
-//                                                     scale:[UIScreen mainScreen].scale
-//                                               orientation:UIImageOrientationUp];
-//        #warning TEST2
-//    } else {
-//        return;
-//    }
-//
-//
-//}
+
 -(void)refreshScreen {
     //с помощью крутилок меняем цвет главного экрана
 //    CGFloat red = self.redComponentSlider.value/255;
@@ -224,6 +241,12 @@ typedef enum {
             self.backgroundColor.red = red;
             self.backgroundColor.green = green;
             self.backgroundColor.blue = blue;
+            
+            self.hexBackTextField.text =  [self hexFromUIColor:[UIColor colorWithRed:red
+                                                                               green:green
+                                                                                blue:blue
+                                                                               alpha:1]];
+            
         } else {
             self.frontRInfoLable.text = @"R";
             self.frontGInfoLable.text = @"G";
@@ -232,7 +255,15 @@ typedef enum {
             self.frontColor.red = red;
             self.frontColor.green = green;
             self.frontColor.blue = blue;
+            
+            self.hexFrontTextField.text =  [self hexFromUIColor:[UIColor colorWithRed:red
+                                                                               green:green
+                                                                                blue:blue
+                                                                               alpha:1]];
         }
+        
+   
+        
         
         [self makeColorQRFromString:self.titleText];
         
@@ -253,6 +284,10 @@ typedef enum {
                 self.backgroundColor.red = hue;
                 self.backgroundColor.green = saturation;
                 self.backgroundColor.blue = brightness;
+                
+                
+                self.hexBackTextField.text =  [self hexFromUIColor:color];
+                
             } else {
                 self.frontColor.red = hue;
                 self.frontColor.green = saturation;
@@ -262,6 +297,7 @@ typedef enum {
                 self.frontGInfoLable.text = @"S";
                 self.frontBInfoLable.text = @"B";
                 
+                self.hexFrontTextField.text =  [self hexFromUIColor:color];
             }
 
             [self makeColorQRFromString:self.titleText];
@@ -274,10 +310,12 @@ typedef enum {
         self.rTextField.text = [NSString stringWithFormat:@"%3.f", self.redComponentSlider.value];
         self.gTextField.text = [NSString stringWithFormat:@"%3.f", self.greenComponentSlider.value];
         self.bTextField.text = [NSString stringWithFormat:@"%3.f", self.blueComponentSlider.value];
+
     } else {
         self.frontrTextField.text = [NSString stringWithFormat:@"%3.f", self.frontRedComponentSlider.value];
         self.frontgTextField.text = [NSString stringWithFormat:@"%3.f", self.frontGreenComponentSlider.value];
         self.frontbTextField.text = [NSString stringWithFormat:@"%3.f", self.frontBlueComponentSlider.value];
+        
     }
 
 
@@ -311,30 +349,16 @@ typedef enum {
     if (interValue != ColorSchemeTypeRGB) {
         color = [UIColor colorWithRed:red green:green blue:blue alpha:1];
         [color getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
-        
-//        if ([color getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha]) {
-//            color = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
-////            self.redComponentSlider.value = hue * 255;
-////            self.greenComponentSlider.value = saturation * 255;
-////            self.blueComponentSlider.value = brightness * 255;
-//        }
     } else {
         color = [UIColor colorWithHue:red saturation:green brightness:blue alpha:1];
         [color getRed:&hue green:&saturation blue:&brightness alpha:&alpha];
-//        if ([color getRed:&hue green:&saturation blue:&brightness alpha:&alpha]) {
-//            color = [UIColor colorWithRed:hue green:saturation blue:brightness alpha:1];
-////            self.redComponentSlider.value = hue * 255;
-////            self.greenComponentSlider.value = saturation * 255;
-////            self.blueComponentSlider.value = brightness * 255;
- //       }
-        
     }
     
     if (self.isBackground) {
         self.redComponentSlider.value = hue * 255;
         self.greenComponentSlider.value = saturation * 255;
         self.blueComponentSlider.value = brightness * 255;
-
+        
     } else {
         
         self.frontRedComponentSlider.value = hue * 255;
@@ -347,6 +371,26 @@ typedef enum {
  
 }
 
+- (UIColor *)colorFromHexString:(NSString *)hexString {
+    unsigned rgbValue = 0;
+    NSScanner *scanner = [NSScanner scannerWithString:hexString];
+    [scanner setScanLocation:1]; // bypass '#' character
+    [scanner scanHexInt:&rgbValue];
+    return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
+}
+
+- (NSString *) hexFromUIColor:(UIColor *)color {
+    
+    if (CGColorGetNumberOfComponents(color.CGColor) < 4) {
+        const CGFloat *components = CGColorGetComponents(color.CGColor);
+        color = [UIColor colorWithRed:components[30] green:components[141] blue:components[13] alpha:components[1]];
+    }
+    if (CGColorSpaceGetModel(CGColorGetColorSpace(color.CGColor)) != kCGColorSpaceModelRGB) {
+        return [NSString stringWithFormat:@"#FFFFFF"];
+    }
+    return [NSString stringWithFormat:@"#%02X%02X%02X", (int)((CGColorGetComponents(color.CGColor))[0]*255.0), (int)((CGColorGetComponents(color.CGColor))[1]*255.0), (int)((CGColorGetComponents(color.CGColor))[2]*255.0)];
+    
+}
 #pragma mark - Actions
 - (IBAction)actionSlider:(UISlider *)sender {
     if (sender.tag <= 2) {
@@ -422,12 +466,19 @@ typedef enum {
     self.imagePickerController =vc;
     [self presentViewController:vc animated:YES completion:nil];   
 }
+
+- (IBAction)actionTakePhoto:(UIButton *)sender {
+    UIImagePickerController* vc = [[UIImagePickerController alloc] init];
+    vc.delegate = self;
+    vc.sourceType = UIImagePickerControllerSourceTypeCamera;
+    [self presentViewController:vc animated:YES completion:nil];
+}
 #pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     UIImage *image = info[UIImagePickerControllerOriginalImage];
     if (image) {
         self.selectedImage = image;
-        [self.imagePickerController dismissViewControllerAnimated:YES completion:^{
+        [picker dismissViewControllerAnimated:YES completion:^{
             self.QRImageView.image = [self imageByCombiningImage:self.QRImageView.image withImage:image];
         }];
         
@@ -486,43 +537,108 @@ typedef enum {
 }
 #pragma mark - TextField delegate
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
-    textField.text = @"";
+    if (textField.tag == 10 || textField.tag == 11) {
+        textField.text = @"#";
+    } else {
+        textField.text = @"";
+    }
+    
     return YES;
 }
 - (void)textFieldDidEndEditing:(UITextField *)textField{
     [textField resignFirstResponder];
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
-    NSInteger value = [textField.text integerValue];
-    if (value > 255) {
-        UIAlertController* ac = [UIAlertController alertControllerWithTitle:@"Значения не должны превышать 255" message:nil preferredStyle:(UIAlertControllerStyleAlert)];
-        UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Ок" style:(UIAlertActionStyleCancel) handler:nil];
-        [ac addAction:aa];
-        [self presentViewController:ac animated:YES completion:nil];
-        return NO;
-    }
-
-    [(UISlider*)[self.backGroundSliders objectAtIndex:textField.tag] setValue:value];
-    [self refreshScreen];
     
-    [textField resignFirstResponder];
+    if (textField.tag != 10 && textField.tag != 11) {
+        NSInteger value = [textField.text integerValue];
+        if (value > 255) {
+            UIAlertController* ac = [UIAlertController alertControllerWithTitle:@"Значения не должны превышать 255" message:nil preferredStyle:(UIAlertControllerStyleAlert)];
+            UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Ок" style:(UIAlertActionStyleCancel) handler:nil];
+            [ac addAction:aa];
+            [self presentViewController:ac animated:YES completion:nil];
+            return NO;
+        }
+        
+        [(UISlider*)[self.backGroundSliders objectAtIndex:textField.tag] setValue:value];
+        [self refreshScreen];
+        
+    } else {
+        if ([textField isEqual:self.hexBackTextField]) {
+            UIColor* color = [self colorFromHexString:textField.text];
+            //
+            CGFloat red;
+            CGFloat green;
+            CGFloat blue;
+            CGFloat alpha;
+            
+            [color getRed:&red green:&green blue:&blue alpha:&alpha];
+            
+            self.redComponentSlider.value = red * 255;
+            self.greenComponentSlider.value = green * 255;
+            self.blueComponentSlider.value = blue * 255;
+            
+            self.isBackground = YES;
+            
+            [self refreshScreen];
+            
+            if (self.selectedImage) {
+                self.QRImageView.image = [self imageByCombiningImage:self.QRImageView.image withImage:self.selectedImage];
+            }
+            //
+            //
+            
+        } else {
+            UIColor* color = [self colorFromHexString:textField.text];
+            
+            CGFloat red;
+            CGFloat green;
+            CGFloat blue;
+            CGFloat alpha;
+            
+            [color getRed:&red green:&green blue:&blue alpha:&alpha];
+            
+            self.frontRedComponentSlider.value = red * 255;
+            self.frontGreenComponentSlider.value = green * 255;
+            self.frontBlueComponentSlider.value = blue * 255;
+            
+            self.isBackground = NO;
+            
+            [self refreshScreen];
+            
+            if (self.selectedImage) {
+                self.QRImageView.image = [self imageByCombiningImage:self.QRImageView.image withImage:self.selectedImage];
+            }
+        }
+    }
+    
+   [textField resignFirstResponder];
     
     return YES;
 }
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-
-    if (range.length > 3 || range.location > 2) {
-        return NO;
-    }
-  
-    NSCharacterSet* validationSet = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
-    NSArray* components =[string componentsSeparatedByCharactersInSet:validationSet];
-    if ([components count] > 1){
-        return NO;
+    
+    if (textField.tag != 10 && textField.tag != 11) {
+        if (range.length > 3 || range.location > 2) {
+            return NO;
+        }
+        
+        NSCharacterSet* validationSet = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+        NSArray* components =[string componentsSeparatedByCharactersInSet:validationSet];
+        if ([components count] > 1){
+            return NO;
+        } else {
+            return YES;
+        }
     } else {
-        return YES;
+        if (range.length > 7 || range.location > 6) {
+            return NO;
+        } else {
+            return YES;
+        }
     }
 }
+
 
 //#pragma mark - Table view data source
 //
@@ -589,5 +705,45 @@ typedef enum {
     // Pass the selected object to the new view controller.
 }
 */
+//-(void)makeQRWithLogo:(NSString*)string{
+//
+//    if (self.selectedImage) {
+//        NSData *stringData = [string dataUsingEncoding: NSUTF8StringEncoding];
+//
+//        CIFilter *qrFilter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+//        [qrFilter setValue:stringData forKey:@"inputMessage"];
+//        [qrFilter setValue:@"H" forKey:@"inputCorrectionLevel"];
+//
+//        CIFilter* colorFilter =  [CIFilter filterWithName:@"CIFalseColor"];
+//        [colorFilter setValue:qrFilter.outputImage forKey:@"inputImage"];
+//
+//        [colorFilter setValue:[CIColor colorWithRed:self.frontColor.red green:self.frontColor.green blue:self.frontColor.blue] forKey:@"inputColor0"];
+//        [colorFilter setValue:[CIColor colorWithRed:self.backgroundColor.red green:self.backgroundColor.green blue:self.backgroundColor.blue] forKey:@"inputColor1"];
+//        [colorFilter setValue:[CIColor colorWithRed:self.backgroundColor.red green:self.backgroundColor.green blue:self.backgroundColor.blue] forKey:@"inputColor1"];
+//
+//        CIFilter* filter = [CIFilter filterWithName:@"CISourceOverCompositing"];
+//        //[filter setValue:colorFilter.outputImage forKey:@"inputImage"];
+//        CGAffineTransform test = CGAffineTransformMakeTranslation((CGRectGetMidX(self.QRImageView.frame) - self.selectedImage.size.width/2),
+//                                                                   (CGRectGetMidY(self.QRImageView.frame) - self.selectedImage.size.height/2));
+//        [filter setValue:self.selectedImage forKey:@"inputBackgroundImage"];
+////        [filter setValue: forKey:@"inputImage"];
+//        CIImage *qrImage = filter.outputImage;
+//        qrImage = [qrImage imageByApplyingTransform:test];
+//
+////        float scaleX = 0.5*self.QRImageView.frame.size.width / qrImage.extent.size.width;
+////        float scaleY = 0.5*self.QRImageView.frame.size.height / qrImage.extent.size.height;
+////
+////        qrImage = [qrImage imageByApplyingTransform:CGAffineTransformMakeScale(scaleX, scaleY)];
+//
+//        self.QRImageView.image = [UIImage imageWithCIImage:qrImage
+//                                                     scale:[UIScreen mainScreen].scale
+//                                               orientation:UIImageOrientationUp];
+//        #warning TEST2
+//    } else {
+//        return;
+//    }
+//
+//
+//}
 
 @end

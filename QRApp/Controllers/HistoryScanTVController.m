@@ -26,6 +26,8 @@
 @property(assign, nonatomic)BOOL isFiltered;
 @property(assign, nonatomic)BOOL isEditing;
 @property(strong, nonatomic)NSMutableArray* tempObjectArray;
+@property(strong, nonatomic)NSMutableArray* tempCellArray;
+
 
 @property(strong, nonatomic)NSArray*withExport;
 @property(strong, nonatomic)NSArray*withOutExport;
@@ -157,18 +159,21 @@
     if ([post.type isEqualToString:@"QR"]) {
         if ([post.value rangeOfString:@"MECARD:"].location != NSNotFound) {
             if ([self findNameAndLastName:post.value]) {
-                cell.nameLabel.text = [NSString stringWithFormat:@"Контакт - %@", [self findNameAndLastName:post.value]];
+                cell.nameLabel.text = [NSString stringWithFormat:@"%@", [self findNameAndLastName:post.value]];
+                cell.typeLabel.text = @"Контакт";
             } else {
                 cell.nameLabel.text = @"Контакт";
+                cell.typeLabel.text = @"QR";
             }
 
         } else {
             cell.nameLabel.text = post.value;
+            cell.typeLabel.text = @"QR";
         }
         
         cell.imageViewCell.layer.magnificationFilter = kCAFilterNearest;
         cell.imageViewCell.image = [UIImage imageWithData:post.picture];
-        cell.typeLabel.text = @"QR";
+        
 
         
     } else if ([post.type isEqualToString:@"PDF"]){
@@ -264,6 +269,9 @@
         }
         
         HistoryCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        
+        [self.tempCellArray addObject:cell];
+        
         cell.nameLabel.textColor = [UIColor blackColor];
         cell.dateLabel.textColor = [UIColor blackColor];
         cell.typeLabel.textColor = [UIColor blackColor];
@@ -289,6 +297,9 @@
         }
         
         HistoryCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        
+        [self.tempCellArray removeObject:cell];
+        
         cell.nameLabel.textColor = [UIColor whiteColor];
         cell.dateLabel.textColor = [UIColor whiteColor];
         cell.typeLabel.textColor = [UIColor whiteColor];
@@ -327,6 +338,9 @@
     }
     
     [self.tempObjectArray removeAllObjects];
+    
+    [self.tempCellArray removeAllObjects];
+    
     [self.navigationController setToolbarHidden:YES animated:YES];
     [self.tableView setEditing:self.isEditing animated:YES];
     [self.tableView reloadData];
@@ -344,6 +358,12 @@
         self.isFiltered = YES;
         self.filterObject = [NSMutableArray array];
         [self filterContentForSearchText:searchText];
+        
+        if (self.tempObjectArray.count > 0) {
+
+            [self.tempObjectArray removeAllObjects];
+            [self.tableView reloadData];
+        }
     }
 
 }
@@ -412,6 +432,7 @@
         } else {
             [self.navigationController setToolbarHidden:NO animated:YES];
             self.tempObjectArray = [NSMutableArray array];
+            self.tempCellArray = [NSMutableArray array];
         }
         [self.tableView setEditing:self.isEditing animated:YES];
         
@@ -480,6 +501,9 @@
         
         NSArray* array = [NSArray arrayWithArray:self.tempObjectArray];
         [self.tempObjectArray removeAllObjects];
+        
+        [self.tempCellArray removeAllObjects];
+        
         [self.navigationController setToolbarHidden:YES animated:NO];
         [self.tableView setEditing:self.isEditing animated:NO];
         [self.tableView reloadData];
@@ -498,6 +522,9 @@
 -(void)actionCancelEditing:(UIBarButtonItem*)sender{
     self.isEditing = !self.isEditing;
     [self.tempObjectArray removeAllObjects];
+    
+    [self.tempCellArray removeAllObjects];
+    
     [self.navigationController setToolbarHidden:YES animated:YES];
     [self.tableView setEditing:self.isEditing animated:YES];
     [self.tableView reloadData];
