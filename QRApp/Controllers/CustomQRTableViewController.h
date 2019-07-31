@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic) IBOutlet UIButton *addIconButton;
 @property (weak, nonatomic) IBOutlet UIButton *makePhotoButton;
+@property (weak, nonatomic) IBOutlet UIButton *deleteLogoButton;
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *QRImageView;
@@ -61,6 +62,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)actionAddLogo:(UIButton *)sender;
 
 - (IBAction)actionTakePhoto:(UIButton *)sender;
+
+- (IBAction)actionDeleteLogo:(UIButton *)sender;
+
 @end
 
 NS_ASSUME_NONNULL_END

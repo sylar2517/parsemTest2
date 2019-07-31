@@ -52,13 +52,13 @@ typedef enum {
     self.navigationItem.rightBarButtonItem = rigthItem;
     
 
-    self.addIconButton.layer.cornerRadius = self.makePhotoButton.layer.cornerRadius = 15;
-    self.addIconButton.layer.masksToBounds  = self.makePhotoButton.layer.masksToBounds = YES;
+    self.addIconButton.layer.cornerRadius = self.makePhotoButton.layer.cornerRadius = self.deleteLogoButton.layer.cornerRadius =  15;
+    self.addIconButton.layer.masksToBounds  = self.makePhotoButton.layer.masksToBounds = self.deleteLogoButton.layer.masksToBounds =YES;
     
     [self initColors];
     
     [self refreshScreen];
-    
+    self.deleteLogoButton.hidden = YES;
 }
 #pragma mark - UIBarButtonItem
 -(void)actionSave:(UIBarButtonItem*)sender{
@@ -460,9 +460,8 @@ typedef enum {
 - (IBAction)actionAddLogo:(UIButton *)sender {
     UIImagePickerController* vc = [[UIImagePickerController alloc] init];
     vc.delegate = self;
-    
     vc.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    vc.allowsEditing = NO;
+    vc.allowsEditing = YES;
     self.imagePickerController =vc;
     [self presentViewController:vc animated:YES completion:nil];   
 }
@@ -471,18 +470,53 @@ typedef enum {
     UIImagePickerController* vc = [[UIImagePickerController alloc] init];
     vc.delegate = self;
     vc.sourceType = UIImagePickerControllerSourceTypeCamera;
+    vc.allowsEditing = YES;
     [self presentViewController:vc animated:YES completion:nil];
 }
+
+- (IBAction)actionDeleteLogo:(UIButton *)sender{
+    if (self.selectedImage) {
+        self.selectedImage = nil;
+    }
+    [self refreshScreen];
+    self.deleteLogoButton.hidden = YES;
+}
+
+
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+//    UIView* view =[[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
+//    view.backgroundColor = [UIColor redColor];
+//    return view;
+//}
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+//    return 200;
+//}
 #pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    UIImage *image = info[UIImagePickerControllerOriginalImage];
+    UIImage *image = info[UIImagePickerControllerEditedImage];
     if (image) {
         self.selectedImage = image;
         [picker dismissViewControllerAnimated:YES completion:^{
             self.QRImageView.image = [self imageByCombiningImage:self.QRImageView.image withImage:image];
+            self.deleteLogoButton.hidden = NO;
         }];
         
+    } else {
+        image = info[UIImagePickerControllerOriginalImage];
+        if (image) {
+            self.selectedImage = image;
+            [picker dismissViewControllerAnimated:YES completion:^{
+                self.QRImageView.image = [self imageByCombiningImage:self.QRImageView.image withImage:image];
+                self.deleteLogoButton.hidden = NO;
+            }];
+        }
+        
     }
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    [self dismissViewControllerAnimated:NO completion:nil];
+    [self.imagePickerController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (UIImage*)imageByCombiningImage:(UIImage*)firstImage withImage:(UIImage*)secondImage {
@@ -510,10 +544,7 @@ typedef enum {
     return image;
 }
 
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
-    [self dismissViewControllerAnimated:NO completion:nil];
-    [self.imagePickerController dismissViewControllerAnimated:YES completion:nil];
-}
+
 #pragma mark - Table view delegate
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath{
     return NO;

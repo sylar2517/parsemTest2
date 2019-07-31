@@ -9,8 +9,11 @@
 #import "СhooseQRTableViewController.h"
 #import "EnterTextViewController.h"
 #import "CustomQRTableViewController.h"
+#import "ContactTableViewController.h"
+#import "QRPopViewController.h"
 
-@interface ChooseQRTableViewController ()  <EnterTextViewControllerDelegate>
+
+@interface ChooseQRTableViewController ()  <EnterTextViewControllerDelegate, QRPopViewControllerDelegate>
 @end
 
 @implementation ChooseQRTableViewController
@@ -38,7 +41,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
   
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row < 3 || indexPath.row == 4 || indexPath.row == 5) {
+    
+    if (indexPath.row != 3 && indexPath.section == 0) {
         EnterTextViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"EnterTextViewController"];
         vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         vc.modalPresentationStyle = UIModalPresentationOverFullScreen;
@@ -74,9 +78,27 @@
                 break;
         }
         [self presentViewController:vc animated:YES completion:nil];
-    }  else {
-        UITableViewController* tvc = [self.storyboard instantiateViewControllerWithIdentifier:@"testIDForPush"];
+    }  else if (indexPath.row == 3 && indexPath.section == 0) {
+        ContactTableViewController* tvc = [self.storyboard instantiateViewControllerWithIdentifier:@"testIDForPush"];
         [self.navigationController pushViewController:tvc animated:YES];
+    } else if (indexPath.section == 1) {
+        if (indexPath.row == 0) {
+            QRPopViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"popUpForQRCamOrGal"];
+            vc.delegate = self;
+            vc.isBackground = YES;
+            vc.modalPresentationStyle = UIModalPresentationOverFullScreen;
+            vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            
+            [self presentViewController:vc animated:YES completion:nil];
+        } else {
+            QRPopViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"popUpForQRCamOrGal"];
+            vc.delegate = self;
+            vc.isBackground = YES;
+            vc.modalPresentationStyle = UIModalPresentationOverFullScreen;
+            vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            
+            [self presentViewController:vc animated:YES completion:nil];
+        }
     }
 
     
@@ -89,7 +111,38 @@
     tvc.typeQR = type;
     [self.navigationController pushViewController:tvc animated:YES];
 }
+#pragma mark - QRPopViewControllerDelegate
+- (void)transferImage:(UIImage*)image fromBackground:(BOOL)background{
     
+    NSLog(@"%@", image);
+    NSLog(@"%d", background);
+    
+    UIAlertController * alertController = [UIAlertController alertControllerWithTitle: @"Введите текст для QR-кода"
+                                                                              message: nil
+                                                                       preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = @"Введите текст";
+        textField.textColor = [UIColor blackColor];
+        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        textField.borderStyle = UITextBorderStyleRoundedRect;
+        textField.keyboardAppearance = UIKeyboardAppearanceDark;
+    }];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        NSArray * textfields = alertController.textFields;
+        UITextField * textField = textfields[0];
+//
+//        NSLog(@"%@",textField.text);
+#warning GO TO RESULT
+    }]];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
+    
+    
+    
+    
+}
 //- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 //#warning Incomplete implementation, return the number of sections
 //    return 0;
