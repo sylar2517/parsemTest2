@@ -222,6 +222,10 @@
 				764AF5AD22E0991E00A63293 /* CustomQRTableViewController.m */,
 				76E17EA122E8899D00E4B33F /* ZoomViewController.h */,
 				76E17EA222E8899D00E4B33F /* ZoomViewController.m */,
+				763980A522F2484300929E05 /* QRFromImageTVC.h */,
+				763980A622F2484300929E05 /* QRFromImageTVC.m */,
+				763980A022F2397700929E05 /* QRPopViewController.h */,
+				763980A122F2397700929E05 /* QRPopViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -251,17 +255,13 @@
 			isa = PBXGroup;
 			children = (
 				7606927222C40B1600BB9D6E /* Cells */,
-				760A5C3422C56EA50032B730 /* Controllers */,
 				763CD00922C6A5840009F955 /* ModelsCoreData */,
 				763980A322F2398B00929E05 /* Models */,
-				763980A522F2484300929E05 /* QRFromImageTVC.h */,
-				763980A622F2484300929E05 /* QRFromImageTVC.m */,
+				760A5C3422C56EA50032B730 /* Controllers */,
 				7614778022BFF9FF00022E85 /* AppDelegate.h */,
 				7614778122BFF9FF00022E85 /* AppDelegate.m */,
 				7614778622BFF9FF00022E85 /* Main.storyboard */,
 				7614778C22BFFA0000022E85 /* Assets.xcassets */,
-				763980A022F2397700929E05 /* QRPopViewController.h */,
-				763980A122F2397700929E05 /* QRPopViewController.m */,
 				7614778E22BFFA0000022E85 /* LaunchScreen.storyboard */,
 				7614779122BFFA0000022E85 /* Info.plist */,
 				7614779222BFFA0000022E85 /* main.m */,

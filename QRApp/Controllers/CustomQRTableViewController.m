@@ -63,31 +63,51 @@ typedef enum {
 #pragma mark - UIBarButtonItem
 -(void)actionSave:(UIBarButtonItem*)sender{
     
-    if ([self getQRCode]) {
-        QRPost* post = [NSEntityDescription insertNewObjectForEntityForName:@"QRPost" inManagedObjectContext:[DataManager sharedManager].persistentContainer.viewContext];
-        NSDate* now = [NSDate date];
-        post.dateOfCreation = now;
-        post.type = self.typeQR;
-        post.value = self.titleText;
-        
-        UIImage* image = self.QRImageView.image;
-        
-        UIGraphicsBeginImageContext(CGSizeMake(400, 400));
-        [image drawInRect:CGRectMake(0, 0, 400, 400)];
-        UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        NSData *imageData = UIImagePNGRepresentation(newImage);
-        post.data = imageData;
-        
-        [[DataManager sharedManager] saveContext];
-        
-        [self.navigationController popToRootViewControllerAnimated:YES];
-    } else {
-        UIAlertController* ac = [UIAlertController alertControllerWithTitle:@"Данные цвета не подходят" message:nil preferredStyle:(UIAlertControllerStyleAlert)];
-        UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Ок" style:(UIAlertActionStyleCancel) handler:nil];
-        [ac addAction:aa];
-        [self presentViewController:ac animated:YES completion:nil];
-    }
+    
+    QRPost* post = [NSEntityDescription insertNewObjectForEntityForName:@"QRPost" inManagedObjectContext:[DataManager sharedManager].persistentContainer.viewContext];
+    NSDate* now = [NSDate date];
+    post.dateOfCreation = now;
+    post.type = self.typeQR;
+    post.value = self.titleText;
+    
+    UIImage* image = self.QRImageView.image;
+    
+    UIGraphicsBeginImageContext(CGSizeMake(400, 400));
+    [image drawInRect:CGRectMake(0, 0, 400, 400)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    NSData *imageData = UIImagePNGRepresentation(newImage);
+    post.data = imageData;
+    
+    [[DataManager sharedManager] saveContext];
+    
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    
+//    if ([self getQRCode]) {
+//        QRPost* post = [NSEntityDescription insertNewObjectForEntityForName:@"QRPost" inManagedObjectContext:[DataManager sharedManager].persistentContainer.viewContext];
+//        NSDate* now = [NSDate date];
+//        post.dateOfCreation = now;
+//        post.type = self.typeQR;
+//        post.value = self.titleText;
+//
+//        UIImage* image = self.QRImageView.image;
+//
+//        UIGraphicsBeginImageContext(CGSizeMake(400, 400));
+//        [image drawInRect:CGRectMake(0, 0, 400, 400)];
+//        UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+//        UIGraphicsEndImageContext();
+//        NSData *imageData = UIImagePNGRepresentation(newImage);
+//        post.data = imageData;
+//
+//        [[DataManager sharedManager] saveContext];
+//
+//        [self.navigationController popToRootViewControllerAnimated:YES];
+//    } else {
+//        UIAlertController* ac = [UIAlertController alertControllerWithTitle:@"Данные цвета не подходят" message:nil preferredStyle:(UIAlertControllerStyleAlert)];
+//        UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Ок" style:(UIAlertActionStyleCancel) handler:nil];
+//        [ac addAction:aa];
+//        [self presentViewController:ac animated:YES completion:nil];
+//    }
     
     
 }

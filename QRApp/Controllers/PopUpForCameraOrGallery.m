@@ -45,7 +45,7 @@
     vc.delegate = self;
 
     vc.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    vc.allowsEditing = NO;
+    vc.allowsEditing = YES;
     self.imagePickerController =vc;
     [self presentViewController:vc animated:YES completion:nil];    
 }
@@ -53,20 +53,76 @@
 
 #pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+//    UIImage *image = info[UIImagePickerControllerOriginalImage];
+//    if (image) {
+//        self.selectedImage = image;
+//        [self.imagePickerController dismissViewControllerAnimated:YES completion:^{
+//
+//
+//        }];
+//
+//    }
+    
+    
     UIImage *image = info[UIImagePickerControllerOriginalImage];
-    if (image) {
+    CGFloat test = self.view.frame.size.width + self.view.frame.size.width/3;
+    //NSLog(@"%f, %f", image.size.height, test);
+    if (image.size.height < test) {
+        image = info[UIImagePickerControllerOriginalImage];
+        if (image) {
+            self.selectedImage = image;
+            [picker dismissViewControllerAnimated:YES completion:^{
+                GalleryViewController* gvc = [self.storyboard instantiateViewControllerWithIdentifier:@"galleryController"];
+                gvc.selectedImage = self.selectedImage;
+                gvc.modalPresentationStyle = UIModalPresentationOverFullScreen;
+                gvc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                gvc.delegate = self;
+                [self presentViewController:gvc animated:YES completion:nil];
+            }];
+        }
+    } else {
+        image = info[UIImagePickerControllerEditedImage];
         self.selectedImage = image;
-        [self.imagePickerController dismissViewControllerAnimated:YES completion:^{
+        [picker dismissViewControllerAnimated:YES completion:^{
             GalleryViewController* gvc = [self.storyboard instantiateViewControllerWithIdentifier:@"galleryController"];
             gvc.selectedImage = self.selectedImage;
             gvc.modalPresentationStyle = UIModalPresentationOverFullScreen;
             gvc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
             gvc.delegate = self;
             [self presentViewController:gvc animated:YES completion:nil];
-           
         }];
-        
+
     }
+    
+//    UIImage *image = info[UIImagePickerControllerEditedImage];
+//    if (image) {
+//
+//        self.selectedImage = image;
+//        [picker dismissViewControllerAnimated:YES completion:^{
+//            GalleryViewController* gvc = [self.storyboard instantiateViewControllerWithIdentifier:@"galleryController"];
+//            gvc.selectedImage = self.selectedImage;
+//            gvc.modalPresentationStyle = UIModalPresentationOverFullScreen;
+//            gvc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+//            gvc.delegate = self;
+//            [self presentViewController:gvc animated:YES completion:nil];
+//        }];
+//
+//    } else {
+//        image = info[UIImagePickerControllerOriginalImage];
+//        if (image) {
+//            self.selectedImage = image;
+//            [picker dismissViewControllerAnimated:YES completion:^{
+//                GalleryViewController* gvc = [self.storyboard instantiateViewControllerWithIdentifier:@"galleryController"];
+//                gvc.selectedImage = self.selectedImage;
+//                gvc.modalPresentationStyle = UIModalPresentationOverFullScreen;
+//                gvc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+//                gvc.delegate = self;
+//                [self presentViewController:gvc animated:YES completion:nil];
+//            }];
+//        }
+//
+//    }
+//#warning HERE
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{

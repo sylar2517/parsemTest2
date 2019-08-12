@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *QRImageView;
 
+
 @property (weak, nonatomic) IBOutlet UILabel *RInfoLable;
 @property (weak, nonatomic) IBOutlet UILabel *GInfoLable;
 @property (weak, nonatomic) IBOutlet UILabel *BInfoLable;

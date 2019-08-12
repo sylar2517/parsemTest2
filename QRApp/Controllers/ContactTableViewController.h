@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ContactTableViewController : UITableViewController
 
 @property(strong, nonatomic)NSString* meCard;
+@property(strong, nonatomic)NSData* imageData;
 
 
 @property (weak, nonatomic) IBOutlet UIButton *contactButton;

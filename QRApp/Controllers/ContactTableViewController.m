@@ -9,6 +9,8 @@
 #import "ContactTableViewController.h"
 #import "EnterTextViewController.h"
 #import "CustomQRTableViewController.h"
+#import "ZoomViewController.h"
+
 
 #import <Contacts/Contacts.h>
 #import <ContactsUI/ContactsUI.h>
@@ -41,6 +43,12 @@
     if (self.meCard) {
         self.navigationController.navigationBar.tintColor = [UIColor lightGrayColor];
         [self.contactButton setTitle:@"Сохранить контакт" forState:(UIControlStateNormal)];
+        
+        if (self.imageData) {
+            UIBarButtonItem* qr = [[UIBarButtonItem alloc] initWithTitle:@"Открыть QR" style:(UIBarButtonItemStyleDone) target:self action:@selector(actionOpenQR:)];
+            //@selector(actionGo:)];
+            self.navigationItem.rightBarButtonItem = qr;
+        }
         
         NSArray* array = [self.meCard componentsSeparatedByString:@";"];
         
@@ -111,6 +119,18 @@
 }
 
 #pragma mark - UIBarButtonItem
+-(void)actionOpenQR:(UIBarButtonItem*)sender{
+    
+    ZoomViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"ZoomVC"];
+    UIImage* image = [UIImage imageWithData:self.imageData];
+    UIGraphicsBeginImageContext(CGSizeMake(400, 400));
+    [image drawInRect:CGRectMake(0, 0, 400, 400)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    vc.transferedImage = newImage;
+    [self presentViewController:vc animated:YES completion:nil];
+    
+}
 -(void)actionGo:(UIBarButtonItem*)sender{
     NSInteger counter = 0;
     for (UITextField* textField in self.textFields) {

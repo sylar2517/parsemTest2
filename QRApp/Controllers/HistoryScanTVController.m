@@ -190,27 +190,13 @@
 -(NSString*)findNameAndLastName:(NSString*)string{
     NSArray* array = [string componentsSeparatedByString:@";"];
     
-    NSString* name = nil;
-    
     for (NSString* str in array) {
         if ([str rangeOfString:@"N:"].location != NSNotFound) {
             NSString* test = [str substringFromIndex:[str rangeOfString:@"N:"].location + 2];
-            
-            NSArray* nameAndLastName = [test componentsSeparatedByString:@","];
-            
-            if (nameAndLastName.count == 2) {
-                name = [NSString stringWithFormat:@"%@ %@", nameAndLastName.firstObject, nameAndLastName.lastObject];
-            } else {
-                nameAndLastName = [test componentsSeparatedByString:@" "];
-                if (nameAndLastName.count == 2) {
-                    name = [NSString stringWithFormat:@"%@ %@", nameAndLastName.firstObject, nameAndLastName.lastObject];
-                }
-            }
-            
-            
+            return test;
         }
     }
-    return name;
+    return @"Контакт";
 }
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -235,6 +221,7 @@
             if ([post.value rangeOfString:@"MECARD:"].location != NSNotFound) {
                 ContactTableViewController* tvc = [self.storyboard instantiateViewControllerWithIdentifier:@"testIDForPush"];
                 tvc.meCard = post.value;
+                tvc.imageData = post.picture;
                 [self.navigationController pushViewController:tvc animated:YES];
             } else {
                 [self.hsDelegate historyScanTVControllerPresentResult:post];

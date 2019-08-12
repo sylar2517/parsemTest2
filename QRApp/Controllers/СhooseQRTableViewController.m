@@ -11,7 +11,7 @@
 #import "CustomQRTableViewController.h"
 #import "ContactTableViewController.h"
 #import "QRPopViewController.h"
-
+#import "QRFromImageTVC.h"
 
 @interface ChooseQRTableViewController ()  <EnterTextViewControllerDelegate, QRPopViewControllerDelegate>
 @end
@@ -32,10 +32,12 @@
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 //    self.navigationController.navigationBar.translucent = NO;
 }
-//- (void)viewDidAppear:(BOOL)animated{
-//    [super viewDidAppear:animated];
-//    [self.navigationItem setTitle:@""];
-//}
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [self.navigationItem setTitle:@""];
+    self.navigationController.navigationBarHidden = NO;
+
+}
 
 #pragma mark - Table view data source
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -93,7 +95,7 @@
         } else {
             QRPopViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"popUpForQRCamOrGal"];
             vc.delegate = self;
-            vc.isBackground = YES;
+            vc.isBackground = NO;
             vc.modalPresentationStyle = UIModalPresentationOverFullScreen;
             vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
             
@@ -132,8 +134,16 @@
     [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         NSArray * textfields = alertController.textFields;
         UITextField * textField = textfields[0];
-//
-//        NSLog(@"%@",textField.text);
+
+        if (textField.text.length > 0) {
+            QRFromImageTVC* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateQRfromImage"];
+            vc.titleText = textField.text;
+            vc.transferImage = image;
+            vc.background = background;
+            vc.typeQR = @"Изображение";
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+
 #warning GO TO RESULT
     }]];
     

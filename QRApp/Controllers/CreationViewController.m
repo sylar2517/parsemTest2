@@ -94,7 +94,10 @@
         cell.imageCell.layer.magnificationFilter = kCAFilterNearest;
         cell.imageCell.image = [UIImage imageWithData:dataPicture];
     } else if ([post.type isEqualToString:@"contact"]) {
-        cell.infoLabel.text = @"Контакт";
+//        NSLog(@"AAA - %@", post.value);
+//        cell.infoLabel.text = @"Контакт";
+        cell.infoLabel.text = [self findNameAndLastName:post.value];
+        
         NSData* dataPicture = post.data;
         cell.imageCell.image = [UIImage imageWithData:dataPicture];
     }  else if (![post.type isEqualToString:@"Простой"]) {
@@ -106,7 +109,17 @@
     
 }
 #pragma mark - Methods
-
+-(NSString*)findNameAndLastName:(NSString*)string{
+    NSArray* array = [string componentsSeparatedByString:@";"];
+    
+    for (NSString* str in array) {
+        if ([str rangeOfString:@"N:"].location != NSNotFound) {
+            NSString* test = [str substringFromIndex:[str rangeOfString:@"N:"].location + 2];
+            return test;
+        }
+    }
+    return @"Контакт";
+}
 -(UIImage*)makeQRFromText:(NSString*)text from:(UIImageView*)imageView{
     
     NSData *stringData = [text dataUsingEncoding: NSUTF8StringEncoding];
@@ -181,6 +194,7 @@
     if ([post.type isEqualToString:@"contact"]) {
         ContactTableViewController* tvc = [self.storyboard instantiateViewControllerWithIdentifier:@"testIDForPush"];
         tvc.meCard = post.value;
+        tvc.imageData = post.data;
         [self.navigationController pushViewController:tvc animated:YES];
     } else {
         ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];

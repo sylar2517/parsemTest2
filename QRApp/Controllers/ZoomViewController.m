@@ -22,6 +22,7 @@
     if (self.transferedImage) {
         self.exitButton.layer.cornerRadius = 15;
         self.exitButton.layer.masksToBounds = YES;
+        self.QRImageView.layer.magnificationFilter = kCAFilterNearest;
         self.QRImageView.image = self.transferedImage;
     } else {
         [self dismissViewControllerAnimated:YES completion:nil];
