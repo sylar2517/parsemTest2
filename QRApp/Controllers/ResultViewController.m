@@ -117,7 +117,7 @@
         CGPoint pointOnMainView = [touch locationInView:self.view];
         NSInteger delta = self.startCoordY - pointOnMainView.y;
         
-        self.topLayoutConstraint.constant = -delta;
+        self.topLayoutConstraint.constant = 50-delta;
     }
 
 
