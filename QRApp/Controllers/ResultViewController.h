@@ -24,7 +24,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UIButton *exportButton;
+@property (weak, nonatomic) IBOutlet UIButton *rollUpButton;
 
+
+@property (weak, nonatomic) IBOutlet UIView *parentView;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *mainViewHeightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *topLayoutConstraint;
 
 
 

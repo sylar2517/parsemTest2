@@ -85,7 +85,8 @@
     ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
     vc.result = string;
     vc.fromCamera = YES;
-    [self presentViewController:vc animated:YES completion:nil];
+    //vc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    [self presentViewController:vc animated:NO completion:nil];
 }
 
 #pragma mark - HVCDelegate
@@ -94,6 +95,7 @@
     ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
     vc.post = post;
     vc.fromCamera = NO;
+    vc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     [self presentViewController:vc animated:YES completion:nil];
 }
 

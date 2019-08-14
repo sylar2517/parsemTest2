@@ -200,6 +200,7 @@
         ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
         vc.postQR = post;
         vc.fromCamera = NO;
+        vc.modalPresentationStyle = UIModalPresentationOverFullScreen;
         [self presentViewController:vc animated:YES completion:nil];
     }
 }

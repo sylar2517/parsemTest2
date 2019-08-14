@@ -15,12 +15,17 @@
 
 @interface ResultViewController () <UITextViewDelegate>
 
+@property(assign, nonatomic)NSInteger startCoordY;
+
 @end
 
 @implementation ResultViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.parentView.layer.cornerRadius = 20;
+    self.parentView.layer.masksToBounds = YES;
     
     self.mainView.layer.cornerRadius = 10;
     self.mainView.layer.masksToBounds = YES;
@@ -47,20 +52,22 @@
     self.exportButton.titleLabel.adjustsFontSizeToFitWidth = YES;
     self.exportButton.titleLabel.lineBreakMode = NSLineBreakByClipping;
     
-    NSLog(@"%@", self.postQR);
-    
     if (self.post && !self.fromCamera) {
         self.resultTextImageView.text = self.post.value;
         [self checkLing:self.post.value];
         NSData* dataPicture = self.post.picture;
         self.resultImageView.layer.magnificationFilter = kCAFilterNearest;
         self.resultImageView.image = [UIImage imageWithData:dataPicture];
+        self.backButton.hidden = YES;
+        self.mainViewHeightConstraint.constant = self.mainViewHeightConstraint.constant - 50;
         
     } else if (self.result && self.fromCamera){
         self.resultTextImageView.text = self.result;
         [self makeQRFromText:self.result];
         [self checkLing:self.result];
         [self save];
+        self.topLayoutConstraint.constant = 0;
+        self.rollUpButton.hidden = YES;
         
     }  else if (self.postQR && !self.fromCamera){
         self.resultTextImageView.text = self.postQR.value;
@@ -68,8 +75,10 @@
         NSData* dataPicture = self.postQR.data;
         self.resultImageView.layer.magnificationFilter = kCAFilterNearest;
         self.resultImageView.image = [UIImage imageWithData:dataPicture];
-        
-    } else {
+        self.backButton.hidden = YES;
+        self.mainViewHeightConstraint.constant = self.mainViewHeightConstraint.constant - 50;
+    }
+    else {
         [self dismissViewControllerAnimated:YES completion:nil];
         NSLog(@"Error result");
     }
@@ -79,12 +88,66 @@
     
     self.copingButton.tintColor = self.backButton.tintColor = [UIColor whiteColor];
     
-    //[self makeQRFromText];
-    //self.resultTextImageView.delegate = self;
-    
-    
+
+//    UISwipeGestureRecognizer *gestureRecognizerRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandlerDown:)];
+//    [gestureRecognizerRight setDirection:(UISwipeGestureRecognizerDirectionDown)];
+//    [self.view addGestureRecognizer:gestureRecognizerRight];
+
 }
 
+//-(void)swipeHandlerDown:(UISwipeGestureRecognizer*)sender{
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event{
+    if (!self.fromCamera) {
+        UITouch* touch = [touches anyObject];
+        CGPoint pointOnMainView = [touch locationInView:self.view];
+        self.startCoordY = pointOnMainView.y;
+        
+        if (self.startCoordY < 50) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
+    }
+    
+}
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    if (!self.fromCamera) {
+        UITouch* touch = [touches anyObject];
+        CGPoint pointOnMainView = [touch locationInView:self.view];
+        NSInteger delta = self.startCoordY - pointOnMainView.y;
+        
+        self.topLayoutConstraint.constant = -delta;
+    }
+
+
+}
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event{
+    if (!self.fromCamera) {
+        UITouch* touch = [touches anyObject];
+        CGPoint pointOnMainView = [touch locationInView:self.view];
+        
+        NSInteger delta = self.startCoordY - pointOnMainView.y;
+        if (delta < -100) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        } else {
+            self.topLayoutConstraint.constant = 50;
+            
+        }
+    }
+}
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event{
+    UITouch* touch = [touches anyObject];
+    CGPoint pointOnMainView = [touch locationInView:self.view];
+    
+    NSInteger delta = self.startCoordY - pointOnMainView.y;
+    if (delta < -100) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        self.topLayoutConstraint.constant = 50;
+        
+    }
+}
 #pragma mark - Methods
 -(void)save{
     if (self.fromCamera && self.resultTextImageView.text) {
@@ -189,9 +252,9 @@
     
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    [self.resultTextImageView resignFirstResponder];
-}
+//- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+//    [self.resultTextImageView resignFirstResponder];
+//}
 
 #pragma mark - Segue;
 // In a storyboard-based application, you will often want to do a little preparation before navigation
