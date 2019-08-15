@@ -407,33 +407,35 @@
 #pragma mark -  Actions storyboard
 - (IBAction)actionSettings:(id)sender{
     
-    UIAlertController* ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:(UIAlertControllerStyleActionSheet)];
+    [self.hsDelegate showSideMunu];
     
-    
-    UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Отмена" style:(UIAlertActionStyleCancel) handler:nil];
-    UIAlertAction* editing = [UIAlertAction actionWithTitle:@"Редактировать" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-        
-        self.isEditing = !self.isEditing;
-        if (self.editing == NO) {
-            [self.navigationController setToolbarHidden:YES animated:YES];
-        } else {
-            [self.navigationController setToolbarHidden:NO animated:YES];
-            self.tempObjectArray = [NSMutableArray array];
-            self.tempCellArray = [NSMutableArray array];
-        }
-        [self.tableView setEditing:self.isEditing animated:YES];
-        
-    }];
-    
-    UIAlertAction* clear = [UIAlertAction actionWithTitle:@"Отчистить историю" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-        [self allertForDelete];
-    }];
-    
-    [ac addAction:editing];
-    [ac addAction:clear];
-    [ac addAction:aa];
-    
-    [self presentViewController:ac animated:YES completion:nil];
+//    UIAlertController* ac = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:(UIAlertControllerStyleActionSheet)];
+//
+//
+//    UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Отмена" style:(UIAlertActionStyleCancel) handler:nil];
+//    UIAlertAction* editing = [UIAlertAction actionWithTitle:@"Редактировать" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+//
+//        self.isEditing = !self.isEditing;
+//        if (self.editing == NO) {
+//            [self.navigationController setToolbarHidden:YES animated:YES];
+//        } else {
+//            [self.navigationController setToolbarHidden:NO animated:YES];
+//            self.tempObjectArray = [NSMutableArray array];
+//            self.tempCellArray = [NSMutableArray array];
+//        }
+//        [self.tableView setEditing:self.isEditing animated:YES];
+//
+//    }];
+//
+//    UIAlertAction* clear = [UIAlertAction actionWithTitle:@"Отчистить историю" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+//        [self allertForDelete];
+//    }];
+//
+//    [ac addAction:editing];
+//    [ac addAction:clear];
+//    [ac addAction:aa];
+//
+//    [self presentViewController:ac animated:YES completion:nil];
 }
 
 -(void)allertForDelete{

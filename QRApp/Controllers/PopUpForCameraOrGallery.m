@@ -31,6 +31,8 @@
     self.galleryView.layer.cornerRadius = 10;
     self.galleryView.layer.masksToBounds = YES;
     
+    
+    [self.view bringSubviewToFront:self.popUpView];
 }
 
 #pragma mark - Action
@@ -50,6 +52,14 @@
     [self presentViewController:vc animated:YES completion:nil];    
 }
 
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    UITouch* touch = [touches anyObject];
+    CGPoint pointOnMainView = [touch locationInView:self.view];
+    
+    if (!CGRectContainsPoint(self.popUpView.frame, pointOnMainView)) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
 
 #pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {

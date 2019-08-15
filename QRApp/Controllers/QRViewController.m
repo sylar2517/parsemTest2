@@ -631,7 +631,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
             if (object.type == AVMetadataObjectTypeQRCode && self.haveResult) {
                 //
                 //[self.video transformedMetadataObjectForMetadataObject:object].accessibilityFrame;
-                NSLog(@"%@", [NSNumber numberWithInt:self.haveResult]);
+//                NSLog(@"%@", [NSNumber numberWithInt:self.haveResult]);
                 AVMetadataObject * obj = [self.video transformedMetadataObjectForMetadataObject:object];
                 
 //                self.qrView.frame = [[UIView alloc] initWithFrame:obj.bounds];
@@ -644,7 +644,10 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
                     AudioServicesPlayAlertSound (1117);
                     [self.session stopRunning];
                     //self.haveResult = NO;
-                    [self.delegate pushResultVC:object.stringValue];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self.delegate pushResultVC:object.stringValue];
+                    });
+                    
                 }
   
             

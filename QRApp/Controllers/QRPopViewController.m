@@ -94,6 +94,15 @@
     [self dismissViewControllerAnimated:NO completion:nil];
     [self.imagePickerController dismissViewControllerAnimated:YES completion:nil];
 }
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    UITouch* touch = [touches anyObject];
+    CGPoint pointOnMainView = [touch locationInView:self.view];
+    
+    if (!CGRectContainsPoint(self.popView.frame, pointOnMainView)) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
 /*
 #pragma mark - Navigation
 

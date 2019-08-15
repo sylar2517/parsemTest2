@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
+@property (weak, nonatomic) IBOutlet UIView *sideMenu;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *sideMenuConstraint;
+@property (weak, nonatomic) IBOutlet UIVisualEffectView *blurEffect;
 
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *widthConstrain;

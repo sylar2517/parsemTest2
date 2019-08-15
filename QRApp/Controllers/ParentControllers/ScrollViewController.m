@@ -30,7 +30,14 @@
     [self.tabBarController.tabBar setHidden:YES];
     self.firstTime = YES;
     
+    
+    self.sideMenuConstraint.constant = CGRectGetWidth(self.view.bounds);
+    self.sideMenu.layer.shadowOpacity = 1;
+    
+    
 }
+
+
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -99,6 +106,42 @@
     [self presentViewController:vc animated:YES completion:nil];
 }
 
+-(void)showSideMunu{
+    
+    self.scrollView.scrollEnabled = NO;
+    self.sideMenuConstraint.constant = 110;
+    [self.tabBarController.tabBar setHidden:YES];
+    self.blurEffect.hidden = NO;
+    [UIView animateWithDuration:0.3 animations:^{
+        
+        
+        [self.view layoutIfNeeded];
+    }];
+    
+    UIButton* button = [[UIButton alloc] initWithFrame:
+                        CGRectMake(CGRectGetMinX(self.view.bounds),
+                                   CGRectGetMinX(self.view.bounds),
+                                   
+                                   110,//CGRectGetWidth(self.view.bounds)/2,
+                                   CGRectGetHeight(self.view.bounds))];
+    //button.backgroundColor = [UIColor redColor];
+    [button addTarget:self action:@selector(clouseSideMenu:) forControlEvents:(UIControlEventTouchUpInside)];
+    
+    [self.view addSubview:button];
+    
+    //[self.view layoutIfNeeded];
+}
+
+-(void)clouseSideMenu:(UIButton*)sender{
+    self.scrollView.scrollEnabled = YES;
+    self.sideMenuConstraint.constant = CGRectGetWidth(self.view.bounds);
+    [self.tabBarController.tabBar setHidden:NO];
+    self.blurEffect.hidden = YES;
+    [UIView animateWithDuration:0.3 animations:^{
+        [self.view layoutIfNeeded];
+    }];
+    [sender removeFromSuperview];
+}
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
