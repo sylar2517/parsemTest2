@@ -18,8 +18,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HistoryScanTVController : CoreDataTableViewController <NSFetchedResultsControllerDelegate>
 
+@property(strong, nonatomic)NSString* sort;
+
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (nonatomic, weak) id <HistoryScanTVControllerDelegate> hsDelegate;
+
+-(void)setEditingHistory;
+-(void)clearHistory;
+-(void)showAll;
+-(void)showQR;
+-(void)showPDF;
 
 - (IBAction)actionSettings:(id)sender;
 

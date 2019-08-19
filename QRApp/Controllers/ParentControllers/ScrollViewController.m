@@ -11,10 +11,14 @@
 #import "ResultViewController.h"
 
 #import "HistoryScanTVController.h"
+#import "SideMenuTableViewController.h"
 
-@interface ScrollViewController () <UIScrollViewDelegate, QRViewControllerDelegate, HistoryScanTVControllerDelegate>
-//@property(assign, nonatomic)NSInteger contentOffset;
+@interface ScrollViewController () <UIScrollViewDelegate, QRViewControllerDelegate, HistoryScanTVControllerDelegate, SideMenuTableViewControllerDelegate>
+
 @property(assign, nonatomic)BOOL firstTime;
+@property(strong, nonatomic) UIButton* sideMenuExitButton;
+@property(strong, nonatomic) HistoryScanTVController* historyVC;
+
 @end
 
 @implementation ScrollViewController
@@ -56,6 +60,35 @@
 //        [self.tabBarController.tabBar setHidden:YES];
 //    }
 //}
+#pragma mark - SideMenuTableViewControllerDelegate
+- (void)dissMissSideMenuTVC{
+    self.scrollView.scrollEnabled = YES;
+    self.sideMenuConstraint.constant = CGRectGetWidth(self.view.bounds);
+    [self.tabBarController.tabBar setHidden:NO];
+    self.blurEffect.hidden = YES;
+    [UIView animateWithDuration:0.3 animations:^{
+        [self.view layoutIfNeeded];
+    }];
+    
+    if (self.sideMenuExitButton) {
+        [self.sideMenuExitButton removeFromSuperview];
+    }
+}
+- (void)setEditing{
+    [self.historyVC setEditingHistory];
+}
+- (void)clearHistory{
+    [self.historyVC clearHistory];
+}
+- (void)showAll{
+    [self.historyVC showAll];
+}
+-(void)showQR{
+    [self.historyVC showQR];
+}
+-(void)showPDF{
+    [self.historyVC showPDF];
+}
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
 
@@ -66,6 +99,7 @@
     } else {
         self.navigationController.navigationBarHidden = YES;
         [self.tabBarController.tabBar setHidden:YES];
+        [self.historyVC.searchBar resignFirstResponder];
     }
 }
 
@@ -93,7 +127,7 @@
     vc.result = string;
     vc.fromCamera = YES;
     //vc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    [self presentViewController:vc animated:NO completion:nil];
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 #pragma mark - HVCDelegate
@@ -128,6 +162,7 @@
     [button addTarget:self action:@selector(clouseSideMenu:) forControlEvents:(UIControlEventTouchUpInside)];
     
     [self.view addSubview:button];
+    self.sideMenuExitButton = button;
     
     //[self.view layoutIfNeeded];
 }
@@ -141,6 +176,8 @@
         [self.view layoutIfNeeded];
     }];
     [sender removeFromSuperview];
+    
+    NSLog(@"%@", self.historyVC);
 }
 #pragma mark - Navigation
 
@@ -154,7 +191,13 @@
 //        HistoryScanTVController* vc = segue.destinationViewController;
 //        vc.hsDelegate = self;
         UINavigationController* nav = segue.destinationViewController;
+        self.historyVC = (HistoryScanTVController*)nav.topViewController;
         [(HistoryScanTVController*)nav.topViewController setHsDelegate:self];
+    }
+    else if ([segue.identifier isEqualToString:@"sideMenu"]) {
+        SideMenuTableViewController* vc = segue.destinationViewController;
+        vc.delegate = self;
+        
     }
 }
 

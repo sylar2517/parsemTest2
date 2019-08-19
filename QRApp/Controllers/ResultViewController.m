@@ -77,6 +77,7 @@
         self.resultImageView.image = [UIImage imageWithData:dataPicture];
         self.backButton.hidden = YES;
         self.mainViewHeightConstraint.constant = self.mainViewHeightConstraint.constant - 50;
+        
     }
     else {
         [self dismissViewControllerAnimated:YES completion:nil];

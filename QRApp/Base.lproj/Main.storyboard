@@ -274,9 +274,7 @@
                         </connections>
                     </tableView>
                     <tabBarItem key="tabBarItem" systemItem="history" id="hvj-ee-SLl"/>
-                    <toolbarItems>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="ROM-oT-1Nx"/>
-                    </toolbarItems>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" title="История" id="aGL-Ee-CZr">
                         <rightBarButtonItems>
                             <barButtonItem systemItem="compose" id="09F-xO-FyH">
@@ -2045,7 +2043,7 @@
                                                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="muw-zt-SEr">
                                                                 <rect key="frame" x="0.0" y="0.0" width="304" height="896"/>
                                                                 <connections>
-                                                                    <segue destination="mmf-aC-Wu5" kind="embed" id="9Zd-jd-sq2"/>
+                                                                    <segue destination="mmf-aC-Wu5" kind="embed" identifier="sideMenu" id="9Zd-jd-sq2"/>
                                                                 </connections>
                                                             </containerView>
                                                         </subviews>
@@ -3355,10 +3353,10 @@
             </objects>
             <point key="canvasLocation" x="4380" y="-715"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Side Menu Table View Controller-->
         <scene sceneID="hg1-M0-XFi">
             <objects>
-                <tableViewController id="mmf-aC-Wu5" sceneMemberID="viewController">
+                <tableViewController id="mmf-aC-Wu5" customClass="SideMenuTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="oAc-zy-3nb">
                         <rect key="frame" x="0.0" y="0.0" width="304" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -3424,25 +3422,17 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9g2-ZL-WXU">
                                                     <rect key="frame" x="10" y="0.0" width="284" height="60"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Сначала новые" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bA5-Jj-vZN">
-                                                            <rect key="frame" x="49" y="19" width="123" height="22"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Показать все" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bA5-Jj-vZN">
+                                                            <rect key="frame" x="89" y="19.5" width="106.5" height="21"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="G9d-CY-s3o">
-                                                            <rect key="frame" x="180" y="14" width="51" height="32"/>
-                                                            <color key="onTintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        </switch>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.14999999999999999" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
-                                                        <constraint firstItem="bA5-Jj-vZN" firstAttribute="top" secondItem="9g2-ZL-WXU" secondAttribute="top" constant="19" id="7Oj-N6-ZlI"/>
-                                                        <constraint firstItem="G9d-CY-s3o" firstAttribute="top" secondItem="9g2-ZL-WXU" secondAttribute="top" constant="14" id="EHL-r0-AWL"/>
-                                                        <constraint firstAttribute="bottom" secondItem="bA5-Jj-vZN" secondAttribute="bottom" constant="19" id="Kbo-FL-KYc"/>
-                                                        <constraint firstItem="G9d-CY-s3o" firstAttribute="leading" secondItem="bA5-Jj-vZN" secondAttribute="trailing" constant="8" id="QG2-zK-mNQ"/>
-                                                        <constraint firstItem="bA5-Jj-vZN" firstAttribute="leading" secondItem="9g2-ZL-WXU" secondAttribute="leading" constant="49" id="spL-on-5R6"/>
-                                                        <constraint firstItem="G9d-CY-s3o" firstAttribute="centerY" secondItem="bA5-Jj-vZN" secondAttribute="centerY" id="tEi-4t-Szs"/>
+                                                        <constraint firstItem="bA5-Jj-vZN" firstAttribute="centerX" secondItem="9g2-ZL-WXU" secondAttribute="centerX" id="324-sp-QEd"/>
+                                                        <constraint firstItem="bA5-Jj-vZN" firstAttribute="centerY" secondItem="9g2-ZL-WXU" secondAttribute="centerY" id="bzC-5R-Gau"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>

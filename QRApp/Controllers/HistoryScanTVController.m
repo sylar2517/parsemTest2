@@ -61,9 +61,13 @@
     
     self.toolbarItems = self.withExport;
     
-    
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.width, 0);
+    self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
+
     
 }
+
+
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -71,6 +75,47 @@
     [self.navigationItem setTitle:@"История"];
     
 }
+
+
+-(void)showAll{
+
+    self.fetchedResultsController = nil;
+    [NSFetchedResultsController deleteCacheWithName:@"Master"];
+
+//    NSSortDescriptor* sdName = [NSSortDescriptor sortDescriptorWithKey:@"dateOfCreation" ascending:NO];
+//    [[self.fetchedResultsController fetchRequest] setSortDescriptors:@[sdName]];
+//    NSError* error;
+//    if (![[self fetchedResultsController] performFetch:&error]) {
+//        // Handle you error here
+//    }
+    [self.tableView reloadData];
+}
+-(void)showQR{
+
+    [NSFetchedResultsController deleteCacheWithName:@"Master"];
+    NSPredicate *predicate =[NSPredicate predicateWithFormat:@"type contains[cd] %@ OR type contains[cd] %@", @"QR", @"Контакт"];
+    [[self.fetchedResultsController fetchRequest] setPredicate:predicate];
+    NSError* error;
+    if (![[self fetchedResultsController] performFetch:&error]) {
+        // Handle you error here
+    }
+    [self.tableView reloadData];
+
+}
+
+-(void)showPDF{
+    
+    [NSFetchedResultsController deleteCacheWithName:@"Master"];
+    NSPredicate *predicate =[NSPredicate predicateWithFormat:@"type contains[cd] %@", @"PDF"];
+    [[self.fetchedResultsController fetchRequest] setPredicate:predicate];
+    NSError* error;
+    if (![[self fetchedResultsController] performFetch:&error]) {
+        // Handle you error here
+    }
+    [self.tableView reloadData];
+    
+}
+
 
 - (NSFetchedResultsController*) fetchedResultsController {
     if (_fetchedResultsController != nil) {
@@ -112,6 +157,8 @@
         [self.tableView reloadData];
     }
 }
+
+
 
 #pragma mark - UITableViewDataSourse
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -199,6 +246,9 @@
     return @"Контакт";
 }
 #pragma mark - UITableViewDelegate
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 80;
+}
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
    // [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
@@ -292,9 +342,7 @@
         cell.typeLabel.textColor = [UIColor whiteColor];
     }
 }
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 80.f;
-}
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (self.isFiltered) {
@@ -311,10 +359,12 @@
 
 #pragma mark -  UISearchBarDelegate
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     [searchBar setShowsCancelButton:YES animated:YES];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.width, 0);
     [searchBar resignFirstResponder];
     [searchBar setShowsCancelButton:NO animated:YES];
     searchBar.text = nil;
@@ -340,9 +390,12 @@
     if (searchText.length == 0) {
         self.isFiltered = NO;
         self.filterObject = nil;
+        searchBar.showsCancelButton = NO;
+        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.width, 0);
         [self.tableView reloadData];
     } else {
         self.isFiltered = YES;
+        searchBar.showsCancelButton = YES;
         self.filterObject = [NSMutableArray array];
         [self filterContentForSearchText:searchText];
         
@@ -355,6 +408,8 @@
 
 }
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    searchBar.showsCancelButton = NO;
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, self.tabBarController.tabBar.frame.size.width, 0);
     [searchBar resignFirstResponder];
 }
 #pragma mark -  Private Methods
@@ -402,8 +457,21 @@
 }
 
 
+-(void)setEditingHistory{
+    self.isEditing = !self.isEditing;
+    if (self.editing == NO) {
+        [self.navigationController setToolbarHidden:YES animated:YES];
+    } else {
+        [self.navigationController setToolbarHidden:NO animated:YES];
+        self.tempObjectArray = [NSMutableArray array];
+        self.tempCellArray = [NSMutableArray array];
+    }
+    [self.tableView setEditing:self.isEditing animated:YES];
 
-
+}
+-(void)clearHistory{
+    [self allertForDelete];
+}
 #pragma mark -  Actions storyboard
 - (IBAction)actionSettings:(id)sender{
     
