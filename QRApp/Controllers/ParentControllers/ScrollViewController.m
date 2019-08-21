@@ -60,6 +60,14 @@
 //        [self.tabBarController.tabBar setHidden:YES];
 //    }
 //}
+
+//- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+//    UITouch* touch = [touches anyObject];
+//    CGPoint pointOnMainView = [touch locationInView:self.view];
+//    if (self.scrollView.contentOffset.x == CGRectGetWidth(self.view.frame)) {
+//        [self.delegate test:pointOnMainView];
+//    }
+//}
 #pragma mark - SideMenuTableViewControllerDelegate
 - (void)dissMissSideMenuTVC{
     self.scrollView.scrollEnabled = YES;

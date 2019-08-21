@@ -2311,7 +2311,7 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7H6-FR-hc2">
                                         <rect key="frame" x="0.0" y="240" width="300" height="60"/>
-                                        <color key="backgroundColor" white="0.29999999999999999" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="0.25" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="60" id="Ao2-zK-vzF"/>
                                         </constraints>
@@ -2341,7 +2341,7 @@
                                                 </connections>
                                             </button>
                                         </subviews>
-                                        <color key="backgroundColor" white="0.29999999999999999" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="0.25" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="YOa-Qt-BPz" firstAttribute="top" secondItem="iUS-j8-deu" secondAttribute="bottom" constant="8" id="9Y3-bQ-7Jw"/>
                                             <constraint firstAttribute="trailing" secondItem="HKD-S8-zUU" secondAttribute="trailing" id="EPA-hj-qvM"/>
@@ -2952,7 +2952,7 @@
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V07-0B-uel">
                                                 <rect key="frame" x="0.0" y="240" width="300" height="60"/>
-                                                <color key="backgroundColor" white="0.29999999999999999" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="backgroundColor" white="0.25" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="60" id="qI2-Gb-qVB"/>
                                                 </constraints>
@@ -2990,7 +2990,7 @@
                                                         </connections>
                                                     </button>
                                                 </subviews>
-                                                <color key="backgroundColor" white="0.29999999999999999" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="backgroundColor" white="0.25" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstItem="AWy-eV-HOb" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="wV5-xc-CbA" secondAttribute="trailing" constant="8" symbolic="YES" id="3sm-bu-sqw"/>
                                                     <constraint firstAttribute="trailing" secondItem="jXu-XN-UlF" secondAttribute="trailing" id="8Wc-xy-3TZ"/>
@@ -3030,7 +3030,7 @@
                                                         </connections>
                                                     </button>
                                                 </subviews>
-                                                <color key="backgroundColor" white="0.29999999999999999" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="backgroundColor" white="0.25" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="trailing" secondItem="eNG-S9-4hS" secondAttribute="trailing" constant="8" id="3eL-fA-q09"/>
                                                     <constraint firstItem="l9B-Oi-oLh" firstAttribute="top" secondItem="i3T-kd-wlm" secondAttribute="top" constant="10" id="5K8-NT-HEN"/>

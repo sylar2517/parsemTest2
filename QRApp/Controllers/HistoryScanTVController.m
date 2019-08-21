@@ -76,7 +76,7 @@
     
 }
 
-
+#pragma mark - Side Bar methods
 -(void)showAll{
 
     self.fetchedResultsController = nil;

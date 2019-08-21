@@ -30,7 +30,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *conterButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bottomConstrain;
 @property (weak, nonatomic) IBOutlet UIButton *textScanButton;
-@property (weak, nonatomic) IBOutlet UIButton *exitButton;
+//@property (weak, nonatomic) IBOutlet UIButton *exitButton;
 
 
 - (IBAction)actionFlashOnCliked:(UIButton *)sender;

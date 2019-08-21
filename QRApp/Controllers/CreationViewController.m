@@ -43,6 +43,13 @@
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     
+    
+    if ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad )
+    {
+        self.collectionView.contentInset = UIEdgeInsetsMake(50, 10, 50, 10);
+    }
+    
+    
     [self loadBase];
     
 }

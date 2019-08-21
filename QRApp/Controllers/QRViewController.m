@@ -17,7 +17,7 @@
 
 
 #import "ScrollViewController.h"
-
+#import "CameraFocusSquare.h"
 
 typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     AVCamSetupResultSuccess,
@@ -49,6 +49,8 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 @property(strong, nonatomic)AVCapturePhotoOutput *outputPhoto;
 @property(assign, nonatomic)BOOL isScaningText;
 
+@property(strong, nonatomic)CameraFocusSquare* focusSquare;
+
 
 @end
 
@@ -71,8 +73,8 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     self.textScanButton.layer.cornerRadius = 10;
     self.textScanButton.layer.masksToBounds = YES;
     
-    self.exitButton.layer.cornerRadius = 10;
-    self.exitButton.layer.masksToBounds = YES;
+//    self.exitButton.layer.cornerRadius = 10;
+//    self.exitButton.layer.masksToBounds = YES;
     
     self.conterView.layer.cornerRadius = 0.5 * self.conterView.bounds.size.width;;
     self.conterView.layer.masksToBounds = YES;
@@ -139,6 +141,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
         [self.tempForPhoto removeAllObjects];
     }
 }
+
 - (void)viewDidLayoutSubviews{
 
     [super viewDidLayoutSubviews];
@@ -156,28 +159,61 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 
 
 #pragma mark - touches
-//-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-//{
-//
-//    CGPoint point = [[touches anyObject] locationInView:self.view];
-////    float newX = point.x / self.view.frame.size.width;
-////    float newY = point.y / self.view.frame.size.height;
-//
-//
-//    [self.device lockForConfiguration:nil];
-//    [self.device setFocusPointOfInterest:point];
-//    [self.device setFocusMode:(AVCaptureFocusModeAutoFocus)];
-//    [self.device setExposurePointOfInterest:point];
-//    [self.device setExposureMode:(AVCaptureExposureModeContinuousAutoExposure)];
-//
-//    [self.device unlockForConfiguration];
-//
-////    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-////    view.backgroundColor = UIColor.redColor;
-////    view.center = point;
-////    [self.view addSubview:view];
-////    [self.view bringSubviewToFront:view];
-//}
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    UITouch* touch = [touches anyObject];
+    CGPoint pointOnMainView = [touch locationInView:self.view];
+    
+    [self focusOnPoint:pointOnMainView];
+    
+    if (!self.focusSquare) {
+        self.focusSquare = [[CameraFocusSquare alloc] initWithTouchPoint:pointOnMainView];
+        [self.view addSubview:self.focusSquare];
+        [self.focusSquare setNeedsDisplay];
+    } else {
+        [self.view bringSubviewToFront:self.focusSquare];
+        [self.focusSquare updatePoint:pointOnMainView];
+    }
+    
+    [self.focusSquare animateFocusingAction];
+    
+}
+
+
+-(void)focusOnPoint:(CGPoint)pointOnView{
+    
+    NSError *error = nil;
+    
+    double focus_x = pointOnView.x/self.video.frame.size.width;
+    double focus_y = pointOnView.y/self.video.frame.size.height;
+    
+    CGPoint focusPoint = CGPointMake(focus_x, focus_y);
+    
+    if ([self.device lockForConfiguration:&error]) {
+        if ([self.device isFocusPointOfInterestSupported]) {
+            [self.device setFocusPointOfInterest:CGPointMake(focusPoint.x, focusPoint.y)];
+            [self.device setFocusMode:AVCaptureFocusModeContinuousAutoFocus];
+            
+        } else{
+            NSLog(@"isFocusPointOfInterestSupported");
+        }
+        
+        if ([self.device isExposurePointOfInterestSupported]) {
+            [self.device setExposurePointOfInterest:CGPointMake(focusPoint.x, focusPoint.y)];
+            [self.device setExposureMode:AVCaptureExposureModeAutoExpose];
+            
+        }
+        else{
+            NSLog(@"isExposurePointOfInterestSupported");
+        }
+        [self.device unlockForConfiguration];
+        
+    } else {
+        if (error) {
+            NSLog(@"AAA - %@", error);
+        }
+    }
+}
+
 #pragma mark - ScrollViewControllerDelegate
 
 - (void) changeScreen:(BOOL)stopSession{
@@ -193,6 +229,10 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
         
     } else {
         [self.session startRunning];
+        
+        [self focusOnPoint:CGPointMake(self.view.center.x, self.view.center.y)];
+        
+        
         self.haveResult = YES;
     }
 }
@@ -275,8 +315,8 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     [self.session beginConfiguration];
     
     AVCaptureDevice* device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    self.device = device;
     
-    //Imput
     if(!device){
         device = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionBack];
         if (!device) {
@@ -319,7 +359,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     if ([self.session canAddOutput:self.output]) {
         [self.session addOutput:self.output];
         [self.output setMetadataObjectsDelegate:objectsDelegate queue:dispatch_get_main_queue()];
-        self.output.metadataObjectTypes = @[AVMetadataObjectTypeQRCode];
+        self.output.metadataObjectTypes = @[AVMetadataObjectTypeQRCode, AVMetadataObjectTypeAztecCode, AVMetadataObjectTypeDataMatrixCode];
     } else {
         NSLog(@"No output");
         self.setupResult = AVCamSetupResultSessionConfigurationFailed;
@@ -581,7 +621,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
         
         [UIView animateWithDuration:1 animations:^{
             self.textScanButton.hidden = NO;
-            self.exitButton.hidden = NO;
+            //self.exitButton.hidden = NO;
             [self.view layoutIfNeeded];
         }];
         
@@ -599,7 +639,8 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     self.imageViewQR.hidden = YES;
     self.snapButton.hidden = self.snapButtonView.hidden =self.conterView.hidden = YES;
     self.snapButton.hidden = self.snapButtonView.hidden = YES;
-    self.textScanButton.hidden = self.exitButton.hidden = YES;
+    self.textScanButton.hidden =  YES; //self.exitButton.hidden =
+    
     self.conterButton.hidden = YES;
     self.bottomConstrain.constant = 20;
     [self.view bringSubviewToFront:self.toolBarView];
@@ -629,12 +670,9 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
             AVMetadataMachineReadableCodeObject* object = [metadataObjects objectAtIndex:0];
             
             if (object.type == AVMetadataObjectTypeQRCode && self.haveResult) {
-                //
-                //[self.video transformedMetadataObjectForMetadataObject:object].accessibilityFrame;
-//                NSLog(@"%@", [NSNumber numberWithInt:self.haveResult]);
+
                 AVMetadataObject * obj = [self.video transformedMetadataObjectForMetadataObject:object];
-                
-//                self.qrView.frame = [[UIView alloc] initWithFrame:obj.bounds];
+
                 self.qrView.frame = obj.bounds;
  
            
@@ -662,43 +700,59 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 //                [self presentViewController:vc animated:YES completion:nil];
                 
             }
-            else if ((object.type == AVMetadataObjectTypeAztecCode || object.type == AVMetadataObjectTypeDataMatrixCode)) {
+            else if ((object.type == AVMetadataObjectTypeAztecCode || object.type == AVMetadataObjectTypeDataMatrixCode) && self.haveResult) {
  //&& self.haveResult
-               // self.haveResult = NO;
-                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-                AudioServicesPlayAlertSound (1117);
-
-                //[NSString stringWithFormat:@"Это не QR %@", object.stringValue];
-                UIAlertController* ac = [UIAlertController alertControllerWithTitle: @"Это не QR" message:nil preferredStyle:(UIAlertControllerStyleActionSheet)];
-
-                UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Отмена" style:(UIAlertActionStyleCancel) handler:nil];
-                UIAlertAction* editing = [UIAlertAction actionWithTitle: [NSString stringWithFormat:@"%@", object.stringValue] style:(UIAlertActionStyleDefault) handler:nil];
-
-
-                [ac addAction:editing];
-                [ac addAction:aa];
-
-                [self presentViewController:ac animated:YES completion:nil];
-
-            } else if ((object.type == AVMetadataObjectTypeCode128Code || object.type == AVMetadataObjectTypeEAN8Code || object.type == AVMetadataObjectTypeUPCECode || object.type == AVMetadataObjectTypeCode39Code)) {
-                //&& self.haveResult
-                // self.haveResult = NO;
+                self.haveResult = NO;
                 AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
                 AudioServicesPlayAlertSound (1117);
                 
-                //[NSString stringWithFormat:@"Это не QR %@", object.stringValue];
-                UIAlertController* ac = [UIAlertController alertControllerWithTitle: @"Это не QR" message:nil preferredStyle:(UIAlertControllerStyleActionSheet)];
-                
-                UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Отмена" style:(UIAlertActionStyleCancel) handler:nil];
-                UIAlertAction* editing = [UIAlertAction actionWithTitle: [NSString stringWithFormat:@"%@", object.stringValue] style:(UIAlertActionStyleDefault) handler:nil];
-                
-                
-                [ac addAction:editing];
-                [ac addAction:aa];
-                
-                [self presentViewController:ac animated:YES completion:nil];
-                
+               
+                if (!object.stringValue) {
+                    UIAlertController* ac = [UIAlertController alertControllerWithTitle: @"Это не QR" message:nil preferredStyle:(UIAlertControllerStyleAlert)];
+                    UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Отмена" style:(UIAlertActionStyleCancel) handler:^(UIAlertAction * _Nonnull action) {
+                        self.haveResult = YES;
+                    }];
+                    [ac addAction:aa];
+                    
+                    [self presentViewController:ac animated:YES completion:nil];
+                } else {
+                    UIAlertController* ac = [UIAlertController alertControllerWithTitle: @"Это не QR" message:[NSString stringWithFormat:@"%@", object.stringValue] preferredStyle:(UIAlertControllerStyleAlert)];
+                    
+                    UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Отмена" style:(UIAlertActionStyleCancel) handler:^(UIAlertAction * _Nonnull action) {
+                        self.haveResult = YES;
+                    }];
+                   
+                    UIAlertAction* copy = [UIAlertAction actionWithTitle:@"Скопировать" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+                        self.haveResult = YES;
+                        [UIPasteboard generalPasteboard].string = object.stringValue;
+                    }];
+                    
+                    [ac addAction:aa];
+                    [ac addAction:copy];
+                    
+                    [self presentViewController:ac animated:YES completion:nil];
+                }
+
             }
+//            else if ((object.type == AVMetadataObjectTypeCode128Code || object.type == AVMetadataObjectTypeEAN8Code || object.type == AVMetadataObjectTypeUPCECode || object.type == AVMetadataObjectTypeCode39Code)) {
+//                //&& self.haveResult
+//                // self.haveResult = NO;
+//                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+//                AudioServicesPlayAlertSound (1117);
+//
+//                //[NSString stringWithFormat:@"Это не QR %@", object.stringValue];
+//                UIAlertController* ac = [UIAlertController alertControllerWithTitle: @"Это не QR" message:nil preferredStyle:(UIAlertControllerStyleAlert)];
+//
+//                UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Отмена" style:(UIAlertActionStyleCancel) handler:nil];
+//                UIAlertAction* editing = [UIAlertAction actionWithTitle: [NSString stringWithFormat:@"%@", object.stringValue] style:(UIAlertActionStyleDefault) handler:nil];
+//
+//
+//                [ac addAction:editing];
+//                [ac addAction:aa];
+//
+//                [self presentViewController:ac animated:YES completion:nil];
+//
+//            }
         }
     }
 }
@@ -869,6 +923,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 #pragma mark - NSNotification
 -(void)appMovedToForeground:(NSNotification*)notification{
     [self.session startRunning];
+    [self focusOnPoint:CGPointMake(self.view.center.x, self.view.center.y)];
 }
 -(void)appMovedToBackground:(NSNotification*)notification{
     [self.session stopRunning];

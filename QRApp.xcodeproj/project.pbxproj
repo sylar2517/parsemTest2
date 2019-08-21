@@ -47,6 +47,7 @@
 		76B257F222C8EA52002E22D5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76B257F122C8EA51002E22D5 /* WebKit.framework */; };
 		76B257F822C93A60002E22D5 /* CreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B257F722C93A60002E22D5 /* CreationViewController.m */; };
 		76B5429222E1D9ED00123E06 /* ContactTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B5429122E1D9ED00123E06 /* ContactTableViewController.m */; };
+		76B7E9C6230DCF3A00BCA236 /* CameraFocusSquare.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B7E9C5230DCF3A00BCA236 /* CameraFocusSquare.m */; };
 		76E17EA322E8899D00E4B33F /* ZoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E17EA222E8899D00E4B33F /* ZoomViewController.m */; };
 		76FBC54E22DBC2EF00B3FBC3 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76FBC54D22DBC2EF00B3FBC3 /* WebViewController.m */; };
 		76FBC55022DBCBC100B3FBC3 /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76FBC54F22DBCBC100B3FBC3 /* PDFKit.framework */; };
@@ -144,6 +145,8 @@
 		76B257F722C93A60002E22D5 /* CreationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CreationViewController.m; sourceTree = "<group>"; };
 		76B5429022E1D9ED00123E06 /* ContactTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactTableViewController.h; sourceTree = "<group>"; };
 		76B5429122E1D9ED00123E06 /* ContactTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactTableViewController.m; sourceTree = "<group>"; };
+		76B7E9C4230DCF3A00BCA236 /* CameraFocusSquare.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraFocusSquare.h; sourceTree = "<group>"; };
+		76B7E9C5230DCF3A00BCA236 /* CameraFocusSquare.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraFocusSquare.m; sourceTree = "<group>"; };
 		76E17EA122E8899D00E4B33F /* ZoomViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZoomViewController.h; sourceTree = "<group>"; };
 		76E17EA222E8899D00E4B33F /* ZoomViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZoomViewController.m; sourceTree = "<group>"; };
 		76FBC54C22DBC2EF00B3FBC3 /* WebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
@@ -197,6 +200,8 @@
 			isa = PBXGroup;
 			children = (
 				763980A422F23E5000929E05 /* ParentControllers */,
+				767C120723073FF10012A281 /* SideMenuTableViewController.h */,
+				767C120823073FF10012A281 /* SideMenuTableViewController.m */,
 				7653841022C0D9EC00D6EDDE /* PopUpForCameraOrGallery.h */,
 				7653841122C0D9EC00D6EDDE /* PopUpForCameraOrGallery.m */,
 				76371E8022C160DE00AF8E28 /* GalleryViewController.h */,
@@ -263,8 +268,6 @@
 				760A5C3422C56EA50032B730 /* Controllers */,
 				7614778022BFF9FF00022E85 /* AppDelegate.h */,
 				7614778122BFF9FF00022E85 /* AppDelegate.m */,
-				767C120723073FF10012A281 /* SideMenuTableViewController.h */,
-				767C120823073FF10012A281 /* SideMenuTableViewController.m */,
 				7614778622BFF9FF00022E85 /* Main.storyboard */,
 				7614778C22BFFA0000022E85 /* Assets.xcassets */,
 				7614778E22BFFA0000022E85 /* LaunchScreen.storyboard */,
@@ -309,6 +312,8 @@
 		763980A322F2398B00929E05 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				76B7E9C4230DCF3A00BCA236 /* CameraFocusSquare.h */,
+				76B7E9C5230DCF3A00BCA236 /* CameraFocusSquare.m */,
 				7684C15822E5D17E007A72C7 /* Color.h */,
 				7684C15922E5D17E007A72C7 /* Color.m */,
 				763CD00622C6A3D30009F955 /* DataManager.h */,
@@ -501,6 +506,7 @@
 				762D639922DD00F600013805 /* HistoryPost+CoreDataClass.m in Sources */,
 				76B5429222E1D9ED00123E06 /* ContactTableViewController.m in Sources */,
 				7684C15A22E5D17E007A72C7 /* Color.m in Sources */,
+				76B7E9C6230DCF3A00BCA236 /* CameraFocusSquare.m in Sources */,
 				763980A222F2397700929E05 /* QRPopViewController.m in Sources */,
 				767C120923073FF10012A281 /* SideMenuTableViewController.m in Sources */,
 				762D639822DD00F600013805 /* Posts+CoreDataProperties.m in Sources */,

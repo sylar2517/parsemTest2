@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class ScrollViewController;
 @protocol ScrollViewControllerDelegate
 - (void) changeScreen:(BOOL)stopSession;
+//-(void) test:(CGPoint)point;
 @end
 
 @interface ScrollViewController : UIViewController

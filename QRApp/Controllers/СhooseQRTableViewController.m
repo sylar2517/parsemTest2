@@ -144,7 +144,7 @@
             [self.navigationController pushViewController:vc animated:YES];
         }
 
-#warning GO TO RESULT
+//#warning GO TO RESULT
     }]];
     
     [self presentViewController:alertController animated:YES completion:nil];
