@@ -191,7 +191,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     if ([self.device lockForConfiguration:&error]) {
         if ([self.device isFocusPointOfInterestSupported]) {
             [self.device setFocusPointOfInterest:CGPointMake(focusPoint.x, focusPoint.y)];
-            [self.device setFocusMode:AVCaptureFocusModeContinuousAutoFocus];
+            [self.device setFocusMode:AVCaptureFocusModeAutoFocus];
             
         } else{
             NSLog(@"isFocusPointOfInterestSupported");
@@ -452,7 +452,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     [self buttonCliked:sender];
     
     self.buttonPressed = sender.tag;
-    
+    [self focusOnPoint:CGPointMake(self.view.center.x, self.view.center.y)];
 }
 
 - (IBAction)actionScanPDF:(UIButton *)sender {
@@ -478,6 +478,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     
     [self buttonCliked:sender];
     self.buttonPressed = sender.tag;
+    [self focusOnPoint:CGPointMake(self.view.center.x, self.view.center.y)];
 }
 
 - (IBAction)actionBarcode:(UIButton *)sender{
@@ -489,6 +490,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     [self buttonCliked:sender];
     
      self.buttonPressed = sender.tag;
+    [self focusOnPoint:CGPointMake(self.view.center.x, self.view.center.y)];
 }
 
 - (IBAction)scanText:(UIButton *)sender {
@@ -518,6 +520,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     [self.view layoutIfNeeded];
 
     self.buttonPressed = sender.tag;
+    [self focusOnPoint:CGPointMake(self.view.center.x, self.view.center.y)];
 }
 
 
@@ -692,8 +695,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
                 self.qrLabel.text = object.stringValue;
                 [self highlightBordersQR];
                 //self.haveResult = NO;
-//                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-//                AudioServicesPlayAlertSound (1117);
+
 //                ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
 //                vc.result = object.stringValue;
 //                vc.fromCamera = YES;

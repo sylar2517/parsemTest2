@@ -1890,7 +1890,7 @@
                                 <rect key="frame" x="20" y="88" width="374" height="375"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zcz-sV-oeQ">
-                                        <rect key="frame" x="8" y="8" width="84" height="40"/>
+                                        <rect key="frame" x="8" y="8" width="129" height="40"/>
                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="hAJ-QA-eyF"/>
@@ -1928,7 +1928,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bca-Pn-z2v">
-                                        <rect key="frame" x="282" y="8" width="84" height="40"/>
+                                        <rect key="frame" x="237" y="8" width="129" height="40"/>
                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="ZYI-T1-ceS"/>
@@ -1960,7 +1960,7 @@
                                     <constraint firstItem="igb-xb-Bt7" firstAttribute="top" secondItem="Y5d-4h-7zN" secondAttribute="bottom" constant="8" symbolic="YES" id="HHm-Zd-Qps"/>
                                     <constraint firstAttribute="height" constant="375" id="J8l-Qy-Sx9"/>
                                     <constraint firstItem="igb-xb-Bt7" firstAttribute="trailing" secondItem="Y5d-4h-7zN" secondAttribute="trailing" id="NIC-hR-zRf"/>
-                                    <constraint firstItem="Bca-Pn-z2v" firstAttribute="leading" relation="lessThanOrEqual" secondItem="zcz-sV-oeQ" secondAttribute="trailing" constant="190" id="OOR-CS-Xql"/>
+                                    <constraint firstItem="Bca-Pn-z2v" firstAttribute="leading" relation="lessThanOrEqual" secondItem="zcz-sV-oeQ" secondAttribute="trailing" constant="100" id="OOR-CS-Xql"/>
                                     <constraint firstItem="zcz-sV-oeQ" firstAttribute="width" secondItem="Bca-Pn-z2v" secondAttribute="width" id="Uhc-NK-btR"/>
                                     <constraint firstItem="zcz-sV-oeQ" firstAttribute="top" secondItem="8Nh-6P-l09" secondAttribute="top" constant="8" id="a6F-S9-iOX"/>
                                     <constraint firstItem="Bca-Pn-z2v" firstAttribute="top" secondItem="8Nh-6P-l09" secondAttribute="top" constant="8" id="gBt-re-FZ0"/>
@@ -2627,13 +2627,40 @@
                                     <action selector="actionExtit:" destination="i5t-JW-RT0" eventType="touchUpInside" id="CMP-Aj-5Nj"/>
                                 </connections>
                             </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uyr-rb-LN8">
+                                <rect key="frame" x="20" y="64" width="177" height="50"/>
+                                <color key="backgroundColor" white="0.14999999999999999" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Экспорт">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cE4-3q-JZA">
+                                <rect key="frame" x="217" y="64" width="177" height="50"/>
+                                <color key="backgroundColor" white="0.14999999999999999" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="of9-BT-X8n"/>
+                                </constraints>
+                                <state key="normal" title="Сохранить">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="actionSave:" destination="i5t-JW-RT0" eventType="touchUpInside" id="99t-UI-g9S"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="zwT-fb-JpS" firstAttribute="width" secondItem="8Wx-02-Q8t" secondAttribute="width" id="BmA-xZ-tJu"/>
                             <constraint firstItem="zwT-fb-JpS" firstAttribute="centerY" secondItem="8Wx-02-Q8t" secondAttribute="centerY" id="L1H-nJ-VeF"/>
+                            <constraint firstItem="cE4-3q-JZA" firstAttribute="leading" secondItem="uyr-rb-LN8" secondAttribute="trailing" constant="20" id="RB3-Bd-KuA"/>
+                            <constraint firstItem="cE4-3q-JZA" firstAttribute="top" secondItem="ecN-SA-xCA" secondAttribute="top" constant="20" id="Txh-QY-aiu"/>
+                            <constraint firstAttribute="trailing" secondItem="cE4-3q-JZA" secondAttribute="trailing" constant="20" id="U9N-rZ-01y"/>
+                            <constraint firstItem="uyr-rb-LN8" firstAttribute="width" secondItem="cE4-3q-JZA" secondAttribute="width" id="brS-by-6pF"/>
                             <constraint firstItem="zwT-fb-JpS" firstAttribute="centerX" secondItem="8Wx-02-Q8t" secondAttribute="centerX" id="d6g-z4-QFF"/>
                             <constraint firstItem="JMJ-iq-UDk" firstAttribute="centerX" secondItem="zwT-fb-JpS" secondAttribute="centerX" id="drK-g6-Czf"/>
+                            <constraint firstItem="uyr-rb-LN8" firstAttribute="height" secondItem="cE4-3q-JZA" secondAttribute="height" id="gkZ-mi-7Og"/>
+                            <constraint firstItem="uyr-rb-LN8" firstAttribute="top" secondItem="ecN-SA-xCA" secondAttribute="top" constant="20" id="u98-7G-DsS"/>
+                            <constraint firstItem="uyr-rb-LN8" firstAttribute="leading" secondItem="ecN-SA-xCA" secondAttribute="leading" constant="20" id="z7d-MI-0Xd"/>
                             <constraint firstItem="JMJ-iq-UDk" firstAttribute="top" secondItem="zwT-fb-JpS" secondAttribute="bottom" constant="37" id="zNJ-86-lvJ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ecN-SA-xCA"/>
@@ -2641,6 +2668,8 @@
                     <connections>
                         <outlet property="QRImageView" destination="DvG-Q7-Aev" id="f8F-pe-fA8"/>
                         <outlet property="exitButton" destination="JMJ-iq-UDk" id="xFl-Wk-IbG"/>
+                        <outlet property="exportButton" destination="uyr-rb-LN8" id="Txh-ng-fGq"/>
+                        <outlet property="saveButton" destination="cE4-3q-JZA" id="uk7-nz-pyH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FzZ-1t-HSe" userLabel="First Responder" sceneMemberID="firstResponder"/>

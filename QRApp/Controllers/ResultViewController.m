@@ -265,7 +265,7 @@
     if ([segue.identifier isEqualToString:@"zoomSegue"]) {
         ZoomViewController* vc = segue.destinationViewController;
         UIImage* image = self.resultImageView.image;
-        
+        vc.isContact = NO;
         UIGraphicsBeginImageContext(CGSizeMake(400, 400));
         [image drawInRect:CGRectMake(0, 0, 400, 400)];
         UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();

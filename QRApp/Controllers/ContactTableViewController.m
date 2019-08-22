@@ -126,7 +126,7 @@
     UIGraphicsBeginImageContext(CGSizeMake(400, 400));
     [image drawInRect:CGRectMake(0, 0, 400, 400)];
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    
+    vc.isContact = YES;
     vc.transferedImage = newImage;
     [self presentViewController:vc animated:YES completion:nil];
     
