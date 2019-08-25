@@ -48,6 +48,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 @property(strong, nonatomic)AVCaptureVideoDataOutput *outputText;
 @property(strong, nonatomic)AVCapturePhotoOutput *outputPhoto;
 @property(assign, nonatomic)BOOL isScaningText;
+@property(assign, nonatomic)BOOL isBarcode;
 
 @property(strong, nonatomic)CameraFocusSquare* focusSquare;
 
@@ -72,9 +73,6 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     
     self.textScanButton.layer.cornerRadius = 10;
     self.textScanButton.layer.masksToBounds = YES;
-    
-//    self.exitButton.layer.cornerRadius = 10;
-//    self.exitButton.layer.masksToBounds = YES;
     
     self.conterView.layer.cornerRadius = 0.5 * self.conterView.bounds.size.width;;
     self.conterView.layer.masksToBounds = YES;
@@ -359,7 +357,13 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     if ([self.session canAddOutput:self.output]) {
         [self.session addOutput:self.output];
         [self.output setMetadataObjectsDelegate:objectsDelegate queue:dispatch_get_main_queue()];
-        self.output.metadataObjectTypes = @[AVMetadataObjectTypeQRCode, AVMetadataObjectTypeAztecCode, AVMetadataObjectTypeDataMatrixCode];
+        if (self.isBarcode) {
+             self.output.metadataObjectTypes = @[AVMetadataObjectTypeUPCECode, AVMetadataObjectTypeCode39Code,AVMetadataObjectTypeCode39Mod43Code ,AVMetadataObjectTypeEAN13Code , AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode93Code, AVMetadataObjectTypeCode128Code ,AVMetadataObjectTypePDF417Code ,AVMetadataObjectTypeInterleaved2of5Code ,AVMetadataObjectTypeITF14Code];
+            self.isBarcode = NO;
+        } else {
+            self.output.metadataObjectTypes = @[AVMetadataObjectTypeQRCode, AVMetadataObjectTypeAztecCode, AVMetadataObjectTypeDataMatrixCode];
+        }
+//        self.output.metadataObjectTypes = @[AVMetadataObjectTypeQRCode, AVMetadataObjectTypeAztecCode, AVMetadataObjectTypeDataMatrixCode];
     } else {
         NSLog(@"No output");
         self.setupResult = AVCamSetupResultSessionConfigurationFailed;
@@ -422,7 +426,7 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 }
 #pragma mark - Actions
 - (IBAction)actionFlashOnCliked:(UIButton *)sender {
-     AVCaptureDevice *flashLight = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    AVCaptureDevice *flashLight = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     if ([flashLight isTorchAvailable] && [flashLight isTorchModeSupported:AVCaptureTorchModeOn])
     {
         BOOL success = [flashLight lockForConfiguration:nil];
@@ -487,9 +491,14 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
         return;
     }
     
+    [self reloadSession];
+    self.isBarcode = YES;
+    [self initSessionForQR:YES];
+
+    
     [self buttonCliked:sender];
     
-     self.buttonPressed = sender.tag;
+    self.buttonPressed = sender.tag;
     [self focusOnPoint:CGPointMake(self.view.center.x, self.view.center.y)];
 }
 
@@ -736,25 +745,49 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
                 }
 
             }
-//            else if ((object.type == AVMetadataObjectTypeCode128Code || object.type == AVMetadataObjectTypeEAN8Code || object.type == AVMetadataObjectTypeUPCECode || object.type == AVMetadataObjectTypeCode39Code)) {
-//                //&& self.haveResult
-//                // self.haveResult = NO;
-//                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-//                AudioServicesPlayAlertSound (1117);
+            else if ((object.type == AVMetadataObjectTypeUPCECode ||
+                      object.type == AVMetadataObjectTypeCode39Code ||
+                      object.type == AVMetadataObjectTypeCode39Mod43Code ||
+                      object.type == AVMetadataObjectTypeEAN13Code ||
+                      object.type == AVMetadataObjectTypeEAN8Code ||
+                      object.type == AVMetadataObjectTypeCode93Code ||
+                      object.type == AVMetadataObjectTypeCode128Code || //
+                      object.type == AVMetadataObjectTypePDF417Code ||
+                      object.type == AVMetadataObjectTypeInterleaved2of5Code ||
+                      object.type == AVMetadataObjectTypeITF14Code) && self.haveResult) {
+                self.haveResult = NO;
+                
+//                 self.output.metadataObjectTypes = @[AVMetadataObjectTypeUPCECode, AVMetadataObjectTypeCode39Code,AVMetadataObjectTypeCode39Mod43Code ,AVMetadataObjectTypeEAN13Code , AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode93Code, AVMetadataObjectTypeCode128Code ,AVMetadataObjectTypePDF417Code ,AVMetadataObjectTypeInterleaved2of5Code ,AVMetadataObjectTypeITF14Code];
+                //&& self.haveResult
+                // self.haveResult = NO;AVMetadataObjectTypeUPCECode ((object.type == AVMetadataObjectTypeCode128Code || object.type == AVMetadataObjectTypeEAN8Code || object.type == AVMetadataObjectTypeUPCECode || object.type == AVMetadataObjectTypeCode39Code)) {
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+                AudioServicesPlayAlertSound (1117);
+
+                //[NSString stringWithFormat:@"Это не QR %@", object.stringValue];
+                #warning test
+                ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
+                vc.result = object.stringValue;
+                vc.fromCamera = YES;
+                vc.isBarcode = YES;
+                vc.AVMetadataObjectType = object.type;
+                [self presentViewController:vc animated:YES completion:nil];
+
+//                UIAlertController* ac = [UIAlertController alertControllerWithTitle: @"Штриховой код" message:nil preferredStyle:(UIAlertControllerStyleAlert)];
 //
-//                //[NSString stringWithFormat:@"Это не QR %@", object.stringValue];
-//                UIAlertController* ac = [UIAlertController alertControllerWithTitle: @"Это не QR" message:nil preferredStyle:(UIAlertControllerStyleAlert)];
-//
-//                UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Отмена" style:(UIAlertActionStyleCancel) handler:nil];
-//                UIAlertAction* editing = [UIAlertAction actionWithTitle: [NSString stringWithFormat:@"%@", object.stringValue] style:(UIAlertActionStyleDefault) handler:nil];
+//                UIAlertAction* aa = [UIAlertAction actionWithTitle:@"Отмена" style:(UIAlertActionStyleCancel) handler:^(UIAlertAction * _Nonnull action) {
+//                    self.haveResult = YES;
+//                }];
+//                UIAlertAction* editing = [UIAlertAction actionWithTitle: [NSString stringWithFormat:@"%@", object.type] style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+//                    self.haveResult = YES;
+//                }];
 //
 //
 //                [ac addAction:editing];
 //                [ac addAction:aa];
 //
 //                [self presentViewController:ac animated:YES completion:nil];
-//
-//            }
+
+            }
         }
     }
 }
@@ -783,7 +816,10 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
                 if ([region isEqual:nil]) {
                     continue;
                 }
-
+                
+                //NSLog(@"%@", NSStringFromCGRect(region.boundingBox));
+                
+                
                 [self higthlightWord:region];
 
                 NSArray* boxes = region.characterBoxes;

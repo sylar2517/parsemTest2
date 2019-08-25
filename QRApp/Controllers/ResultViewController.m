@@ -13,6 +13,8 @@
 #import "QRPost+CoreDataClass.h"
 #import "ZoomViewController.h"
 
+#import <AVFoundation/AVFoundation.h>
+
 @interface ResultViewController () <UITextViewDelegate>
 
 @property(assign, nonatomic)NSInteger startCoordY;
@@ -78,6 +80,14 @@
         self.backButton.hidden = YES;
         self.mainViewHeightConstraint.constant = self.mainViewHeightConstraint.constant - 50;
         
+    } else if (self.isBarcode && self.fromCamera) {
+#warning test
+//        self.resultTextImageView.text = self.result;
+//        if (self.AVMetadataObjectType == AVMetadataObjectTypeUPCECode) {
+//            NSString *barCodeValue = @"0123456789";
+//            NSString *barCodeURL = [NSString stringWithFormat:@"http://www.barcodesinc.com/generator/image.php?code=%@&style=197&type=C128B&width=200&height=100&xres=1&font=3", barCodeValue];
+//            self.resultImageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:barCodeURL]]];
+//        }
     }
     else {
         [self dismissViewControllerAnimated:YES completion:nil];

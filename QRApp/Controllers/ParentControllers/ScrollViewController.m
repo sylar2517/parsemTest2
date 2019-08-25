@@ -127,6 +127,7 @@
     ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
     vc.result = string;
     vc.fromCamera = YES;
+    vc.isBarcode = NO;
     //vc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     [self presentViewController:vc animated:YES completion:nil];
 }

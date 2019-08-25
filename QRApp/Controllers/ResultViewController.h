@@ -15,7 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(strong, nonatomic)NSString* result;
 @property(strong, nonatomic)HistoryPost* post;
 @property(assign, nonatomic)BOOL fromCamera;
+@property(assign, nonatomic)BOOL isBarcode;
 @property(strong, nonatomic)QRPost* postQR;
+@property(strong, nonatomic)NSString * AVMetadataObjectType;
 
 @property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) IBOutlet UIImageView *resultImageView;
