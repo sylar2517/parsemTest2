@@ -47,6 +47,8 @@
         [self.delegate showQR];
     }  else if (indexPath.row == 6){
         [self.delegate showPDF];
+    } else if (indexPath.row == 10){
+        [self.delegate showBarcode];
     }
     else if (indexPath.row == 12){
         [self.delegate clearHistory];

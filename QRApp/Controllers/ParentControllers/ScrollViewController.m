@@ -90,6 +90,9 @@
 -(void)showPDF{
     [self.historyVC showPDF];
 }
+-(void)showBarcode{
+    [self.historyVC showBarcode];
+}
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
 
@@ -138,10 +141,18 @@
     ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
     vc.post = post;
     vc.fromCamera = NO;
+    vc.isBarcode = NO;
     vc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     [self presentViewController:vc animated:YES completion:nil];
 }
-
+- (void)historyScanTVControllerPresentResultBarcode:(HistoryPost *)post{
+    ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
+    vc.post = post;
+    vc.fromCamera = NO;
+    vc.isBarcode = YES;
+    vc.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    [self presentViewController:vc animated:YES completion:nil];
+}
 -(void)showSideMunu{
     
     self.scrollView.scrollEnabled = NO;

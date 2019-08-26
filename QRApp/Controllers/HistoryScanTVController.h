@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class ScrollViewController, HistoryScanTVController, HistoryPost;
 @protocol HistoryScanTVControllerDelegate
 - (void)historyScanTVControllerPresentResult:(HistoryPost*)post;
+- (void)historyScanTVControllerPresentResultBarcode:(HistoryPost*)post;
 -(void)showSideMunu;
 @end
 
@@ -28,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)showAll;
 -(void)showQR;
 -(void)showPDF;
+-(void)showBarcode;
 
 - (IBAction)actionSettings:(id)sender;
 

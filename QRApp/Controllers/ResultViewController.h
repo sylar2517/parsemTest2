@@ -19,6 +19,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(strong, nonatomic)QRPost* postQR;
 @property(strong, nonatomic)NSString * AVMetadataObjectType;
 
+//
+//
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageHeightConstraint;
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *originHeightConstraint;
+
 @property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) IBOutlet UIImageView *resultImageView;
 @property (weak, nonatomic) IBOutlet UITextView *resultTextImageView;

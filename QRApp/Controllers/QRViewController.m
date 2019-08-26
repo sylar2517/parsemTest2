@@ -31,6 +31,10 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 @property(strong, nonatomic)UIView* qrView;
 @property(strong, nonatomic)UILabel* qrLabel;
 
+
+@property(strong, nonatomic)UIView* barcodeViewTop;
+@property(strong, nonatomic)UIView* barcodeViewBottom;
+
 @property(strong, nonatomic) NSArray* request;
 @property(assign, nonatomic) BOOL haveResult;
 @property(assign, nonatomic) BOOL takePhoto;
@@ -127,6 +131,10 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     [self.qrView removeFromSuperview];
     self.qrView.frame = CGRectZero;
     self.qrLabel.text = nil;
+    
+    
+    self.haveResult = YES;
+    [self focusOnPoint:CGPointMake(self.view.center.x, self.view.center.y)];
 }
 
 
@@ -440,6 +448,10 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
             [flashLight unlockForConfiguration];
         }
     }
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self focusOnPoint:CGPointMake(self.view.center.x, self.view.center.y)];
+    });
 }
 
 
@@ -494,12 +506,29 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
     [self reloadSession];
     self.isBarcode = YES;
     [self initSessionForQR:YES];
-
     
     [self buttonCliked:sender];
     
-    self.buttonPressed = sender.tag;
+    UIView* view1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0,
+                                                             CGRectGetWidth(self.view.bounds),
+                                                             CGRectGetHeight(self.view.bounds)/2 - 100)];
+    view1.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
+    self.barcodeViewTop = view1;
+    [self.view addSubview:self.barcodeViewTop];
+    
+    UIView* view2 = [[UIView alloc] initWithFrame:CGRectMake(0,  CGRectGetHeight(self.view.bounds)/2 + 100,
+                                                             CGRectGetWidth(self.view.bounds),
+                                                             CGRectGetHeight(self.view.bounds)/2 - 100)];
+    view2.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
+    
+    self.barcodeViewBottom = view2;
+    [self.view addSubview:self.barcodeViewBottom];
+    [self.view bringSubviewToFront:self.toolBarView];
+   
+
     [self focusOnPoint:CGPointMake(self.view.center.x, self.view.center.y)];
+    self.buttonPressed = sender.tag;
+    
 }
 
 - (IBAction)scanText:(UIButton *)sender {
@@ -665,6 +694,10 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
         [self.tempForPhoto removeAllObjects];
     }
     
+    if (self.barcodeViewTop && self.barcodeViewBottom) {
+        [self.barcodeViewTop removeFromSuperview];
+        [self.barcodeViewBottom removeFromSuperview];
+    }
     
 }
 #pragma mark - AVCaptureMetadataOutputObjectsDelegate
@@ -746,24 +779,24 @@ typedef NS_ENUM(NSUInteger, AVCamSetupResult) {
 
             }
             else if ((object.type == AVMetadataObjectTypeUPCECode ||
+                      object.type == AVMetadataObjectTypeCode93Code ||
                       object.type == AVMetadataObjectTypeCode39Code ||
                       object.type == AVMetadataObjectTypeCode39Mod43Code ||
                       object.type == AVMetadataObjectTypeEAN13Code ||
                       object.type == AVMetadataObjectTypeEAN8Code ||
-                      object.type == AVMetadataObjectTypeCode93Code ||
                       object.type == AVMetadataObjectTypeCode128Code || //
-                      object.type == AVMetadataObjectTypePDF417Code ||
-                      object.type == AVMetadataObjectTypeInterleaved2of5Code ||
-                      object.type == AVMetadataObjectTypeITF14Code) && self.haveResult) {
-                self.haveResult = NO;
+                      object.type == AVMetadataObjectTypePDF417Code)
+                     && self.haveResult) {
                 
+                self.haveResult = NO;
+               
+            
 //                 self.output.metadataObjectTypes = @[AVMetadataObjectTypeUPCECode, AVMetadataObjectTypeCode39Code,AVMetadataObjectTypeCode39Mod43Code ,AVMetadataObjectTypeEAN13Code , AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode93Code, AVMetadataObjectTypeCode128Code ,AVMetadataObjectTypePDF417Code ,AVMetadataObjectTypeInterleaved2of5Code ,AVMetadataObjectTypeITF14Code];
                 //&& self.haveResult
                 // self.haveResult = NO;AVMetadataObjectTypeUPCECode ((object.type == AVMetadataObjectTypeCode128Code || object.type == AVMetadataObjectTypeEAN8Code || object.type == AVMetadataObjectTypeUPCECode || object.type == AVMetadataObjectTypeCode39Code)) {
                 AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
                 AudioServicesPlayAlertSound (1117);
 
-                //[NSString stringWithFormat:@"Это не QR %@", object.stringValue];
                 #warning test
                 ResultViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"resultVC"];
                 vc.result = object.stringValue;

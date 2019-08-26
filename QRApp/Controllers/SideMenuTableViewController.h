@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)showAll;
 - (void)showQR;
 - (void)showPDF;
+-(void)showBarcode;
 @end
 
 @interface SideMenuTableViewController : UITableViewController

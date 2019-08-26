@@ -115,7 +115,18 @@
     [self.tableView reloadData];
     
 }
-
+-(void)showBarcode{
+    
+    [NSFetchedResultsController deleteCacheWithName:@"Master"];
+    NSPredicate *predicate =[NSPredicate predicateWithFormat:@"type contains[cd] %@", @"Штрихкод"];
+    [[self.fetchedResultsController fetchRequest] setPredicate:predicate];
+    NSError* error;
+    if (![[self fetchedResultsController] performFetch:&error]) {
+        // Handle you error here
+    }
+    [self.tableView reloadData];
+    
+}
 
 - (NSFetchedResultsController*) fetchedResultsController {
     if (_fetchedResultsController != nil) {
@@ -220,14 +231,17 @@
         
         cell.imageViewCell.layer.magnificationFilter = kCAFilterNearest;
         cell.imageViewCell.image = [UIImage imageWithData:post.picture];
-        
 
-        
     } else if ([post.type isEqualToString:@"PDF"]){
         cell.nameLabel.text = post.value;
         cell.imageViewCell.image = [UIImage imageNamed:@"pdf"];
         cell.imageViewCell.backgroundColor = [UIColor redColor];
         cell.typeLabel.text = @"PDF";
+    } else if ([post.type isEqualToString:@"Штрихкод"]){
+        cell.nameLabel.text = post.value;
+        cell.imageViewCell.image = [UIImage imageWithData:post.picture];
+        cell.imageViewCell.backgroundColor = [UIColor whiteColor];
+        cell.typeLabel.text = @"Штрихкод";
     }
     
     
@@ -286,6 +300,8 @@
             WebViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:@"webView"];
             vc.post = post;
             [self presentViewController:vc animated:YES completion:nil];
+        }  else if ([post.type isEqualToString:@"Штрихкод"]) {
+            [self.hsDelegate historyScanTVControllerPresentResultBarcode:post];
         }
         
     } else {
